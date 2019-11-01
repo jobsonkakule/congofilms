@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+{% block title 'Agence de test' %}
+
+{% block body %}
+
+    <div class="jumbotron text-center">
+        <h1>Welcome to the blog</h1>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Totam suscipit odit repellendus, eos quaerat error, neque culpa officia, reprehenderit libero quis impedit aperiam animi. Possimus, minus eum expedita sed id reiciendis doloremque aspernatur similique animi eius, ipsum deserunt repellat delectus placeat veritatis sint, vero eveniet assumenda consequatur. Veniam culpa nesciunt quia error ipsa, officiis suscipit. Consequatur alias adipisci quam, facilis animi expedita laborum iste placeat rem iure veritatis aut quas. Delectus enim repellat sapiente consequatur nostrum. Optio eum minima delectus. Quis, natus ratione? Necessitatibus autem ea commodi atque, ab in magni quisquam quos facere culpa, soluta voluptate repellendus. Dolorem, aliquam!</p>
+    </div>
+
+    <div class="container">
+        <h2>Les derniers biens</h2>
+        <div class="row flex">
+            {% for property in properties %}
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('property.show', {id: property.id, slug: property.slug}) }}">{{ property.title }}</a>
+                            </h5>
+                            <p class="card-text">{{ property.city }} ({{ property.postalCode }})</p>
+                            <div class="text-primary" style="font-weight: bold; font-size:2rem">{{ property.formattedPrice }} $</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock  %}
