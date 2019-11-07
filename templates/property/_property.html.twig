@@ -1,4 +1,9 @@
 <div class="card-mt-4">
+    {% if property.filename %}
+        <img src="{{ vich_uploader_asset(property, 'imageFile') | imagine_filter('thumb') }}" alt="" class="card-img-top">
+    {% else %}
+        <img src="{{ '/images/properties/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
+    {% endif %}
     <div class="card-body">
         <h5 class="card-title">
             <a href="{{ path('property.show', {id: property.id, slug: property.slug}) }}">
