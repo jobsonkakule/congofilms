@@ -20,5 +20,13 @@ public/images
 ###< symfony/web-server-bundle ###
 
 ###> liip/imagine-bundle ###
-/public/media/cache/
+# /public/media/cache/
+/public/media
 ###< liip/imagine-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
