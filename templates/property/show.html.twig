@@ -15,11 +15,15 @@
             {% endif %}
             <div class="row">
                 <div class="col-md-8">
-                    {% if property.filename %}
-                        <img src="{{ vich_uploader_asset(property, 'imageFile') | imagine_filter('medium') }}" alt="" class="card-img-top" width="100%">
-                    {% else %}
-                        <img src="{{ '/images/properties/noimage.png' | imagine_filter('medium') }}" alt="" class="card-img-top" width="100%">
-                    {% endif %}
+                    <div data-slider>
+                        {% if property.pictures is empty %}
+                            <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" class="card-img-top" width="100%">
+                        {% else %}
+                            {% for picture in property.pictures %}
+                                <img src="{{ vich_uploader_asset(picture, 'imageFile') | imagine_filter('medium') }}" alt="" class="card-img-top" width="100%">
+                            {% endfor %}
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="col-md-4">
                     <h1>{{ property.title }}</h1>
@@ -53,10 +57,10 @@
         <div class="row">
             <div class="col-md-8">
                 <h2>Caractéristiques</h2>
-                <table class="tabble-striped">
+                <table class="table table-striped">
                     <tr>
                         <td>Surface habitable</td>
-                        <td>{{ property.surface }}</td>
+                        <td>{{ property.surface }} m²</td>
                     </tr>
                     <tr>
                         <td>Pièces</td>
@@ -85,6 +89,6 @@
                 </ul>
             </div>
         </div>
-        <nav class="nav nav-tabs"></nav>
+        <div id="map" style=" width: 100%; height: 400px;" data-lat="{{ property.lat }}" data-lng="{{ property.lng }}"></div>
     </div>
 {% endblock %}
