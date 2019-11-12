@@ -2,12 +2,14 @@
 
 namespace App\Repository;
 
+use App\Entity\Picture;
 use App\Entity\Property;
 use App\Entity\PropertySearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method Property|null find($id, $lockMode = null, $lockVersion = null)
@@ -17,19 +19,25 @@ use Doctrine\ORM\QueryBuilder;
  */
 class PropertyRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, Property::class);
+        $this->paginator = $paginator;
     }
-    
     /**
-     * findAllVisibleQuey
+     * paginateAllVisible
      *
      * @param  mixed $search
+     * @param  mixed $page
      *
-     * @return Query
+     * @return PaginationInterface
      */
-    public function findAllVisibleQuey(PropertySearch $search): Query
+    public function paginateAllVisible(PropertySearch $search, int $page): PaginationInterface
     {
 
         $query = $this->findVisibleQuery();
@@ -55,16 +63,21 @@ class PropertyRepository extends ServiceEntityRepository
         }
         if ($search->getLat() && $search->getLng()) {
             $query = $query
-                ->select('p')
-                    ->andWhere('(6353 * 2 * ASIN(SQRT( POWER(SIN((p.lat - :lat) 
-                    * pi()/180 / 2), 2) + COS(p.lat * pi()/180 ) 
-                    * COS(:lat * pi()/180) 
-                    * POWER(SIN((p.lng - :lng) * pi()/180 / 2), 2) ))) <= :distance')
-                    ->setParameter('lng', $search->getLng())
-                    ->setParameter('lat', $search->getLat())
-                    ->setParameter('distance', $search->getDistance());
+                ->andWhere('(6353 * 2 * ASIN(SQRT( POWER(SIN((p.lat - :lat) 
+                * pi()/180 / 2), 2) + COS(p.lat * pi()/180 ) 
+                * COS(:lat * pi()/180) 
+                * POWER(SIN((p.lng - :lng) * pi()/180 / 2), 2) ))) <= :distance')
+                ->setParameter('lng', $search->getLng())
+                ->setParameter('lat', $search->getLat())
+                ->setParameter('distance', $search->getDistance());
         }
-        return $query->getQuery();
+        $properties = $this->paginator->paginate(
+            $query->getQuery(),
+            $page,
+            12
+        );
+        $this->hydratePicture($properties);
+        return $properties;
     }
 
     /**
@@ -74,10 +87,12 @@ class PropertyRepository extends ServiceEntityRepository
      */
     public function findLatest(): array
     {
-        return $this->findVisibleQuery()
+        $properties = $this->findVisibleQuery()
             ->setMaxResults(4)
             ->getQuery()
             ->getResult();
+        $this->hydratePicture($properties);
+        return $properties;
         
     }
 
@@ -89,35 +104,21 @@ class PropertyRepository extends ServiceEntityRepository
     private function findVisibleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('p')
+
             ->where('p.sold = false');
     }
 
-    // /**
-    //  * @return Property[] Returns an array of Property objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    private function hydratePicture($properties)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        if (method_exists($properties, 'getItems')) {
+            $properties = $properties->getItems();
+        }
+        $pictures = $this->getEntityManager()->getRepository(Picture::class)->findForProperties($properties);
+        foreach($properties as $property) {
+            /** @var $property Property */
+            if ($pictures->containsKey($property->getId())) {
+                $property->setPicture($pictures->get($property->getId()));
+            }
+        }
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Property
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
