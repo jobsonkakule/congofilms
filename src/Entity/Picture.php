@@ -26,21 +26,16 @@ class Picture
     private $filename;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Property", inversedBy="pictures")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $property;
-
-    
-
-    /**
      * @var File|null
-     * @Assert\Image(
-     *  mimeTypes="image/jpeg"
-     * )
-     * @Vich\UploadableField(mapping="property_image", fileNameProperty="filename")
+     * @Vich\UploadableField(mapping="post_image", fileNameProperty="filename")
      */
     private $imageFile;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="pictures")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $post;
 
     public function getId(): ?int
     {
@@ -58,20 +53,6 @@ class Picture
 
         return $this;
     }
-
-    public function getProperty(): ?Property
-    {
-        return $this->property;
-    }
-
-    public function setProperty(?Property $property): self
-    {
-        $this->property = $property;
-
-        return $this;
-    }
-
-    
 
     /**
      * Get the value of imageFile
@@ -93,6 +74,17 @@ class Picture
     public function setImageFile($imageFile): self
     {
         $this->imageFile = $imageFile;
+        return $this;
+    }
+
+    public function getPost(): ?Post
+    {
+        return $this->post;
+    }
+
+    public function setPost(?Post $post): self
+    {
+        $this->post = $post;
 
         return $this;
     }

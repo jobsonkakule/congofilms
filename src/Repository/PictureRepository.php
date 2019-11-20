@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Picture;
-use App\Entity\Property;
+use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -22,10 +22,10 @@ class PictureRepository extends ServiceEntityRepository
     }
 
     /**
-     * @var Property[] $properties
+     * @var Post[] $properties
      * @return ArrayCollection
      */
-    public function findForProperties(array $properties): ArrayCollection
+    public function findForPosts(array $posts): ArrayCollection
     {
         $qb = $this->createQueryBuilder('p');
         $pictures = $qb
@@ -35,18 +35,19 @@ class PictureRepository extends ServiceEntityRepository
                     'p.id',
                     $this->createQueryBuilder('p2')
                     ->select('MIN(p2.id)')
-                    ->where('p2.property IN (:properties)')
-                    ->groupBy('p2.property')
+                    ->where('p2.post IN (:posts)')
+                    ->groupBy('p2.post')
                     ->getDQL()
                 )
             )
             ->getQuery()
-            ->setParameter('properties', $properties)
+            ->setParameter('posts', $posts)
             ->getResult();
         $pictures = array_reduce($pictures, function (array $acc, Picture $picture) {
-            $acc[$picture->getProperty()->getId()] = $picture;
+            $acc[$picture->getPost()->getId()] = $picture;
             return $acc;
         }, []);
         return new ArrayCollection($pictures);
     }
+    
 }

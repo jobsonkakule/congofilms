@@ -24,6 +24,16 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+        
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
     App\Listener\ImageCacheSubscriber:
@@ -39,3 +49,6 @@ services:
     Twig\CacheExtension\Extension:
         tags:
         - { name: twig.exception }
+
+    # intervention_image:
+    #     driver: gd 

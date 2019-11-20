@@ -1,7 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Repository\PropertyRepository;
+use App\Repository\CategoryRepository;
+use App\Repository\PostRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -26,11 +27,14 @@ class HomeController extends AbstractController
      *
      * @return Response
      */
-    public function index(PropertyRepository $repository): Response
+    public function index(PostRepository $repository, CategoryRepository $categories): Response
     {
-        $properties = $repository->findLatest();
+        $posts = $repository->findLatest();
+        $categories = $categories->findAll();
+        dump($categories);
         return $this->render('views/home.html.twig', [
-            'properties' => $properties
+            'posts' => $posts,
+            'categories' => $categories
         ]);
     }
 }

@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Dashboard | Grands-Lacs.news' %}
+
+{% block body %}
+    
+    <div class="container mt-4">
+        <h1>Editer la catégorie</h1>
+        {{ include("admin/category/_form.html.twig", {button: 'Editer'}) }}
+    </div>
+
+{% endblock %}

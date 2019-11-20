@@ -1,5 +1,6 @@
 import Places from 'places.js'
 import Map from './modules/map'
+import Tips from './modules/tips'
 import 'slick-carousel'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -34,6 +35,7 @@ if (searchAdress !== null) {
 let $ = require('jquery')
 
 require('../css/app.css');
+require('../scss/app.scss');
 
 require('select2')
 
@@ -41,12 +43,12 @@ $('[data-slider]').slick({
     dots: true,
     arrows: true
 })
-$('select').select2()
-let $contactButton = $('#contactButton')
-$contactButton.click(e => {
-    e.preventDefault()
-    $('#contactForm').slideToggle();
-})
+// $('select').select2()
+// let $contactButton = $('#contactButton')
+// $contactButton.click(e => {
+//     e.preventDefault()
+//     $('#contactForm').slideToggle();
+// })
 
 // Suppression des elements
 
@@ -72,6 +74,29 @@ document.querySelectorAll('[data-delete]').forEach(a => {
     })
 })
 
+
+// Top button
+
+$(document).ready(function(){
+    $(window).scroll(function(){
+      if($(this).scrollTop() > 150) {
+        $('.gotop').fadeIn();
+      } else {
+        $('.gotop').fadeOut();
+      }
+    });
+    $('.gotop').on('click', function(){
+      $('html, body').scrollTop(0);
+      return false;
+    })
+});
+
+// Last news carousel
+$('.carousel-inner div:first-child').addClass('active')
+
+
+// Responsive button
+Tips.iconBar()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');

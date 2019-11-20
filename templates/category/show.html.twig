@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+
+{% block title category.title %}
+    
+{% block body %}
+    <div class="container">
+        <h1>{{ category.title }}</h1>
+        <br>
+        <div class="row">
+            {% for post in posts %}
+                <div class="col-md-4">
+                    <div class="card-mt-4">
+                        {% if post.picture %}
+                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" class="card-img-top">
+                        {% else %}
+                            <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+                                    {{ post.title }}
+                                </a>
+                            </h5>
+                            {{ post.content | truncate(200) }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+            
+        <div class="pagination">
+                {{ knp_pagination_render(posts) }}
+        </div>
+    </div>
+    <div class="pub-2">
+
+    </div>
+    <br>
+{% endblock %}

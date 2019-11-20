@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+{% block title 'Dashboard | Grands-Lacs.news' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Gérer les catégories</h1>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="text-right">
+            <a href="{{ path('admin.category.new') }}" class="btn btn-primary">Ajouter une catégorie</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.title }}</td>
+                            <td>
+                                <a href="{{ path('admin.category.edit', {id: category.id}) }}" class="btn btn-secondary">Editer</a>
+                                <form method="post" action="{{ path('admin.category.delete', {id: category.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                                    <button class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </thead>
+        </table>
+        <br>
+    </div>
+{% endblock  %}

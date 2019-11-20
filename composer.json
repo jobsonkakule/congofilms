@@ -8,6 +8,7 @@
         "beberlei/doctrineextensions": "^1.2",
         "cocur/slugify": "^3.2",
         "fzaninotto/faker": "^1.8",
+        "intervention/image": "^2.5",
         "knplabs/knp-paginator-bundle": "^4.0",
         "liip/imagine-bundle": "^2.2",
         "sensio/framework-extra-bundle": "^5.1",
@@ -33,6 +34,7 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "4.3.*",
         "twig/cache-extension": "^1.4@dev",
+        "twig/extensions": "^1.5",
         "vich/uploader-bundle": "^1.10"
     },
     "require-dev": {
