@@ -21,9 +21,13 @@
                         <i class="fas fa-cloud"></i>
                         <span>Goma, RDCongo</span>
                         <span>{{ "now" | localizeddate('long', 'none') }}</span>
-                        <span><a href="">Inscription/Connexion</a></span>
                         <span><a href="">Contact</a></span>
                         <span>+243975843988</span>
+                        {% if app.user %}
+                        <span><a href="/logout" style="color: rgb(248, 104, 104)">Déconnexion</a></span>
+                        {% else %}
+                        <span><a href="{{ path('login') }}">Inscription/Connexion</a></span>
+                        {% endif %}
                     </div>
                     <div class="top-right">
                         Suivez-nous :
@@ -92,6 +96,18 @@
                             </li>
                             <li>
                                 <a href="#">Internationales</a>
+                            </li>
+                            <li class="login-link">
+                                {% if app.user %}
+                                <a href="/logout">Déconnexion</a>
+                                {% else %}
+                                <a href="{{ path('login') }}">Connexion/Inscription</a>
+                                {% endif %}
+                                <div class="top-right">
+                                    <span><a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <span><a href=""><i class="fab fa-twitter"></i></a>
+                                    <span><a href=""><i class="fab fa-youtube"></i></a>
+                                </div>
                             </li>
                         </ul>
                     </nav>

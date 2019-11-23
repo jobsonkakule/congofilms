@@ -176,7 +176,7 @@
                 <div class="cat-post-infos">
                   <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
                   <span class="td-post-date">Apr 12, 2017</span>
-                  <div class="td-module-comments"><a href="">0</a></div>
+                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}#comments">{{ topPost.comments | length }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
                   {{ topPost.content | truncate(100) }}
@@ -316,7 +316,7 @@
               <div class="cat-post-infos">
                 <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
                 <span class="td-post-date">{{ post.createdAt | date("d F, Y") }}</span>
-                <div class="td-module-comments"><a href="https://demo.tagdiv.com/newspaper/td-post-amazons-apple-watch-killer-will-be-free-and-sell-you-everything/#respond">0</a></div>
+                <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ post.comments | length }}</a></div>
               </div>
               <div class="cat-post-excerpt">
                 {{ post.content | truncate(200) }}

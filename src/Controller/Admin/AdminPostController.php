@@ -76,6 +76,13 @@ class AdminPostController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
+            $pics = [];
+            foreach ($post->getPictures() as $picture) {
+                $targetPath = 'media/posts/' .  $picture->getFileName();
+                $pics[] = $targetPath;
+                $this->resizeImage($targetPath);
+            }
+            dump($pics);
             $this->addFlash('success', 'Elément bien modifié avec succès');
             return $this->redirectToRoute('admin.post.index');
         }
@@ -103,11 +110,11 @@ class AdminPostController extends AbstractController
 
     }
 
-    // private function resizeImage($targetPath)
-    // {
-    //     $manager = new ImageManager(['driver' => 'gd']);
-    //     $manager->make($targetPath)->widen(1024, function ($constraint) {
-    //         $constraint->upsize();
-    //     })->save($targetPath);
-    // }
+    private function resizeImage($targetPath)
+    {
+        $manager = new ImageManager(['driver' => 'gd']);
+        $manager->make($targetPath)->widen(768, function ($constraint) {
+            $constraint->upsize();
+        })->save($targetPath);
+    }
 }
