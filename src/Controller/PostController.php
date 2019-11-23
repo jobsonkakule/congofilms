@@ -1,16 +1,12 @@
 <?php
 namespace App\Controller;
 
-use App\Entity\Contact;
+use App\Entity\Comment;
 use App\Entity\Post;
-use App\Entity\PostSearch;
-use App\Form\ContactType;
-use App\Form\PostSearchType;
-use App\Notification\ContactNotification;
+use App\Form\CommentType;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,8 +49,8 @@ class PostController extends AbstractController
         string $slug, 
         Request $request,
         CategoryRepository $categories,
-        ContactNotification $notification,
-        PostRepository $repository
+        PostRepository $repository,
+        CommentController $commentController
     ): Response
     {
         if ($post->getSlug() !== $slug) {
@@ -63,14 +59,14 @@ class PostController extends AbstractController
                 'slug' => $post->getSlug()
             ], 301);
         }
-        $contact = new Contact();
-        $contact->setProperty($post);
-        $form = $this->createForm(ContactType::class, $contact);
+        $comment = new Comment();
+        $comment->setPost($post);
+        $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $notification->notify($contact);
-            $this->addFlash('success', 'Votre email a bien été envoyé');
+            $commentController->add($comment);
+            $this->addFlash('success', 'Votre commentaire a bien été posté');
             return $this->redirectToRoute('post.show', [
                 'id' => $post->getId(),
                 'slug' => $post->getSlug()

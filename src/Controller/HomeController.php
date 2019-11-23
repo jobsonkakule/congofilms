@@ -31,7 +31,6 @@ class HomeController extends AbstractController
     {
         $posts = $repository->findLatest();
         $categories = $categories->findAll();
-        dump($categories);
         return $this->render('views/home.html.twig', [
             'posts' => $posts,
             'categories' => $categories

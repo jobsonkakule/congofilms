@@ -63,7 +63,7 @@ $theme-mobile: rgb(34, 34, 34);
         position: absolute;
         top: 53px;
         bottom: 0;
-        width: 60%;
+        min-width: 250px;
         height: 100vh;
         left: -100%;
         background: $header-bg;
@@ -75,7 +75,8 @@ $theme-mobile: rgb(34, 34, 34);
         
         ul {
             display: block;
-            
+            position: relative;
+            height: 100%;
             li {
                 &.active, &:hover {
                     a, a:hover {
@@ -84,6 +85,12 @@ $theme-mobile: rgb(34, 34, 34);
                 }
                 a {
                     color: $theme-title;
+                }
+                
+                &.login-link {
+                    display: block;
+                    position: absolute;
+                    bottom: 70px;
                 }
             }
         }

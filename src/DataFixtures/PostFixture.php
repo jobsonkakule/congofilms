@@ -17,6 +17,8 @@ class PostFixture extends Fixture
             $post
                 ->setTitle($faker->words(8, true))
                 ->setContent($faker->sentences(50, true))
+                ->setOnline(false)
+                ->setViews(0)
                 ;
             $manager->persist($post);
         }

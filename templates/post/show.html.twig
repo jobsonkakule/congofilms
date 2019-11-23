@@ -38,7 +38,7 @@
                         <div class="post-stat">
                         <a href="#comments">
                             <i class="fas fa-comments"></i>
-                            177
+                            {{ post.comments | length }}
                         </a>
                         </div>
                         <div class="post-stat">
@@ -76,7 +76,7 @@
                 </a>
             </div>
             <div class="post-content">
-                <div class="post-featured-img">
+                <div data-slider class="post-featured-img">
                     {% if post.pictures is not empty %}
                         {% for picture in post.pictures %}
                             <img src="{{ vich_uploader_asset(picture, 'imageFile') | imagine_filter('large') }}" alt="" title="{{ post.title }}">
@@ -112,7 +112,7 @@
                     </div>
                 </a>
                 ou
-                <a href="#comments">
+                <a href="" class="post-comment">
                     <div class="share-icon" style="background: #1b2e3f; color:#FFF;">
                     <i class="far fa-comment"></i>
                     </div>
@@ -143,29 +143,7 @@
                         </div>
                     {% endfor %}
                 </div>
-                <div id="comments">
-                    <br>
-                    <div class="cat-high-title social-panel-title">
-                        <h6>177 Commentaires</h6>
-                    </div>
-                    <div class="comment-section">
-                        <form action="" method="post" id="comment">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <input class="form-control" type="text" name="name" placeholder="Nom">
-                            </div>
-                            <div class="col-md-6">
-                                <input class="form-control" type="email" name="email" placeholder="Email">
-                            </div>
-                            <div class="col-md-12">
-                                <textarea class="form-control" name="content" id="" cols="30" rows="5" placeholder="Votre commentaire ici..."></textarea>
-                            </div>
-                            <input type="hidden" value="0">
-                        </div>
-                        <button class="btn btn-info" type="submit">Envoyer</button>
-                        </form>
-                    </div>
-                </div>
+                {% include "post/_form.html.twig" %}
             </div>
             </div>
             <div class="col-md-4 article-reminder">

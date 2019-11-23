@@ -21,6 +21,7 @@ class PostType extends AbstractType
                 'required' => true,
                 'choice_label' => 'title'
             ])
+            ->add('online')
             ->add('pictureFiles', FileType::class, [
                 'required' => false,
                 'multiple' => true
