@@ -33,7 +33,12 @@ class AdminPostController extends AbstractController
      */
     public function index(Request $request)
     {
-        $posts = $this->repository->paginateAllVisible($request->query->getInt('page', 1));
+        $repository = $this->repository;
+        if ($tag = $request->query->get('tag')) {
+            $posts = $repository->paginateAllVisible($request->query->getInt('page', 1), $tag);
+        } else {
+            $posts = $repository->paginateAllVisible($request->query->getInt('page', 1));
+        }
         return $this->render('admin/post/index.html.twig', compact('posts'));
     }
 
@@ -82,7 +87,6 @@ class AdminPostController extends AbstractController
                 $pics[] = $targetPath;
                 $this->resizeImage($targetPath);
             }
-            dump($pics);
             $this->addFlash('success', 'Elément bien modifié avec succès');
             return $this->redirectToRoute('admin.post.index');
         }
@@ -104,7 +108,7 @@ class AdminPostController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->get('_token'))) {
             $this->em->remove($post);
             $this->em->flush();
-            $this->addFlash('success', 'Bien suprimmé avec succès');
+            $this->addFlash('success', 'Bien suprimé avec succès');
         }
         return $this->redirectToRoute('admin.post.index');
 
@@ -113,7 +117,7 @@ class AdminPostController extends AbstractController
     private function resizeImage($targetPath)
     {
         $manager = new ImageManager(['driver' => 'gd']);
-        $manager->make($targetPath)->widen(768, function ($constraint) {
+        $manager->make($targetPath)->widen(730, function ($constraint) {
             $constraint->upsize();
         })->save($targetPath);
     }

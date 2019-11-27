@@ -179,7 +179,7 @@
                   <div class="td-module-comments"><a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}#comments">{{ topPost.comments | length }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
-                  {{ topPost.content | truncate(100) }}
+                  {{ topPost.content | striptags | truncate(100) }}
                 </div>
               </div>
             </div>
@@ -319,7 +319,7 @@
                 <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ post.comments | length }}</a></div>
               </div>
               <div class="cat-post-excerpt">
-                {{ post.content | truncate(200) }}
+                {{ post.content | striptags | truncate(200) }}
               </div>
             </div>
           </div>
@@ -333,7 +333,7 @@
           {% for post in posts | slice(1, 3) %}
             <div class="report-item">
               <a href=""><span class="report-cat">{{ post.category.title }}</span></a>
-              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
+              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
             </div>
             <hr>
           {% endfor %}

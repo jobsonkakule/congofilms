@@ -29,5 +29,16 @@ export default class Tips {
             $form.slideDown()
         })
     }
+    static copyLink() {
+        $('.copy-link').click(function(e) {
+            e.preventDefault()
+            let link = this.getAttribute('href')
+            let temp = $("<input>")
+            $("body").append(temp);
+            temp.val(link).select()
+            document.execCommand("copy");
+            temp.remove()
+        })
+    }
 }
 

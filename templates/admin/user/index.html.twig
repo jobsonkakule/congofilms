@@ -1,0 +1,39 @@
+{% extends "base.html.twig" %}
+{% block title 'Administration des utilisateurs' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Gérer les utilisateurs</h1>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.roles | last }}</td>
+                            <td>
+                                <a href="{{ path('admin.user.edit', {id: user.id}) }}" class="btn btn-secondary">Editer</a>
+                                <form method="user" action="{{ path('admin.user.delete', {id: user.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                    <button class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </thead>
+        </table>
+        <br>
+    </div>
+{% endblock  %}

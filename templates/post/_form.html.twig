@@ -20,12 +20,12 @@
             </div>
             {% else %}
             <div class="row">
-                <div class="col-md-6">{{ form_row(form.author) }}</div>
-                <div class="col-md-6">{{ form_row(form.email) }}</div>
+                <div class="col-md-6">{{ form_widget(form.author, {'attr': {'placeholder': 'Nom'}}) }}</div>
+                <div class="col-md-6">{{ form_widget(form.email, {'attr': {'placeholder': 'Email'}}) }}</div>
             </div>
             {% endif %}
             <div class="row">
-                <div class="col-md-12">{{ form_row(form.content, {'attr': {'rows': 5, 'placeholder': 'Votre commentaire ici...'}}) }}</div>
+                <div class="col-md-12">{{ form_widget(form.content, {'attr': {'rows': 5, 'placeholder': 'Votre commentaire ici...'}}) }}</div>
             </div>
             <div style="display: none;">{{ form_row(form.parent_id, {'attr': {'value': 0}}) }}</div>
             {{ form_rest(form) }}
@@ -46,7 +46,7 @@
                             <span class="text-muted" style="font-size: 75%;"><em>{{ comment.createdAt | date("d F, Y  H:i") }}</em></span> - 
                             <span class="reply" data-id="{{ comment.id }}" data-parent="{{ comment.id }}" style="font-size: 75%;color:rgba(72, 151, 253, 0.973);text-decoration: underline;cursor:pointer;">Répondre</span>&nbsp;
                             {% if app.user and comment.email == app.user.email %}
-                            <a href="{{ path('comment.delete', {id: comment.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ comment.id) }}" data-id="{{ comment.id }}">Supprimer</a>
+                            <a href="{{ path('comment.delete', {id: comment.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ comment.id) }}" data-id="{{ comment.id }}" onsubmit="return confirm('Etes-vous vraiment sûr ?')">Supprimer</a>
                             {% endif %}
                         </p>
                         <p>
@@ -66,7 +66,7 @@
                                     <span class="text-muted" style="font-size: 75%;"><em>{{ reply.createdAt | date("d F, Y  H:i") }}</em></span> - 
                                     <span class="reply" data-id="{{ comment.id }}" data-parent="{{ reply.id }}" style="font-size: 75%;color:rgba(72, 151, 253, 0.973);text-decoration: underline;cursor:pointer;">Répondre</span>&nbsp;
                                     {% if app.user and reply.email == app.user.email %}
-                                    <a href="{{ path('comment.delete', {id: reply.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ reply.id) }}" data-id="{{ reply.id }}">Supprimer</a>
+                                    <a href="{{ path('comment.delete', {id: reply.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ reply.id) }}" data-id="{{ reply.id }}" onsubmit="return confirm('Etes-vous vraiment sûr ?')">Supprimer</a>
                                     {% endif %}
                                 </p>
                                 <p>

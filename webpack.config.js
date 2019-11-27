@@ -1,5 +1,7 @@
 var Encore = require('@symfony/webpack-encore');
 
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
@@ -71,6 +73,11 @@ Encore
     .addExternals({
         jquery: 'jQuery'
     })
+
+    .addPlugin(new CopyWebpackPlugin([
+        // Copy the skins from tinymce to the build/skins directory
+        { from: 'node_modules/tinymce/skins', to: 'skins' },
+    ]))
 
     // uncomment if you use API Platform Admin (composer req api-admin)
     //.enableReactPreset()

@@ -8,9 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity("username")
  */
 class User implements UserInterface, Serializable
 {
@@ -105,6 +108,17 @@ class User implements UserInterface, Serializable
         return array_unique($roles);
     }
 
+    public function setRoles($role)
+    {
+        $roles = [];
+        foreach($role as $k => $v ) {
+            $roles[] = $v;
+        }
+        $this->roles = $roles;
+
+    }
+    
+
     /**
      * Returns the salt that was originally used to encode the password.
      *
@@ -133,7 +147,8 @@ class User implements UserInterface, Serializable
         return serialize([
             $this->id,
             $this->username,
-            $this->password
+            $this->password,
+            $this->roles
         ]);
     }
 
@@ -142,7 +157,8 @@ class User implements UserInterface, Serializable
         list(
             $this->id,
             $this->username,
-            $this->password
+            $this->password,
+            $this->roles
         ) = unserialize($serialized, ['allowed_classes' => false]);
     }
 

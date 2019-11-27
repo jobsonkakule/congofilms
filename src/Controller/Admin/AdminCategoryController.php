@@ -2,11 +2,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
-use App\Entity\Post;
 use App\Form\CategoryType;
-use App\Form\PostType;
 use App\Repository\CategoryRepository;
-use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
