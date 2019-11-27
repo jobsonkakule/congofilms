@@ -71,7 +71,7 @@ $theme-mobile: rgb(34, 34, 34);
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
         background-color: darken($header-bg, 5);
-        z-index: 4;
+        z-index: 9999;
         
         ul {
             display: block;

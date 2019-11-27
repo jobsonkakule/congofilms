@@ -9,7 +9,7 @@ use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 
-class CommentFixture extends Fixture implements FixtureGroupInterface
+class CommentFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
@@ -24,10 +24,5 @@ class CommentFixture extends Fixture implements FixtureGroupInterface
             $manager->persist($comment);
         }
         $manager->flush();
-    }
-
-    public static function getGroups(): array
-    {
-        return ['group1'];
     }
 }

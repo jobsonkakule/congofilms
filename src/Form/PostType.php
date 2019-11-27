@@ -22,11 +22,13 @@ class PostType extends AbstractType
                 'choice_label' => 'title'
             ])
             ->add('online')
+            ->add('views')
             ->add('pictureFiles', FileType::class, [
                 'required' => false,
                 'multiple' => true
             ])
             ->add('content')
+            ->add('tags', TagType::class)
         ;
     }
 

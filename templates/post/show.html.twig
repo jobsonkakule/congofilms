@@ -14,7 +14,9 @@
             </span>
             <i class="fas fa-chevron-right"></i>
             <span>
-            <a href="">RDC</a>
+            <a href="">
+                {% if post.tags %}{{ post.tags.0 }}{% endif %}
+            </a>
             </span>
             <i class="fas fa-chevron-right"></i>
             <span>
@@ -26,7 +28,7 @@
             <div class="post-header">
                 <ul class="category">
                     <li><a href="">{{ post.category.title }}</a></li>
-                    <li><a href="">RDC</a></li>
+                    <li><a href="">{% if post.tags %}{{ post.tags.0 }}{% endif %}</a></li>
                 </ul>
                 <div class="post-title">
                     <h1>{{ post.title }}</h1>
@@ -79,11 +81,23 @@
                 <div data-slider class="post-featured-img">
                     {% if post.pictures is not empty %}
                         {% for picture in post.pictures %}
-                            <img src="{{ vich_uploader_asset(picture, 'imageFile') | imagine_filter('large') }}" alt="" title="{{ post.title }}">
+                            <img src="{{ vich_uploader_asset(picture, 'imageFile') }}" alt="" title="{{ post.title }}">
                         {% endfor %}
                     {% endif %}
                 </div>
-                    {{ post.content | nl2br }}
+                <div>
+                    {{ post.content | raw }}
+                </div>
+                <ul>
+                    {% if post.tags %}
+                        <li style="display: inline;">TAGS</li>
+                        {% for tag in post.tags %}
+                            <li style="display: inline;">
+                                <a href="">{{ tag }}</a>
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
                 <hr>
                 <div class="sharing-post sharing-bottom">
                 <a href="">
@@ -171,10 +185,10 @@
                 <div class="cat-post-infos">
                     <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
                     <span class="td-post-date">{{ topPost.createdAt | date("d F, Y") }}</span>
-                    <div class="td-module-comments"><a href="">0</a></div>
+                    <div class="td-module-comments"><a href="">{{ topPost.comments | length }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
-                    {{ topPost.content | truncate(200) }}
+                    {{ topPost.content | striptags | truncate(200) }}
                 </div>
                 </div>
             </div>

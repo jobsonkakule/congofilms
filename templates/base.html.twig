@@ -10,7 +10,7 @@
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         {% block stylesheets %}
-            
+            <link rel="stylesheet" href="{{ asset('js/tagsinput/tagsinput.css') }}">
         {% endblock %}
     </head>
     <body>
@@ -55,7 +55,7 @@
                         <ul>
                             <a href=""><img class="hide-logo" src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme"></a>
                             <li class="active">
-                                <a href="#">News</a>
+                                <a href="{{ path('home') }}">News</a>
                             </li>
                             <li>
                                 <a href="#">Politique</a>
@@ -231,6 +231,9 @@
 
         {{ encore_entry_script_tags('app') }}
         <script src="{{ asset('build/app.js') }}"></script>
+        <script src="{{ asset('js/tagsinput/typeahead.js') }}"></script>
+        <script src="{{ asset('js/tagsinput/tagsinput.js') }}"></script>
+        <script src="{{ asset('js/main.js') }}"></script>
         <script src="https://kit.fontawesome.com/da855b0ce0.js"></script>
         <script>
             var didScroll;

@@ -6,6 +6,7 @@ use App\Entity\Picture;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -39,6 +40,13 @@ class PostRepository extends ServiceEntityRepository
         return $posts;
         
     }
+
+    public function findAdminPostQuery(): QueryBuilder {
+        return $this->createQueryBuilder('p')
+            ->leftJoin('p.tags', 't')
+            ->select('p', 't')
+            ;
+    }
     
     /**
      * paginateAllVisible
@@ -48,9 +56,17 @@ class PostRepository extends ServiceEntityRepository
      *
      * @return PaginationInterface
      */
-    public function paginateAllVisible(int $page): PaginationInterface
+    public function paginateAllVisible(int $page, ?string $tag = null): PaginationInterface
     {
-        $query = $this->findVisibleQuery();
+        // $query = $this->findAdminPostQuery();
+        if ($tag) {
+            $query = $this->findAdminPostQuery()
+                ->where('t.name = :name')
+                ->setParameter('name', $tag);
+        } else {
+            $query = $this->findAdminPostQuery();
+            // $query = $this->findVisibleQuery();
+        }
         $posts = $this->paginator->paginate(
             $query->getQuery(),
             $page,
@@ -100,33 +116,4 @@ class PostRepository extends ServiceEntityRepository
             }
         }
     }
-
-    // /**
-    //  * @return Post[] Returns an array of Post objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

@@ -4,6 +4,20 @@ import Tips from './modules/tips'
 import 'slick-carousel'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import tinymce from 'tinymce/tinymce'
+
+import 'tinymce/themes/silver'
+
+// Tagsinput
+// import './tagsinput/tagsinput.css'
+// import './tagsinput/tagsinput.js'
+// import './tagsinput/typeahead.js'
+
+// Any plugins you want to use has to be imported
+import 'tinymce/plugins/paste'
+import 'tinymce/plugins/link'
+import 'tinymce/plugins/image'
+import 'tinymce/plugins/lists'
 
 Map.init()
 
@@ -117,11 +131,39 @@ $(document).ready(function(){
 // Last news carousel
 $('.carousel-inner div:first-child').addClass('active')
 
+// Tagsinput
+// let tags = new Bloodhound({
+//     prefetch: '/tags.json',
+//     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+//     queryTokenizer: Bloodhound.tokenizers.whitespace
 
+// })
+// $('.tag-input').tagsinput({
+//     typeaheadjs: [{
+//         highlights: true
+//     }, {
+//         name: 'tags',
+//         display: 'name',
+//         value: 'name',
+//         source: tags
+//     }]
+// })
+// Copy image Link
+
+
+// Tinymce
+tinymce.init({
+    selector: '#post_content',
+    plugins: ['paste', 'link', 'image', 'lists'],
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    image_description: true,
+    image_caption: true,
+});
 // Responsive button
 Tips.iconBar()
 Tips.comment()
 Tips.replyComment()
+Tips.copyLink()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');
