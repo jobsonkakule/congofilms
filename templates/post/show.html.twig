@@ -8,19 +8,21 @@
             <span>
             <a href="{{ path('home') }}">Accueil</a>
             </span>
+            {% if post.category %}
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                    <a href="">{{ post.category.title }}</a>
+                </span>
+            {% endif %}
+            {% if post.tags | length > 0 %}
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                    <a href="">{{ post.tags.0 }}</a>
+                </span>
+            {% endif %}
             <i class="fas fa-chevron-right"></i>
             <span>
-            <a href="">{{ post.category.title }}</a>
-            </span>
-            <i class="fas fa-chevron-right"></i>
-            <span>
-            <a href="">
-                {% if post.tags %}{{ post.tags.0 }}{% endif %}
-            </a>
-            </span>
-            <i class="fas fa-chevron-right"></i>
-            <span>
-            <a href="">{{ post.title }}</a>
+            <a>{{ post.title }}</a>
             </span>
         </div>
         <div class="row">
@@ -28,13 +30,25 @@
             <div class="post-header">
                 <ul class="category">
                     <li><a href="">{{ post.category.title }}</a></li>
-                    <li><a href="">{% if post.tags %}{{ post.tags.0 }}{% endif %}</a></li>
+                    {% if post.tags | length > 0 %}
+                        <li>
+                            <a href="">{{ post.tags.0 }}</a>
+                        </li>
+                    {% endif %}
                 </ul>
                 <div class="post-title">
                     <h1>{{ post.title }}</h1>
                     <div class="post-info">
                         <div class="post-author">
-                        Par <a href="">Job Kakule</a> - 
+                            Par 
+                            <a href="">
+                                {% if post.author.pseudo is not null %}
+                                    {{ post.author.pseudo }}
+                                {% else %}
+                                    {{ post.author.username }}
+                                {% endif %}
+                            </a> 
+                            - 
                         </div>
                         <span class="post-date">{{ post.createdAt | date("d F, Y") }}</span>
                         <div class="post-stat">
@@ -89,7 +103,7 @@
                     {{ post.content | raw }}
                 </div>
                 <ul>
-                    {% if post.tags %}
+                    {% if post.tags | length > 0 %}
                         <li style="display: inline;">TAGS</li>
                         {% for tag in post.tags %}
                             <li style="display: inline;">
@@ -140,79 +154,17 @@
                 </h6>
                 </div>
                 <div class="row last-articles">
-                    {% for post in posts | slice(1, 3) %}
-                        <div class="col-md-4 last-art-item">
-                            <div class="cat-post-img">
-                                <a href="">
-                                    {% if post.picture %}
-                                        <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" title="{{ post.title }}">
-                                    {% else %}
-                                        <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" title="{{ post.title }}"></a>
-                                    {% endif %}
-                                <a href="" class="item-cat">{{ post.category.title }}</a>
-                            </div>
-                            <div class="cat-post-body">
-                                <a href=""><h6>{{ post.title }}</h6></a>
-                            </div>
-                        </div>
-                    {% endfor %}
+                    {{ lastPosts() }}
                 </div>
                 {% include "post/_form.html.twig" %}
             </div>
             </div>
             <div class="col-md-4 article-reminder">
-            <div style="width: 100%; height: 200px; background:gray;text-align:center;color:#FFF;">
-                Publicité
-            </div>
-            <br>
-            <div class="cat-high-title social-panel-title">
-                <h6>à ne pas manquer</h6>
-            </div>
-            <div class="cat-post-details">
-                <div class="cat-post-img">
-                    {% set topPost = posts.0 %}
-                    <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
-                        {% if topPost.picture %}
-                            <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}">
-                        {% else %}
-                            <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" title="{{ topPost.title }}"></a>
-                        {% endif %}
-                    </a>
-                    <a href="" class="item-cat">{{ topPost.category.title }}</a>
+                <div style="width: 100%; height: 200px; background:gray;text-align:center;color:#FFF;">
+                    Publicité
                 </div>
-                <div class="cat-post-body">
-                <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}"><h5>Amazon’s Apple Watch killer will be free and sell you everything</h5></a>
-                <div class="cat-post-infos">
-                    <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
-                    <span class="td-post-date">{{ topPost.createdAt | date("d F, Y") }}</span>
-                    <div class="td-module-comments"><a href="">{{ topPost.comments | length }}</a></div>
-                </div>
-                <div class="cat-post-excerpt">
-                    {{ topPost.content | striptags | truncate(200) }}
-                </div>
-                </div>
-            </div>
-            <br>
-            <div class="cat-items">
-                {% for post in posts %}
-                    <div class="cat-item-post">
-                        <div class="item-thumb">
-                            <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                {% if post.picture %}
-                                    <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" title="{{ post.title }}">
-                                {% else %}
-                                    <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" title="{{ post.title }}"></a>
-                                {% endif %}
-                            </a>
-                        </div>
-                        <div class="item-details">
-                            <a href=""><h6>{{ post.title }}</h6></a>
-                            <span>{{ post.createdAt | date('d F, Y') }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-            
+                <br>
+                {{ sidebar() }}
             </div>
         </div>
     </div>

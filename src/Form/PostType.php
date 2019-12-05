@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Post;
+use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -22,13 +23,13 @@ class PostType extends AbstractType
                 'choice_label' => 'title'
             ])
             ->add('online')
-            ->add('views')
             ->add('pictureFiles', FileType::class, [
                 'required' => false,
                 'multiple' => true
             ])
             ->add('content')
             ->add('tags', TagType::class)
+            ->add('score')
         ;
     }
 
@@ -36,6 +37,7 @@ class PostType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Post::class,
+            'translation_domain' => 'forms'
         ]);
     }
 }

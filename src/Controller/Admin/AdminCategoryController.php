@@ -6,6 +6,7 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,7 +33,7 @@ class AdminCategoryController extends AbstractController
      */
     public function index(Request $request)
     {
-        $categories = $this->repository->findAll();
+        $categories = $this->repository->findAllAdmin();
         return $this->render('admin/category/index.html.twig', compact('categories'));
     }
 
@@ -41,7 +42,7 @@ class AdminCategoryController extends AbstractController
      * @Route("/admin/category/create", name="admin.category.new")
      * @return void
      */
-    public function new(Request $request)
+    public function new(Request $request, TagAwareAdapterInterface $cache)
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
@@ -50,7 +51,10 @@ class AdminCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($category);
             $this->em->flush();
+
             $this->addFlash('success', 'Elément créé avec succès');
+
+            $cache->invalidateTags(['categories']);
 
             return $this->redirectToRoute('admin.category.index');
         }
@@ -68,13 +72,16 @@ class AdminCategoryController extends AbstractController
      *
      * @return void
      */
-    public function edit(Category $category,Request $request)
+    public function edit(Category $category,Request $request, TagAwareAdapterInterface $cache)
     {
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
             $this->addFlash('success', 'Elément modifié avec succès');
+
+            $cache->invalidateTags(['categories']);
+
             return $this->redirectToRoute('admin.category.index');
         }
         return $this->render('admin/category/edit.html.twig', [
@@ -90,12 +97,14 @@ class AdminCategoryController extends AbstractController
      *
      * @return void
      */
-    public function delete(Category $category, Request $request)
+    public function delete(Category $category, Request $request, TagAwareAdapterInterface $cache)
     {
         if ($this->isCsrfTokenValid('delete' . $category->getId(), $request->get('_token'))) {
             $this->em->remove($category);
             $this->em->flush();
             $this->addFlash('success', 'Elément suprimmé avec succès');
+
+            $cache->invalidateTags(['categories']);
         }
         return $this->redirectToRoute('admin.category.index');
 

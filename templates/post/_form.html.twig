@@ -15,7 +15,11 @@
         {{ form_start(form, {'attr': {'id': 'form-comment', 'action': '#comments'}}) }}
             {% if app.user %}
             <div style="display: none;">
-                {{ form_row(form.author, {'attr': {'value': app.user.username}}) }}
+                {% if app.user.pseudo is not null %}
+                    {{ form_row(form.author, {'attr': {'value': app.user.pseudo}}) }}
+                {% else %}
+                    {{ form_row(form.author, {'attr': {'value': app.user.username}}) }}
+                {% endif %}
                 {{ form_row(form.email, {'attr': {'value': app.user.email}}) }}
             </div>
             {% else %}

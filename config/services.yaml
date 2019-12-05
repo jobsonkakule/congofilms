@@ -49,7 +49,15 @@ services:
     Twig\CacheExtension\Extension:
         tags:
         - { name: twig.exception }
-
-    
-    # intervention_image:
-    #     driver: gd 
+    Symfony\Component\Cache\Adapter\TagAwareAdapterInterface:
+        class: Symfony\Component\Cache\Adapter\TagAwareAdapter
+        arguments: ['@cache.app']
+    # application_search.controller.search:
+    #     class: App\SearchBundle\Controller\SearchController
+    #     arguments:
+    #         - @application_search.service.post_elasticsearch
+    # application_search.service.post_elasticsearch:
+    #     class: Application\SearchBundle\Service\PostElasticsearchService
+    #     arguments:
+    #         - @application_search.util.elasticsearch
+    #         - @application_search.factory.post

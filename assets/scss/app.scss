@@ -87,7 +87,7 @@ a { text-decoration: none; color:inherit; }
     color:$front-color;
 
     background-color: $header-bg;
-    z-index: 1;
+    z-index: 1000;
 
     a {
         text-decoration: none;
@@ -96,6 +96,16 @@ a { text-decoration: none; color:inherit; }
     .search-icon {
         float: right;
         font-size: 1rem;
+        // position: relative;
+        .search-bar {
+            // display: none;
+            background: $theme-title;
+            position: absolute;
+            right: 10px;
+            top: 50px;
+            margin-bottom: 0;
+            min-width: 250px;
+        }
     }
 }
 
@@ -204,9 +214,18 @@ a { text-decoration: none; color:inherit; }
             }
         }
     }
-    &:hover ul {
+    &:hover ul{
         display: block;
     }
+    &:hover {
+        i {
+            transform: rotate(180deg);
+            padding-right: 5px;
+            padding-left: 0;
+
+        }
+    }
+
     i {
         // background: rgb(224, 149, 149);
         font-size: 80%;
@@ -215,7 +234,13 @@ a { text-decoration: none; color:inherit; }
         transition: .3s ease;
     }
 }
-
+//  .search-bar {
+//     position: absolute;
+//     padding-bottom: 0;
+//     top:0;
+//     right:20px;
+//     z-index:2;
+//  }
 .emergency {
     align-items: center;
     padding: 15px 0;
@@ -239,18 +264,15 @@ a { text-decoration: none; color:inherit; }
         .carousel-item {
             opacity: 0;
             transition: .3s ease-in-out;
-            a {
-                width: 100%;
-                padding-top: 10px;
+            p {
+                padding: 0 0 0 10px;
+                margin: 0;
+                width: 90%;
+                display: inline-block;
                 overflow: hidden;
                 white-space: nowrap;
-                overflow: hidden;
                 text-overflow: ellipsis;
             }
-        }
-        p {
-            padding: 0 0 0 10px;
-            margin: 0;
         }
         .active {
             opacity: 1;
@@ -392,6 +414,7 @@ a { text-decoration: none; color:inherit; }
         line-height: 1;
         .post-author {
             font-weight: 700;
+            text-transform: capitalize;
         }
     }
 }
@@ -550,6 +573,7 @@ a { text-decoration: none; color:inherit; }
                 font-weight: bold;
                 display: inline-block;
                 position: relative;
+                text-transform: capitalize;
             }
             .td-module-comments {
                 position: relative;
@@ -747,6 +771,7 @@ a { text-decoration: none; color:inherit; }
                     font-weight: bold;
                     display: inline-block;
                     position: relative;
+                    text-transform: capitalize;
                 }
                 .td-module-comments {
                     position: relative;
@@ -1062,6 +1087,7 @@ footer {
                 float: left;
                 display: inline-block;
                 position: relative;
+                text-transform: capitalize;
                 a {
                     margin: 3px;
                     font-weight: 700;
@@ -1260,6 +1286,24 @@ footer {
     background-color: #fff;
     border-radius: 50px;
     box-shadow: 0 1px 9px #e0e0e0, inset 0 0 2px hsla(0,0%,84%,.75);
+}
+
+h1 {
+    &.entry-title {
+        font-family: roboto,sans-serif;
+        color: #111;
+        font-weight: 400;
+        font-size: 30px;
+        line-height: 38px;
+        margin: -9px 0 19px;
+        word-wrap: break-word;
+    }
+}
+.td-search-query {
+    color: $active-color;
+}
+.min-container {
+    min-height: 300px;
 }
 /*------------------------------------*\
     $RESPONSIVE

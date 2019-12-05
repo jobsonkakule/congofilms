@@ -1,0 +1,55 @@
+# Read the documentation: https://github.com/FriendsOfSymfony/FOSElasticaBundle/blob/master/Resources/doc/setup.md
+fos_elastica:
+    clients:
+        default: { host: 127.0.0.1, port: 9200 }
+    indexes:
+        app: null
+        # post_index:
+        #     client: default
+        #     index_name: post_%kernel.environment%
+        #     types:
+        #         post:
+        #             mappings:
+        #                 id:
+        #                     type: integer
+        #                     index: not_analyzed
+        #                 title:
+        #                     type: string
+        #                     analyzer: english
+        #                     fields:
+        #                         raw:
+        #                             type: string
+        #                             index: not_analyzed
+        #                 content:
+        #                     type: string
+        #                     analyzer: english
+        #                     fields:
+        #                         raw:
+        #                             type: string
+        #                             index: not_analyzed
+        #                 online:
+        #                     type: boolean
+        #                     index: not_analyzed
+        #                 created_at:
+        #                     type: date
+        #                     index: not_analyzed
+        #             persistence:
+        #                 driver: orm
+        #                 model: App\Entity\Post
+        #                 finder: ~
+        #                 provider: ~
+        #                 listener: ~
+
+    
+        # app_post:
+        #     types:
+        #         post:
+        #             properties:
+        #                 title: ~
+        #                 content: ~
+        #             persistence:
+        #                 # the driver can be orm, mongodb or phpcr
+        #                 driver: orm
+        #                 model: App\Entity\Post
+        #                 provider: ~
+        #                 finder: ~

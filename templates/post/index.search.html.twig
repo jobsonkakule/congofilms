@@ -1,0 +1,94 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Recherche '~ q ~ ' | Grands Lacs News' %}
+
+{% block body %}
+    <div class="container min-container mt-1">
+        <div class="crumb">
+            <span>
+            <a href="{{ path('home') }}">Accueil</a>
+            </span>
+            <i class="fas fa-chevron-right"></i>
+            <span>
+                <a>Recherche</a>
+            </span>
+            <i class="fas fa-chevron-right"></i>
+            <span>
+            <a>{{ q }}</a>
+            </span>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <br>
+                <h1 class="entry-title">
+                    <span class="td-search-query">{{ q }}</span>
+                        - 
+                    <span>Résultats de la recherche</span>
+                </h1>
+                <div>
+                    <form action="{{ path('home') }}" method="get">
+                        <div class="form-row align-items-end">
+                            <div class="col-10 pr-0">
+                                <input type="text" name="query" class="form-control" placeholder="Entrer un mot-clé" value="{{ q }}">
+                            </div>
+                            <div class="col-2 pl-0">
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <br>
+                {% if posts is not empty %}
+                    <div class="top-articles">
+                        {% for post in posts %}
+                            <div class="row cat-item-post">
+                            <div class="col-md-4 item-thumb">
+                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+                                    {% if post.picture %}
+                                    <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                                    {% else %}
+                                    <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
+                                    {% endif %}
+                            </div>
+                            <div class="col-md-8 item-details">
+                                <a href=""><h5>{{ post.title }}</h5></a>
+                                <div class="cat-post-infos">
+                                <span class="td-post-author-name">
+                                    <a href="">
+                                    {% if post.author.pseudo is not null %}
+                                        {{ post.author.pseudo }}
+                                    {% else %}
+                                        {{ post.author.username }}
+                                    {% endif %}
+                                    </a>
+                                <span>
+                                </span> - </span>
+                                <span class="td-post-date">{{ post.createdAt | localizeddate('long', 'none') }}</span>
+                                <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ post.comments | length }}</a></div>
+                                </div>
+                                <div class="cat-post-excerpt">
+                                {{ post.content | striptags | truncate(200) }}
+                                </div>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="pagination">
+                            {{ knp_pagination_render(posts) }}
+                    </div>
+                {% else %}
+                <br>
+                <h1 class="entry-title">
+                    Aucun résultat pour votre recherche.
+                </h1>
+                {% endif %}
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock  %}

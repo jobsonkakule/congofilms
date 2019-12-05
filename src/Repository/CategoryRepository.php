@@ -20,53 +20,34 @@ class CategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, Category::class);
     }
 
+    public function findForFooter(): array
+    {
+        $categories = $this->createQueryBuilder('c')
+            ->select('c.title', 'COUNT(p.id) as postsNb')
+            ->join('c.posts', 'p')
+            ->orderBy('postsNb', 'DESC')
+            ->groupBy('p.category')
+            ->setMaxResults(8)
+            ->getQuery()
+            ->getResult()
+            ;
+        return $categories;
+    }
+
     public function findAll()
     {
-        return $this->findCategories()
+        $categories = $this->createQueryBuilder('c')
+            ->getQuery()
+            ->getResult()
+        ;
+        return $categories;
+    }
+
+    public function findAllAdmin()
+    {
+        return $this->createQueryBuilder('c')
             ->getQuery()
             ->getResult()
         ;
     }
-
-    public function findWithPost ()
-    {
-        return $this->findCategories()
-            ;
-    }
-
-    private function findCategories(): QueryBuilder
-    {
-        return $this->createQueryBuilder('c')
-
-            ;
-    }
-
-    // /**
-    //  * @return Category[] Returns an array of Category objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Category
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

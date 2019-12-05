@@ -7,6 +7,7 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -35,9 +36,9 @@ class AdminPostController extends AbstractController
     {
         $repository = $this->repository;
         if ($tag = $request->query->get('tag')) {
-            $posts = $repository->paginateAllVisible($request->query->getInt('page', 1), $tag);
+            $posts = $repository->paginatePostForTag($request->query->getInt('page', 1), $tag);
         } else {
-            $posts = $repository->paginateAllVisible($request->query->getInt('page', 1));
+            $posts = $repository->paginatePostForTag($request->query->getInt('page', 1));
         }
         return $this->render('admin/post/index.html.twig', compact('posts'));
     }
@@ -47,21 +48,23 @@ class AdminPostController extends AbstractController
      * @Route("/admin/post/create", name="admin.post.new")
      * @return void
      */
-    public function new(Request $request)
+    public function new(Request $request, TagAwareAdapterInterface $cache)
     {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $post->setAuthor($this->getUser());
             $this->em->persist($post);
             $this->em->flush();
 
             $this->addFlash('success', 'Elément bien créé avec succès');
 
+            $cache->invalidateTags(['posts', 'lastPosts']);
+
             return $this->redirectToRoute('admin.post.index');
         }
-        
         return $this->render('admin/post/new.html.twig', [
             'post' => $post,
             'form' => $form->createView()
@@ -75,11 +78,12 @@ class AdminPostController extends AbstractController
      *
      * @return void
      */
-    public function edit(Post $post,Request $request)
+    public function edit(Post $post,Request $request, TagAwareAdapterInterface $cache)
     {
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $post->setUpdatedAt(new \DateTime());
             $this->em->flush();
             $pics = [];
             foreach ($post->getPictures() as $picture) {
@@ -87,6 +91,8 @@ class AdminPostController extends AbstractController
                 $pics[] = $targetPath;
                 $this->resizeImage($targetPath);
             }
+            $cache->invalidateTags(['posts','lastPosts']);
+
             $this->addFlash('success', 'Elément bien modifié avec succès');
             return $this->redirectToRoute('admin.post.index');
         }
@@ -103,13 +109,15 @@ class AdminPostController extends AbstractController
      *
      * @return void
      */
-    public function delete(Post $post, Request $request)
+    public function delete(Post $post, Request $request, TagAwareAdapterInterface $cache)
     {
         if ($this->isCsrfTokenValid('delete' . $post->getId(), $request->get('_token'))) {
             $this->em->remove($post);
             $this->em->flush();
             $this->addFlash('success', 'Bien suprimé avec succès');
         }
+        $cache->invalidateTags(['posts','lastPosts']);
+
         return $this->redirectToRoute('admin.post.index');
 
     }

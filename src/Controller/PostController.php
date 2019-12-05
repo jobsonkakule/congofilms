@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class PostController extends AbstractController
 {
@@ -48,9 +49,8 @@ class PostController extends AbstractController
         Post $post, 
         string $slug, 
         Request $request,
-        CategoryRepository $categories,
-        PostRepository $repository,
-        CommentController $commentController
+        CommentController $commentController,
+        TagAwareCacheInterface $cache
     ): Response
     {
         if ($post->getSlug() !== $slug) {
@@ -76,10 +76,9 @@ class PostController extends AbstractController
         $post->setViews($post->getViews()+1);
         $this->em->persist($post);
         $this->em->flush();
+        $cache->invalidateTags(['popularPosts']);
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'posts' => $repository->findLatest(),
-            'categories' => $categories->findAll(),
             'current_menu' => 'posts',
             'form' => $form->createView()
         ]);

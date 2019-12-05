@@ -51,6 +51,26 @@ class User implements UserInterface, Serializable
      */
     private $roles = [];
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pseudo;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $link;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
@@ -201,6 +221,54 @@ class User implements UserInterface, Serializable
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): self
+    {
+        $this->link = $link;
 
         return $this;
     }
