@@ -23,6 +23,7 @@ class Post
     private $id;
 
     /**
+     * @Assert\Length(min=5, max=100)
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -78,7 +79,7 @@ class Post
     /**
      * @ORM\Column(type="integer", options={"default": 0})
      */
-    private $views;
+    private $views = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="post")
@@ -89,6 +90,12 @@ class Post
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", mappedBy="posts", cascade={"persist"})
      */
     private $tags;
+
+    /**
+     * @ORM\Column(type="integer", options={"default": 0})
+     * @Assert\Range(min=0, max=10)
+     */
+    private $score = 0;
 
     public function __construct()
     {
@@ -325,6 +332,18 @@ class Post
             $this->tags->removeElement($tag);
             $tag->removePost($this);
         }
+
+        return $this;
+    }
+
+    public function getScore(): ?int
+    {
+        return $this->score;
+    }
+
+    public function setScore(int $score): self
+    {
+        $this->score = $score;
 
         return $this;
     }

@@ -25,7 +25,7 @@ class PictureRepository extends ServiceEntityRepository
      * @var Post[] $properties
      * @return ArrayCollection
      */
-    public function findForPosts(array $posts): ArrayCollection
+    public function findForPosts($posts): ArrayCollection
     {
         $qb = $this->createQueryBuilder('p');
         $pictures = $qb

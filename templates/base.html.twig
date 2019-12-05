@@ -51,7 +51,7 @@
                     <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme" width="75%">
                 </div>
                 <div class="container">
-                    <nav class="menu active">
+                    <nav class="menu">
                         <ul>
                             <a href=""><img class="hide-logo" src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme"></a>
                             <li class="active">
@@ -111,82 +111,32 @@
                             </li>
                         </ul>
                     </nav>
-                    <a href="" class="search-icon">
-                        <i class="fas fa-search"></i>
-                    </a>
+                    <div class="search-icon">
+                        <a href="" class="search-link">
+                            <i class="fas fa-search"></i>
+                        </a>
+                        <div class="search-bar" id="search-bar">
+                            {#{% if form %}
+                                {{ form_start(form) }}
+                                <div class="form-row align-items-end">
+                                    <div class="col-9 pr-0">{{ form_widget(form.query) }}</div>
+                                    <div class="col-3 pl-0">
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                {{ form_end(form) }}
+                            {% endif %}#}
+                        </div>
+                    </div>
                 </div>
             </header>
-            <div class="site-content">
+            <div class="site-content" style="position: relative;">
                 {% block body %}{% endblock %}
                 <footer class="footer">
                     <div class="container">
-                        {% if posts is defined %}
-                        <div class="row post-reminder">
-                            <div class="col-md-4">
-                                <h4>à ne pas manquer</h4>
-                                <div class="cat-items">
-                                    {% for post in posts | slice(1, 3) %}
-                                        <div class="cat-item-post">
-                                            <div class="item-thumb">
-                                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                                    {% if post.picture %}
-                                                        <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="{{ post.title }}" title="{{ post.title }}" class="card-img-top">
-                                                    {% else %}
-                                                        <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="{{ post.title }}" title="{{ post.title }}" class="card-img-top">
-                                                    {% endif %}
-                                                </a>
-                                            </div>
-                                            <div class="item-details">
-                                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                                    <h6>{{ post.title }} Lorem ipsum dolor sit amet consectetur.</h6>
-                                                </a>
-                                                <span>{{ post.createdAt|date("d F, Y") }}</span>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <h4>articles populaires</h4>
-                                <div class="cat-items">
-                                    {% for post in posts  | slice(1, 3) %}
-                                        <div class="cat-item-post">
-                                            <div class="item-thumb">
-                                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                                    {% if post.picture %}
-                                                        <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="{{ post.title }}" title="{{ post.title }}" class="card-img-top">
-                                                    {% else %}
-                                                        <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="{{ post.title }}" title="{{ post.title }}" class="card-img-top">
-                                                    {% endif %}
-                                                </a>
-                                            </div>
-                                            <div class="item-details">
-                                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                                    <h6>{{ post.title }} Lorem ipsum dolor sit amet consectetur.</h6>
-                                                </a>
-                                                <span>{{ post.createdAt | localizeddate('medium') }}</span>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <h4>catégories populaires</h4>
-                                <ul>
-                                    {% if categories is defined %}
-                                        {% for category in categories | sort((b, a) => a.posts | length <=> b.posts | length) | slice(0, 8) %}
-                                            <li>
-                                                <a href="">
-                                                <span>{{ category.title }}</span>
-                                                <span class="cat-nb">{{ category.posts | length }}</span>
-                                                </a>
-                                            </li>
-                                        {% endfor %}
-                                    {% endif %}
-                                </ul>
-                            </div>
-                        </div>
-                        {% endif %}
+                        {{ footer() }}
                         <hr>
                         <div class="row">
                         <div class="col-md-2 logo-footer">

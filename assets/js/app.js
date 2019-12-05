@@ -65,7 +65,13 @@ $('[data-slider]').slick({
 // })
 
 // Suppression des elements
+// Serach-bar 
 
+$('#search-bar').hide()
+$('.search-link').click(function(e) {
+    e.preventDefault()
+    $('#search-bar').slideToggle()
+})
 document.querySelectorAll('[data-delete]').forEach(a => {
     a.addEventListener('click', e => {
         e.preventDefault()
@@ -154,6 +160,11 @@ $('.carousel-inner div:first-child').addClass('active')
 // Tinymce
 tinymce.init({
     selector: '#post_content',
+    setup: function (editor) {
+        editor.on('change', function (e) {
+            editor.save();
+        });
+    },
     plugins: ['paste', 'link', 'image', 'lists'],
     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
     image_description: true,

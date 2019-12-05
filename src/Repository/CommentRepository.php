@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -29,32 +31,19 @@ class CommentRepository extends ServiceEntityRepository
             ;
     }
 
-    // /**
-    //  * @return Comment[] Returns an array of Comment objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
+    /**
+     * @param Post[] $posts
+     * @return ArrayCollection
+     */
+    public function findForPosts(array $posts): ArrayCollection{
+        $comments = $this->createQueryBuilder('c')
+            ->select('c', 'COUNT(c.id) AS commentsNb')
+            ->where('c.post IN (:posts)')
+            ->groupBy('c.post')
             ->getQuery()
-            ->getResult()
-        ;
+            ->setParameter('posts', $posts)
+            ->getResult();
+        return new ArrayCollection($comments);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Comment
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
+

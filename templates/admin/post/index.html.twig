@@ -23,7 +23,7 @@
                 <tbody>
                     {% for post in posts %}
                         <tr>
-                            <td>{{ post.title }}</td>
+                            <td>{{ post.title | truncate(50) }}</td>
                             <td>{{ post.views }}</td>
                             <td>
                                 {% for tag in post.tags %}

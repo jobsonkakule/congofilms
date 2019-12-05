@@ -5,30 +5,8 @@
 {% endblock %}
 {% block body %}
   <div class="container">
-    <div class="emergency">
-        <div class="em-title">
-            dernière minute
-        </div>
-        <div id="carouselContent" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            {% for post in posts %}
-                <div class="carousel-item">
-                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                        <p>{{ post.title }} Lorem ipsum dolor sit amet consectetur.</p>
-                    </a>
-                </div>
-            {% endfor %}
-          </div>
-          <a class="carousel-text-prev" href="#carouselContent" role="button" data-slide="prev">
-            <i class="fas fa-chevron-left"></i>
-          </a>
-          &nbsp;&nbsp;
-          <a class="carousel-text-next"  href="#carouselContent" role="button" data-slide="next">
-            <i class="fas fa-chevron-right"></i>
-          </a>
-        </div>
-    </div>
-    {% set topPost, news2, news3, news4 = posts.0, posts.1, posts.2, posts.3  %}
+    {{ emergency() }}
+    {% set topPost, news2, news3, news4 = topPosts[0][0], topPosts[1][0], topPosts[2][0], topPosts[3][0]  %}
     <div class="top-news">
       <div class="top-post">
         <div class="post-container">
@@ -42,14 +20,18 @@
         </div>
         <div class="post-infos">
           <div class="post-infos-head">
-            <a href="" class="post-category">{{ topPost.category.title }}</a>
+            <a href="{{ path('category.show', {id: posts[0].id, slug: topPost.category.slug}) }}" class="post-category">{{ topPosts[0].title }}</a>
             <h3>
               {{ topPost.title }}
             </h3>
           </div>
           <div class="post-infos-details">
             <span class="post-author">
-              Armin Vans
+              {% if posts[0].pseudo is not null %}
+                {{ posts[0].pseudo }}
+              {% else %}
+                {{ posts[0].username }}
+              {% endif %}
             </span>
             <span>-</span>
             <span>
@@ -71,7 +53,7 @@
           </div>
           <div class="post-infos">
             <div class="post-infos-head">
-              <a href="" class="post-category">{{ news2.category.title }}</a>
+              <a href="{{ path('category.show', {id: posts[1].id, slug: news2.category.slug}) }}" class="post-category">{{ topPosts[1].title }}</a>
               <h6>
                 {{ news2.title }}
               </h6>
@@ -91,7 +73,7 @@
             </div>
             <div class="post-infos">
               <div class="post-infos-head">
-                <a href="" class="post-category">{{ news3.category.title }}</a>
+                <a href="{{ path('category.show', {id: posts[2].id, slug: news3.category.slug}) }}" class="post-category">{{ topPosts[2].title }}</a>
                 <h6>
                   {{ news3.title }}
                 </h6>
@@ -111,7 +93,7 @@
             </div>
             <div class="post-infos">
               <div class="post-infos-head">
-                <a href="" class="post-category">{{ news4.category.title }}</a>
+                <a href="{{ path('category.show', {id: posts[3].id, slug: news4.category.slug}) }}" class="post-category">{{ topPosts[3].title }}</a>
                 <h6>
                   {{ news4.title }}
                 </h6>
@@ -163,28 +145,53 @@
           <div class="row cat-high-body">
             <div class="col-md-6 cat-post-details">
               <div class="cat-post-img">
-                <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
-                    {% if topPost.picture %}
-                      <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
+                {% if topPosts | length > 8 %}
+                  {% set topItem = topPosts[4][0] %}
+                {% else %}
+                  {% set topItem = posts[0][0] %}
+                {% endif %}
+                <a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}">
+                    {% if topItem.picture %}
+                      <img src="{{ vich_uploader_asset(topItem.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
                     {% else %}
-                      <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}"></a>
+                      <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ topItem.title }}"></a>
                     {% endif %}
-                <a href="" class="item-cat">{{ topPost.category.title }}</a>
+                <a href="{{ path('category.show', {id: posts[0].id, slug: topItem.category.slug}) }}" class="item-cat">{{ posts[0].title }}</a>
               </div>
               <div class="cat-post-body">
-                <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}"><h5>{{ topPost.title }}</h5></a>
+                <a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}"><h5>{{ topItem.title }}</h5></a>
                 <div class="cat-post-infos">
-                  <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
-                  <span class="td-post-date">Apr 12, 2017</span>
-                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}#comments">{{ topPost.comments | length }}</a></div>
+                  <span class="td-post-author-name">
+                    <a href="">
+                      {% if posts[0].pseudo is not null %}
+                        {{ posts[0].pseudo }}
+                      {% else %}
+                        {{ posts[0].username }}
+                      {% endif %}
+                    </a> 
+                  <span>
+                  </span> - </span>
+                  <span class="td-post-date">{{ topItem.createdAt | localizeddate('long', 'none') }}</span>
+                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}#comments">{{ posts[0].commentsNb }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
-                  {{ topPost.content | striptags | truncate(100) }}
+                  {{ topItem.content | striptags | truncate(100) }}
                 </div>
               </div>
             </div>
+            {% if topPosts | length > 8 %}
+              {% set items = [] %}
+              {% for i in topPosts | slice(5, 4) %}
+                {% set items = items | merge([i]) %}
+              {% endfor %}
+            {% else %}
+              {% for i in posts | slice(1, 4) %}
+                {% set items = items | merge([i]) %}
+              {% endfor %}
+            {% endif %}
             <div class="col-md-6 cat-items">
-              {% for post in posts %}
+              {% for p in items | slice(0, 4) %}
+                {% set post = p[0] %}
                 <div class="cat-item-post">
                   <div class="item-thumb">
                     <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
@@ -195,8 +202,8 @@
                         {% endif %}
                   </div>
                   <div class="item-details">
-                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>Traveling Tends to Magnify All Human Emotions</h6></a>
-                    <span>{{ post.createdAt | date("d F, Y") }}</span>
+                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
+                    <span>{{ post.createdAt | localizeddate('long', 'none') }}</span>
                   </div>
                 </div>
               {% endfor %}
@@ -207,22 +214,7 @@
           <h6>Derniers articles</h6>
         </div>
         <div class="row last-articles">
-          {% for post in posts | slice(0, 3) %}
-            <div class="col-md-4 last-art-item">
-              <div class="cat-post-img">
-                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                    {% if post.picture %}
-                      <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                    {% else %}
-                      <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
-                    {% endif %}
-                <a href="" class="item-cat">{{ post.category.title }}</a>
-              </div>
-              <div class="cat-post-body">
-                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-              </div>
-            </div>
-          {% endfor %}
+          {{ lastPosts() }}
         </div>
       </div>
       <div class="col-md-4">
@@ -259,25 +251,28 @@
         <div class="bd-example carousel-last-posts">
           <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
-              {% for post in posts %}
-                <div class="carousel-item">
-                  <div class="carousel-post">
-                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                        {% if post.picture %}
-                          <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                        {% else %}
-                            <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
-                        {% endif %}
-                  </div>
-                  <div class="post-infos">
-                    <div class="post-infos-head">
-                      <a href="" class="post-category">{{ post.category.title }}</a>
-                      <h6>
-                        {{ post.title }}
-                      </h6>
+              {% for p in popularPosts %}
+              {% set post = p[0] %}
+                {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) %}
+                  <div class="carousel-item">
+                    <div class="carousel-post">
+                      <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+                          {% if post.picture %}
+                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                          {% else %}
+                              <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
+                          {% endif %}
+                    </div>
+                    <div class="post-infos">
+                      <div class="post-infos-head">
+                        <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}" class="post-category">{{ p.title }}</a>
+                        <h6>
+                          {{ post.title }}
+                        </h6>
+                      </div>
                     </div>
                   </div>
-                </div>
+                {% endif %}
               {% endfor %}
             </div>
             <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
@@ -301,7 +296,18 @@
         <div class="cat-high-title top-articles-title">
           <h6>à lire aussi</h6>
         </div>
-        {% for post in posts %}
+        {% set others = [] %}
+        {% for p in posts %}
+          {% set post = p[0] %}
+          {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) and (post.id != topItem.id) %}
+            {% set others = others | merge([p]) %}
+          {% endif %}
+        {% endfor %}
+        {% if topPosts | length < 8 %}
+          {% set others = posts | slice(5, 5) %}
+        {% endif %}
+        {% for p in others | slice (0, 5) %}
+        {% set post = p[0] %}
           <div class="row cat-item-post">
             <div class="col-md-4 item-thumb">
               <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
@@ -312,11 +318,20 @@
                   {% endif %}
             </div>
             <div class="col-md-8 item-details">
-              <a href=""><h5>{{ post.title }}</h5></a>
+              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
               <div class="cat-post-infos">
-                <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
-                <span class="td-post-date">{{ post.createdAt | date("d F, Y") }}</span>
-                <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ post.comments | length }}</a></div>
+                <span class="td-post-author-name">
+                  <a href="">
+                    {% if p.pseudo is not null %}
+                      {{ p.pseudo }}
+                    {% else %}
+                      {{ p.username }}
+                    {% endif %}
+                  </a>
+                <span>
+                </span> - </span>
+                <span class="td-post-date">{{ post.createdAt | localizeddate('long', 'none') }}</span>
+                <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ p.commentsNb }}</a></div>
               </div>
               <div class="cat-post-excerpt">
                 {{ post.content | striptags | truncate(200) }}
@@ -330,9 +345,10 @@
           <h6>analyses et reportages</h6>
         </div>
         <div class="reports">
-          {% for post in posts | slice(1, 3) %}
+          {% for p in posts | slice(1, 3) %}
+          {% set post = p[0] %}
             <div class="report-item">
-              <a href=""><span class="report-cat">{{ post.category.title }}</span></a>
+              <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}"><span class="report-cat">{{ post.category.title }}</span></a>
               <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
             </div>
             <hr>
@@ -344,10 +360,11 @@
           <h6>émissions et interviews</h6>
         </div>
         <div class="reports">
-          {% for post in posts | slice(1, 3) %}
+          {% for p in posts | slice(4, 3) %}
+          {% set post = p[0] %}
             <div class="report-item">
               <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-              <a href=""><span class="interview-cat">{{ post.category.title }}</span></a>
+              <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}"><span class="interview-cat">{{ p.title }}</span></a>
             </div>
             <hr>
           {% endfor %}
