@@ -1,0 +1,26 @@
+{{ form_start(form, {'attr': {'class': 'form-signin'}}) }}
+    <div class="text-center mb-4">
+        <p>Merci de renseigner les informations suivantes pour l'inscription</p>
+      </div>
+    <div>
+        {{ form_row(form.username, {'attr': {'placeholder':"Nom d'utlisateur"}}) }}
+    </div>
+    <div>
+        {{ form_row(form.email) }}
+    </div>
+    <div>
+        {{ form_row(form.password) }}
+    </div>
+{{ form_rest(form) }}
+    <br>
+    <button class="btn btn-lg btn-primary btn-block">{{ button|default('Enregistrer') }}</button>
+    <br>
+    <p class="mt-5 mb-3 text-muted text-center">&copy;G-L&#9865;News, 2019-2020</p>
+{{ form_end(form) }}
+
+
+{# <div class="checkbox mb-3">
+    <label>
+        <input type="checkbox" name="_remember_me"> Remember me
+    </label>
+</div> #}

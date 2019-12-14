@@ -17,6 +17,7 @@ class CommentType extends AbstractType
             ->add('author')
             ->add('email')
             ->add('parent_id')
+            ->add('avatar', HiddenType::class)
         ;
     }
 

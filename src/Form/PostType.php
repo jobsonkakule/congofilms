@@ -7,6 +7,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,6 +24,9 @@ class PostType extends AbstractType
                 'choice_label' => 'title'
             ])
             ->add('online')
+            ->add('created_at', DateTimeType::class, [
+                'widget' => 'single_text'
+            ])
             ->add('pictureFiles', FileType::class, [
                 'required' => false,
                 'multiple' => true

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,5 +26,17 @@ class TagRepository extends ServiceEntityRepository
             ->select('t.name')
             ->getQuery()
             ->getResult();
+    }
+
+    public function adminFindAll()
+    {
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMappingBuilder($em);
+        $rsm->addRootEntityFromClassMetadata(Tag::class, 't');
+        return $em->createNativeQuery('
+            SELECT * FROM tag 
+            LEFT JOIN tag_post ON tag_post.tag_id = tag.id 
+            WHERE tag_post.tag_id IS null
+        ', $rsm)->getResult();
     }
 }

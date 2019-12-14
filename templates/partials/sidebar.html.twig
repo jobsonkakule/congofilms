@@ -4,7 +4,7 @@
 </div>
 <div class="cat-post-details">
     <div class="cat-post-img">
-        {% set topPost = posts.0 %}
+        {% set topPost = posts[0] %}
         <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
             {% if topPost.picture %}
                 <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}">
@@ -12,15 +12,24 @@
                 <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" title="{{ topPost.title }}"></a>
             {% endif %}
         </a>
-        <a href="" class="item-cat">{{ topPost.category.title }}</a>
+        <a href="{{ path('category.show', {id: topPost.category.id, slug: topPost.category.slug}) }}" class="item-cat">{{ topPost.category.title }}</a>
     </div>
     <div class="cat-post-body">
         <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
             <h5>{{ topPost.title }}</h5>
         </a>
         <div class="cat-post-infos">
-            <span class="td-post-author-name"><a href="">John Doe</a> <span>-</span> </span>
-            <span class="td-post-date">{{ topPost.createdAt | date("d F, Y") }}</span>
+            <span class="td-post-author-name">
+                <a href="">
+                    {% if topPost.author.pseudo is not null %}
+                        {{ topPost.author.pseudo }}
+                    {% else %}
+                        {{ topPost.author.username }}
+                    {% endif %}
+                </a> 
+                <span>-</span> 
+            </span>
+            <span class="td-post-date">{{ topPost.createdAt | ago }}</span>
             <div class="td-module-comments"><a href="">{{ topPost.comments | length }}</a></div>
         </div>
         <div class="cat-post-excerpt">
@@ -42,8 +51,10 @@
                 </a>
             </div>
             <div class="item-details">
-                <a href=""><h6>{{ post.title }}</h6></a>
-                <span>{{ post.createdAt | date('d F, Y') }}</span>
+                <h6>
+                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">{{ post.title }}</a>
+                </h6>
+                <span>{{ post.createdAt | ago }}</span>
             </div>
         </div>
     {% endfor %}

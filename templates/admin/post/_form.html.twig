@@ -6,8 +6,8 @@
     </div>
     <div class="row">
         <div class="col-md-4">{{ form_row(form.category) }}</div>
+        <div class="col-md-4">{{ form_row(form.created_at, { 'attr': {'class': 'datepicker'}}) }}</div>
         <div class="col-md-4">{{ form_row(form.online, { 'attr': {'class': 'form-control'}}) }}</div>
-        <div class="col-md-4">{{ form_row(form.tags) }}</div>
     </div>
     <div class="row">
         <div class="col-md-4">{{ form_row(form.pictureFiles) }}</div>
@@ -27,6 +27,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">{{ form_row(form.content, {'attr': {'rows': 15}}) }}</div>
+        <div class="col-md-12">{{ form_row(form.tags) }}</div>
     </div>
 {{ form_rest(form) }}
     <button class="btn btn-primary">{{ button|default('Enregistrer') }}</button>

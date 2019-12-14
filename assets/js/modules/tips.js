@@ -40,5 +40,12 @@ export default class Tips {
             temp.remove()
         })
     }
+    static toggleAuthor() {
+        $('.toggle-item').click(function(e){
+            e.preventDefault()
+            $('.cat-high-toggle a').removeClass('cat-high-selected')
+            $(this).addClass('cat-high-selected')
+        })
+    }
 }
 

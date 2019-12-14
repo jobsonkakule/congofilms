@@ -1,5 +1,6 @@
 @import "lib/compass";
-
+@import "floating";
+@import "dashboard";
 $theme-title: rgba(255,255,255,.95);
 $front-color: #FFF;
 $active-color: #4db2ec;
@@ -416,6 +417,9 @@ a { text-decoration: none; color:inherit; }
             font-weight: 700;
             text-transform: capitalize;
         }
+        a {
+            color: $theme-title;
+        }
     }
 }
 .cat-high-title {
@@ -639,8 +643,13 @@ a { text-decoration: none; color:inherit; }
                 font-weight: 500;
                 font-size: 90%;
                 margin-bottom: 0;
-                &:hover {
-                    color: $must-read;
+                a {
+                    color: $theme-color;
+                    text-decoration: none;
+                    transition: .3s;
+                    &:hover {
+                        color: $active-color;
+                    }
                 }
             }
             span {
@@ -977,6 +986,7 @@ footer {
             .item-details {
                 h6 {
                     color: $theme-title;
+                    font-weight: normal;
                     &:hover {
                         color: $active-color;
                     }
@@ -1196,20 +1206,70 @@ footer {
         font-family:Open Sans;
         font-style:italic;
         color: #555555;
-        padding:1.2em 30px 1.2em 75px;
-        border-left:8px solid #78C0A8 ;
+        padding:1em 20px 1em 65px;
+        border-left:8px solid $active-color;
         line-height:1.6;
         position: relative;
         background:#EDEDED;
         &:before {
             font-family:Arial;
             content: "\201C";
-            color:#78C0A8;
+            color: $active-color;
             font-size:4em;
+            font-weight: bold;
             position: absolute;
             left: 10px;
             top:-10px;
         }
+    }
+    ul {
+        &.td-tags {
+            margin: 0 0 10px;
+            font-family: open sans,arial,sans-serif;
+            display: table;
+            line-height: 20px;
+            font-weight: normal;
+            clear: left;
+            height: 20px;
+            font-size: 14px;
+
+            li {
+                list-style: none;
+                display: inline-block;
+                line-height: 20px;
+                margin-left: 0;
+                float: left;
+                margin-bottom: 4px;
+                a { 
+                    display: block;
+                    float: left;
+                    border: 1px solid #ededed;
+                    margin-left: 4px;
+                    line-height: 8px;
+                    color: #111;
+                    padding: 5px 8px;
+                    height: 20px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    &:hover {
+                        text-decoration: none;
+                        background: $active-color;
+                        color: $theme-title;
+                    }
+                }
+            }
+            span {
+                background-color: #222;
+                padding: 5px 9px;
+                color: #fff;
+                display: block;
+                text-transform: uppercase;
+                line-height: 10px;
+                float: left;
+                height: 20px;
+            }
+        }
+        
     }
 }
 .sharing-bottom {
@@ -1305,6 +1365,45 @@ h1 {
 .min-container {
     min-height: 300px;
 }
+.td-category-header {
+    background-color: #fcfcfc;
+    border-bottom: 1px solid #f2f2f2;
+    border-top: 1px solid #f2f2f2;
+    padding-bottom: 18px;
+}
+
+
+.video {
+    a:hover {
+        cursor: pointer;
+    }
+    img {
+        filter: brightness(75%);
+    }
+    
+    display: block;
+    position: relative;
+    .play-btn {
+        display: block;
+        position: absolute;
+        left: calc(50% - 2rem);
+        top: calc(50% - 2rem);
+        font-size: 4rem;
+        margin: 0;
+        padding: 0;
+        line-height: 4rem;
+        color: $theme-title!important;
+        transition: all 0.2s ease;
+        &:hover {
+            left: calc(50% - 2.25rem);
+            top: calc(50% - 2.25rem);
+            font-size: 4.5rem;
+            color: $theme-title!important;
+        }
+    }
+}
+
+
 /*------------------------------------*\
     $RESPONSIVE
 \*------------------------------------*/

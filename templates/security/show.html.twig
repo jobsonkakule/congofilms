@@ -1,0 +1,109 @@
+{% extends "base.html.twig" %}
+
+{% if user.pseudo %}
+{% set pseudo = user.pseudo %}
+{% else %}
+{% set pseudo = user.username %}
+{% endif %}
+
+{% block title 'A propos de l\'auteur : ' ~ pseudo %}
+
+{% block body %}
+
+    <div class="container mt-4 mb-4">
+        <h1 class="text-center" style="font-weight: 700;">
+            {% if app.user and app.user.email == user.email %}
+                Mon compte
+            {% else %}
+                Profil de l'auteur
+            {% endif %}
+        </h1>
+        <hr>
+        {% if app.user and app.user == user  %}
+            <div class="float-right m-0 p-0">
+                <a href="{{ path('profil.edit') }}" class=" btn btn-primary">
+                    <i class="fas fa-user-edit"></i>
+                    Mettre à jour
+                </a>
+            </div>
+        {% endif %}
+        <div class="justify-content-center">
+            {% if user.filename %}
+                <div class="m-auto" style="width: 200px;">
+                    <img class="m-auto" src="{{ vich_uploader_asset(user, 'imageFile') }}" alt="{{ pseudo }}" width="100%" style="border-radius:50%;border:3px solid rgb(222, 231, 255);">
+                    <!-- <img class="img-fluid img-thumbnail" src="{{ vich_uploader_asset(user, 'imageFile') }}" alt="{{ pseudo }}" width="100%"> -->
+                </div>
+                <br>
+            {% endif %}
+            {% if user.pseudo %}
+                <h5 class="text-center">
+                    <span class="text-muted">Nom : </span>
+                    <span style="font-weight: 700;">{{ pseudo }}</span>
+                </h5>
+            {% endif %}
+            <h5 class="text-center">
+                <span class="text-muted">Email : </span>
+                <span style="font-weight: 700;">{{ user.email }}</span>
+            </h5>
+            {% if user.description %}
+                <br>
+                <h5 class="text-muted text-center">
+                    Description
+                </h5>
+                <div class="text-center w-75 m-auto">
+                    <p class="lead">
+                        {{ user.description }}
+                    </p>
+                </div>
+            {% endif %}
+            {% if user.link %}
+                <br>
+                <div class="sharing-post text-center">
+                    <a href="{{ user.link }}" target="_blank">
+                        <div class="share-icon">
+                            <i class="fab fa-facebook-f"></i>
+                        </div>
+                        <div class="share-text">
+                            {% if app.user and app.user.email == user.email %}
+                                Mon compte
+                            {% else %}
+                                L'auteur sur
+                            {% endif %}
+                            Facebook
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            <div class="w-75 m-auto">
+                {% if authorPosts %}
+                    <hr>
+                    <div class="cat-high-toggle">
+                        <h6>
+                            <a href="" class="toggle-item cat-high-selected">Ces derniers articles</a>
+                        </h6>
+                    </div>
+                    <div class="row last-articles">
+                        {% for p in authorPosts | slice(0, 3) %}
+                        {% set postItem = p[0] %}
+                            <div class="col-md-4 last-art-item">
+                                <div class="cat-post-img">
+                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}">
+                                    {% if postItem.picture %}
+                                        <img src="{{ vich_uploader_asset(postItem.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                                    {% else %}
+                                        <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ postItem.title }}"></a>
+                                    {% endif %}
+                                <a href="{{ path('category.show', {id: p.id, slug: postItem.category.slug}) }}" class="item-cat">{{ p.title }}</a>
+                                </div>
+                                <div class="cat-post-body">
+                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}"><h6>{{ postItem.title }}</h6></a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+{% endblock  %}

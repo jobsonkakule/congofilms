@@ -4,7 +4,6 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
-use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,13 +27,19 @@ class PostController extends AbstractController
      * @Route("/posts", name="post.index")
      * @return Response
      */
-    public function index(Request $request, CategoryRepository $categories): Response
+    public function index(Request $request): Response
     {
+        $tag = '';
 
+        if ($request->query->get('tag')) {
+            $tag = $request->query->get('tag');
+            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 12);
+        } else {
+            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, null, 12);
+        }
         return $this->render('post/index.html.twig', [
-            'current_menu' => 'posts',
-            'posts' => $this->repository->paginateAllVisible($request->query->getInt('page', 1)),
-            'categories' => $categories->findAll()
+            'posts' => $posts,
+            'tag' => $tag
         ]);
     }
 
@@ -46,7 +51,8 @@ class PostController extends AbstractController
      * @return Response
      */
     public function show(
-        Post $post, 
+        Post $post,
+        PostRepository $postRepository, 
         string $slug, 
         Request $request,
         CommentController $commentController,
@@ -76,10 +82,19 @@ class PostController extends AbstractController
         $post->setViews($post->getViews()+1);
         $this->em->persist($post);
         $this->em->flush();
+        $authorPosts = $postRepository->findPostsByField($request->query->getInt('page', 1), 'author', $post->getAuthor()->getId());
+        $tags = $post->getTags();
+        $sets = [];
+        foreach ($tags as $tag) {
+            $sets[] = $tag->getName();
+        }
+        $associatedPosts = $postRepository->findLatest($request->query->getInt('page', 1), null, $sets, 4);
+        // dump($associatedPosts);
         $cache->invalidateTags(['popularPosts']);
         return $this->render('post/show.html.twig', [
             'post' => $post,
-            'current_menu' => 'posts',
+            'associatedPosts' => $associatedPosts,
+            'authorPosts' => $authorPosts,
             'form' => $form->createView()
         ]);
     }

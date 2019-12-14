@@ -4,8 +4,11 @@
 
 {% block body %}
     <div class="container mt-4">
-        <h1>Créer un compte</h1>
-        {{ include("security/_form.html.twig", {button: 'Créer'}) }}
+        {% if not form.vars.valid %}
+            <div class="alert alert-danger">Veuillez remplir les champs avec les bonnes informations</div>
+        {% endif %}
+        <h1 class="text-center" style="font-weight: 700;">Créer un compte</h1>
+        {{ include("security/_signupForm.html.twig", {button: 'Créer'}) }}
     </div>
 
 {% endblock %}

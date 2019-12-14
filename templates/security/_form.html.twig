@@ -1,14 +1,32 @@
-{{ form_start(form) }}
-    <div class="row">
-        <div class="col-md-4">{{ form_row(form.username) }}</div>
+{{ form_start(form, {'attr': {'class': 'row pt-4'}}) }}
+    <div class="col-md-6">
+        <div>{{ form_row(form.username) }}</div>
+        <div>{{ form_row(form.email) }}</div>
+        <p class="text-muted">Laisser vide ces champs si vous ne voulez pas changer de mot de passe</p>
+        <div class="form-group">
+            <input type="text" id="password" name="password" class="form-control" placeholder="Entrer un nouveau mot de passe">
+        </div>
+        <div class="form-group">
+            <input type="text" id="confirm" name="confirm" class="form-control" placeholder="Confirmer le mot de passe">
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">{{ form_row(form.email) }}</div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">{{ form_row(form.password) }}</div>
+    <div class="col-md-6">
+        <div>{{ form_row(form.pseudo) }}</div>
+        <div>{{ form_row(form.imageFile) }}</div>
+        <div>{{ form_row(form.description) }}</div>
+        <div>{{ form_row(form.link) }}</div>
     </div>
 {{ form_rest(form) }}
     <br>
-    <button class="btn btn-primary">{{ button|default('Enregistrer') }}</button>
+    <div class="m-auto">
+        <button class="btn btn-primary btn-block">{{ button|default('Enregistrer') }}</button>
+    </div>
+    <br>
 {{ form_end(form) }}
+
+
+{# <div class="checkbox mb-3">
+    <label>
+        <input type="checkbox" name="_remember_me"> Remember me
+    </label>
+</div> #}

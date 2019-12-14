@@ -1,15 +1,34 @@
 <div class="card-mt-4">
-    {% if post.picture %}
-        <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" class="card-img-top">
-    {% else %}
-        <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
-    {% endif %}
-    <div class="card-body">
-        <h5 class="card-title">
+    <div class="cat-post-img">
+        {% if post.picture %}
             <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                {{ post.title }}
+                <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" class="card-img-top">
             </a>
-        </h5>
-        {{ post.content | truncate(200) }}
+        {% else %}
+            <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+                <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
+            </a>
+        {% endif %}
+        <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}" class="item-cat">{{ p.title }}</a>
+    </div>
+    <div class="card-body cat-post-body pt-0">
+        <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
+        <div class="cat-post-infos">
+        <span class="td-post-author-name">
+            <a href="{{ path('profil.show', {id: p.authorId }) }}">
+            {% if p.pseudo is not null %}
+                {{ p.pseudo }}
+            {% else %}
+                {{ p.username }}
+            {% endif %}
+            </a> 
+        <span>
+        </span> - </span>
+        <span class="td-post-date">{{ post.createdAt | ago }}</span>
+        <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ p.commentsNb }}</a></div>
+        </div>
+        <div class="cat-post-excerpt">
+        {{ post.content | striptags | truncate(100) }}
+        </div>
     </div>
 </div>

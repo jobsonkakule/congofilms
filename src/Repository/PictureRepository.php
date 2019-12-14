@@ -22,7 +22,7 @@ class PictureRepository extends ServiceEntityRepository
     }
 
     /**
-     * @var Post[] $properties
+     * @var Post[] $posts
      * @return ArrayCollection
      */
     public function findForPosts($posts): ArrayCollection

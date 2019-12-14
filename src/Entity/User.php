@@ -9,11 +9,14 @@ use Serializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("username")
+ * @Vich\Uploadable
  */
 class User implements UserInterface, Serializable
 {
@@ -26,6 +29,7 @@ class User implements UserInterface, Serializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min=5, max=50)
      */
     private $username;
 
@@ -43,6 +47,7 @@ class User implements UserInterface, Serializable
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Email()
+     * 
      */
     private $email;
 
@@ -58,18 +63,41 @@ class User implements UserInterface, Serializable
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\Length(min=10, max=255)
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $avatar;
+    private $filename;
+
+    /**
+     * @Vich\UploadableField(mapping="user_image", fileNameProperty="filename")
+     * @var File|null
+     * @Assert\Image(mimeTypes={"image/jpeg", "image/png"}, maxSize="10M")
+     */
+    private $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $link;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $password_reset;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $password_reset_at;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $updated_at;
 
     public function __construct()
     {
@@ -249,14 +277,14 @@ class User implements UserInterface, Serializable
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getFilename(): ?string
     {
-        return $this->avatar;
+        return $this->filename;
     }
 
-    public function setAvatar(?string $avatar): self
+    public function setFilename(?string $filename): self
     {
-        $this->avatar = $avatar;
+        $this->filename = $filename;
 
         return $this;
     }
@@ -269,6 +297,69 @@ class User implements UserInterface, Serializable
     public function setLink(?string $link): self
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    public function getPasswordReset(): ?string
+    {
+        return $this->password_reset;
+    }
+
+    public function setPasswordReset(?string $password_reset): self
+    {
+        $this->password_reset = $password_reset;
+
+        return $this;
+    }
+
+    public function getPasswordResetAt(): ?\DateTimeInterface
+    {
+        return $this->password_reset_at;
+    }
+
+    public function setPasswordResetAt(?\DateTimeInterface $password_reset_at): self
+    {
+        $this->password_reset_at = $password_reset_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of imageFile
+     *
+     * @return  File|null
+     */ 
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * Set the value of imageFile
+     *
+     * @param  File|null  $imageFile
+     *
+     * @return  self
+     */ 
+    public function setImageFile($imageFile)
+    {
+        $this->imageFile = $imageFile;
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updated_at = new \DateTime('now');
+        }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }

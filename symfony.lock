@@ -123,6 +123,9 @@
     "fig/link-util": {
         "version": "1.0.0"
     },
+    "firebase/php-jwt": {
+        "version": "v5.0.0"
+    },
     "friendsofsymfony/elastica-bundle": {
         "version": "5.0",
         "recipe": {
@@ -137,6 +140,30 @@
     },
     "fzaninotto/faker": {
         "version": "v1.8.0"
+    },
+    "google/apiclient": {
+        "version": "2.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "2.0",
+            "ref": "49c5d7a66d863d28513979bf0666dc77599100c0"
+        },
+        "files": [
+            "./config/packages/google_apiclient.yaml"
+        ]
+    },
+    "google/apiclient-services": {
+        "version": "v0.121"
+    },
+    "google/auth": {
+        "version": "v1.6.1"
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.5.0"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
     },
     "guzzlehttp/psr7": {
         "version": "1.6.1"
@@ -202,6 +229,9 @@
     "phpdocumentor/type-resolver": {
         "version": "1.0.1"
     },
+    "phpseclib/phpseclib": {
+        "version": "2.0.23"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -219,6 +249,9 @@
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"
+    },
+    "ramsey/uuid": {
+        "version": "3.9.1"
     },
     "react/promise": {
         "version": "v2.7.1"

@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Comment;
 use App\Entity\Picture;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -32,11 +31,9 @@ class PostRepository extends ServiceEntityRepository
 
     public function findForSidebar(): array
     {
-        $posts =  $this->createQueryBuilder('p')
-            ->where('p.created_at <= :now')
-            ->addOrderBy('p.created_at', 'DESC')
+        $posts =  $this->findVisibleQuery()
             ->addOrderBy('p.score', 'DESC')
-            ->setParameter('now', new \DateTime())
+            ->addOrderBy('p.created_at', 'DESC')
             ->setMaxResults(6)
             ->getQuery()
             ->getResult()
@@ -45,18 +42,55 @@ class PostRepository extends ServiceEntityRepository
         return $posts;
     }
 
-    public function findLatest(): array
+    public function findLatest(int $page, ?string $key = null, $tags = [], $limit = 11): PaginationInterface
     {
-        $posts = $this->findVisibleQuery()
-            ->addSelect('c.id', 'c.title', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
+        $query = $this->findVisibleQuery()
+            ->addSelect('c.id', 'c.title', 'a.id AS authorId', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
             ->join('p.author', 'a')
             ->leftJoin('p.category', 'c')
-            ->leftJoin('p.comments', 'com')
-            ->addOrderBy('p.score', 'DESC')
-            ->addOrderBy('p.created_at', 'DESC')
-            ->groupBy('p.id')
-            ->getQuery()
-            ->getResult();
+            ->leftJoin('p.comments', 'com');
+        if ($key) {
+
+            $searchTerms = $this->extractSearchTerms($key);
+        
+            $queryBuilder = $this->createQueryBuilder('p')
+                ->addSelect('c.id', 'c.title', 'a.id AS authorId', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
+                ->join('p.author', 'a')
+                ->leftJoin('p.category', 'c')
+                ->leftJoin('p.comments', 'com');
+        
+            foreach ($searchTerms as $key => $term) {
+                $queryBuilder
+                    ->orWhere('p.title LIKE :t_'.$key)
+                    ->setParameter('t_'.$key, '%'.$term.'%')
+                ;
+            }
+            
+            $query = $queryBuilder
+                ->addOrderBy('p.score', 'DESC')
+                ->addOrderBy('p.created_at', 'DESC')
+                ->groupBy('p.id');
+
+        } elseif ($tags) {
+            $query = $query
+                ->leftJoin('p.tags', 't')
+                ->andWhere('t.name IN (:tags)')
+                ->addOrderBy('p.score', 'DESC')
+                ->addOrderBy('p.created_at', 'DESC')
+                ->setParameter('tags', $tags)
+                ->groupBy('p.id');
+        }
+        else {
+            $query = $query
+                ->addOrderBy('p.score', 'DESC')
+                ->addOrderBy('p.created_at', 'DESC')
+                ->groupBy('p.id');
+        }
+        $posts = $this->paginator->paginate(
+            $query->getQuery(),
+            $page,
+            $limit
+        );
         $hydratePosts = [];
         foreach ($posts as $p) {
             $hydratePosts[] = $p[0];
@@ -64,18 +98,24 @@ class PostRepository extends ServiceEntityRepository
         $this->hydratePicture($hydratePosts);
         return $posts;
     }
-    public function findTopPosts(): array
+    
+    public function findTopPosts(int $categoryId = null): array
     {
         $qb = $this->findVisibleQuery();
+        if ($categoryId) {
+            $qb
+                ->andWhere('c.id = :cat')
+                ->setParameter('cat', $categoryId);
+        }
         $topPosts = $qb
-            ->addSelect('c.id', 'c.title', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
+            ->addSelect('c.id', 'c.title', 'a.id AS authorId', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
             ->join('p.author', 'a')
             ->leftJoin('p.category', 'c')
             ->leftJoin('p.comments', 'com')
             ->addGroupBy('p.id')
             ->addOrderBy('p.score', 'DESC')
             ->addOrderBy('p.created_at', 'DESC')
-            ->setMaxResults(16)
+            ->setMaxResults(24)
             ->getQuery()
             ->getResult();
         $hydratePosts = [];
@@ -95,9 +135,34 @@ class PostRepository extends ServiceEntityRepository
             ->leftJoin('p.comments', 'com')
             ->groupBy('p.id')
             ->addOrderBy('p.created_at', 'DESC')
-            ->setMaxResults(16)
+            ->addOrderBy('p.score', 'DESC')
+            ->setMaxResults(6)
             ->getQuery()
             ->getResult();
+        $hydratePosts = [];
+        foreach ($posts as $p) {
+            $hydratePosts[] = $p[0];
+        }
+        $this->hydratePicture($hydratePosts);
+        return $posts;
+    }
+
+    public function findPostsByField(int $page, $field, $cond): PaginationInterface
+    {
+        $query = $this->findVisibleQuery()
+            ->addSelect('c.id', 'c.title', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
+            ->join('p.author', 'a')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.comments', 'com')
+            ->andWhere('p.' . $field . ' = ' . $cond)
+            ->groupBy('p.id')
+            ->addOrderBy('p.created_at', 'DESC');
+        
+        $posts = $this->paginator->paginate(
+            $query->getQuery(),
+            $page,
+            4
+        );
         $hydratePosts = [];
         foreach ($posts as $p) {
             $hydratePosts[] = $p[0];
@@ -161,47 +226,29 @@ class PostRepository extends ServiceEntityRepository
         $this->hydratePicture($posts);
         return $posts;
     }
-    
-    
-    
-    /**
-     * findPost
-     *
-     * @param  mixed $search
-     * @param  mixed $page
-     *
-     * @return PaginationInterface
-     */
-    public function findPost(int $page, ?string $key = null): PaginationInterface
-    {
-        if ($key) {
-            $query = $this->createQueryBuilder('p')
-                ->orWhere('p.title LIKE :key')
-                ->orWhere('p.content LIKE :key')
-                ->setParameter('key', '%' . $key . '%');
-        } else {
-            $query = $this->createQueryBuilder('p');
-        }
-        $posts = $this->paginator->paginate(
-            $query->getQuery(),
-            $page,
-            12
-        );
-        $this->hydratePicture($posts);
-        return $posts;
-    }
 
     public function findWithCategory(int $categoryId, int $page): PaginationInterface
     {
         $query = $this->findVisibleQuery()
+            ->addSelect('c.id', 'c.title', 'a.id AS authorId', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
+            ->join('p.author', 'a')
+            ->leftJoin('p.category', 'c')
+            ->leftJoin('p.comments', 'com')
             ->andWhere('p.category  = :cat')
-            ->setParameter('cat', $categoryId);
+            ->addOrderBy('p.score', 'DESC')
+            ->addOrderBy('p.id', 'DESC')
+            ->setParameter('cat', $categoryId)
+            ->groupBy('p.id');
         $posts = $this->paginator->paginate(
             $query->getQuery(),
             $page,
-            12
+            9
         );
-        $this->hydratePicture($posts);
+        $hydratePosts = [];
+        foreach ($posts as $p) {
+            $hydratePosts[] = $p[0];
+        }
+        $this->hydratePicture($hydratePosts);
         return $posts;
     }
     /**
@@ -212,7 +259,9 @@ class PostRepository extends ServiceEntityRepository
     private function findVisibleQuery(): QueryBuilder
     {
         return $this->createQueryBuilder('p')
-            ->where('p.online = 1')
+            ->andWhere('p.online = 1')
+            ->andWhere('p.created_at <= :now')
+            ->setParameter('now', new \DateTime())
 
             // ->where('p.sold = false')
             ;
@@ -237,5 +286,16 @@ class PostRepository extends ServiceEntityRepository
                 $post->setPicture($pictures->get($post->getId()));
             }
         }
+    }
+
+    private function extractSearchTerms(string $searchQuery): array
+    {
+        $searchQuery = trim(preg_replace('/[[:space:]]+/', ' ', $searchQuery));
+        $terms = array_unique(explode(' ', $searchQuery));
+
+        // ignore the search terms that are too short
+        return array_filter($terms, function ($term) {
+            return 2 <= mb_strlen($term);
+        });
     }
 }

@@ -16,19 +16,21 @@
             <thead>
                 <tr>
                     <th>Titre</th>
-                    <th>Actions</th>
+                    <th class="text-center">Actions</th>
                 </tr>
                 <tbody>
                     {% for category in categories %}
                         <tr>
                             <td>{{ category.title }}</td>
-                            <td>
+                            <td class="text-center">
                                 <a href="{{ path('admin.category.edit', {id: category.id}) }}" class="btn btn-secondary">Editer</a>
-                                <form method="post" action="{{ path('admin.category.delete', {id: category.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
-                                    <button class="btn btn-danger">Supprimer</button>
-                                </form>
+                                {% if is_granted('SUPER_ADMIN') %}
+                                    <form method="post" action="{{ path('admin.category.delete', {id: category.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ category.id) }}">
+                                        <button class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
