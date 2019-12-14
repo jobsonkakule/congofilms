@@ -1,0 +1,25 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Profile | Grands Lacs' %}
+
+{% block body %}
+    <div class="container mt-4 mb-4">
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% if not form.vars.valid %}
+            <div class="alert alert-danger">Veuillez remplir les champs avec les bonnes informations</div>
+        {% endif %}
+        <h1 class="text-center" style="font-weight: 700;">Mettre à jour votre compte</h1>
+        {% if app.user.filename %}
+            <br>
+            <div class="m-auto" style="width: 150px;">
+                <img src="{{ vich_uploader_asset(user, 'imageFile') }}" alt="{{ app.user.pseudo }}" width="100%" style="border-radius:50%;border:3px solid rgb(222, 231, 255);">
+            </div>
+        {% endif %}
+        {{ include("security/_form.html.twig", {button: 'Mettre à jour'}) }}
+    </div>
+
+{% endblock %}

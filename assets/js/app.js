@@ -175,6 +175,7 @@ Tips.iconBar()
 Tips.comment()
 Tips.replyComment()
 Tips.copyLink()
+Tips.toggleAuthor()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');

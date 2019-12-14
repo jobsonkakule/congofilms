@@ -23,7 +23,7 @@ class CategoryRepository extends ServiceEntityRepository
     public function findForFooter(): array
     {
         $categories = $this->createQueryBuilder('c')
-            ->select('c.title', 'COUNT(p.id) as postsNb')
+            ->addSelect('COUNT(p.id) as postsNb')
             ->join('c.posts', 'p')
             ->orderBy('postsNb', 'DESC')
             ->groupBy('p.category')

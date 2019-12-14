@@ -3,34 +3,176 @@
 {% block title category.title %}
     
 {% block body %}
+    <div class="td-category-header mt-0 mb-2">
+        <div class="container">
+            <br>
+            <div class="crumb mb-0 pb-0">
+                <span>
+                <a href="{{ path('home') }}">Accueil</a>
+                </span>
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                    <a>{{ category.title }}</a>
+                </span>
+            </div>
+            <h1 style="font-weight: 700;">{{ category.title }}</h1>
+        </div>
+    </div>
     <div class="container">
-        <h1>{{ category.title }}</h1>
-        <br>
-        <div class="row">
-            {% for post in posts %}
-                <div class="col-md-4">
-                    <div class="card-mt-4">
-                        {% if post.picture %}
-                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="" class="card-img-top">
+        {% if topPosts and topPosts | length > 3 %}
+            {% set topPost, news2, news3, news4 = topPosts[0][0], topPosts[1][0], topPosts[2][0], topPosts[3][0]  %}
+            <div class="top-news text-center">
+                <div class="top-post">
+                <div class="post-container">
+                    <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
+                        {% if topPost.picture %}
+                        <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
                         {% else %}
-                            <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
+                        <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}">
                         {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                    {{ post.title }}
-                                </a>
-                            </h5>
-                            {{ post.content | truncate(200) }}
-                        </div>
+                    </a>
+                </div>
+                <div class="post-infos">
+                    <div class="post-infos-head">
+                    <h3>
+                        {{ topPost.title }}
+                    </h3>
+                    </div>
+                    <div class="post-infos-details">
+                    <a href="{{ path('profil.show', {id: topPosts[0].authorId }) }}">
+                        <span class="post-author">
+                        {% if posts[0].pseudo is not null %}
+                            {{ posts[0].pseudo }}
+                        {% else %}
+                            {{ posts[0].username }}
+                        {% endif %}
+                        </span>
+                    </a>
+                    <span>-</span>
+                    <span>
+                        {{ topPost.createdAt | ago }}
+                    </span>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+                </div>
+                <div class="last-news">
+                <div class="top-news-2">
+                    <div class="post-container">
+                    <a href="{{ path('post.show', {id: news2.id, slug: news2.slug}) }}">
+                        {% if news2.picture %}
+                            <img src="{{ vich_uploader_asset(news2.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
+                        {% else %}
+                            <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ news2.title }}">
+                        {% endif %}
+                    </a>
+                    </div>
+                    <div class="post-infos">
+                    <div class="post-infos-head">
+                        <h6>
+                        {{ news2.title }}
+                        </h6>
+                    </div>
+                    </div>
+                </div>
+                <div class="top-news-3">
+                    <div class="post-item">
+                    <div class="post-container">
+                        <a href="{{ path('post.show', {id: news3.id, slug: news3.slug}) }}">
+                            {% if news3.picture %}
+                            <img src="{{ vich_uploader_asset(news3.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                            {% else %}
+                            <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" title="{{ news3.title }}">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="post-infos">
+                        <div class="post-infos-head">
+                        <h6>
+                            {{ news3.title }}
+                        </h6>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="post-item">
+                    <div class="post-container">
+                        <a href="{{ path('post.show', {id: news4.id, slug: news4.slug}) }}">
+                            {% if news4.picture %}
+                            <img src="{{ vich_uploader_asset(news4.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                            {% else %}
+                            <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" title="{{ news4.title }}">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div class="post-infos">
+                        <div class="post-infos-head">
+                        <h6>
+                            {{ news4.title }}
+                        </h6>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        {% endif %}
         <br>
-            
-        <div class="pagination">
-                {{ knp_pagination_render(posts) }}
+        <div class="row">
+            <div class="col-md-8 top-articles">
+                {% if topPosts and topPosts | length > 3 %}
+                    {% set others = [] %}
+                    {% for p in posts %}
+                        {% set post = p[0] %}
+                        {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) %}
+                            {% set others = others | merge([p]) %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% set others = posts %}
+                {% endif %}
+                {% for p in others | slice(0, 5) %}
+                {% set post = p[0] %}
+                    <div class="row cat-item-post">
+                    <div class="col-md-4 item-thumb">
+                        <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+                        {% if post.picture %}
+                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                        {% else %}
+                            <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}">
+                        {% endif %}
+                        </a>
+                    </div>
+                        <div class="col-md-8 item-details">
+                            <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
+                            <div class="cat-post-infos">
+                                <span class="td-post-author-name">
+                                    <a href="{{ path('profil.show', {id: p.authorId }) }}">
+                                    {% if p.pseudo is not null %}
+                                        {{ p.pseudo }}
+                                    {% else %}
+                                        {{ p.username }}
+                                    {% endif %}
+                                    </a>
+                                <span>
+                                </span> - </span>
+                                {#<span class="td-post-date">{{ post.createdAt | localizeddate('long', 'none') }}</span>#}
+                                <span class="td-post-date">{{ post.createdAt | ago }}</span>
+                                <div class="td-module-comments">
+                                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ p.commentsNb }}</a>
+                                </div>
+                            </div>
+                            <div class="cat-post-excerpt">
+                            {{ post.content | striptags | truncate(200) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="pagination justify-content-center">
+                    {{ knp_pagination_render(posts) }}
+                </div>
+            </div>
+            <div class="col-md-4 article-reminder">
+                {{ sidebar() }}
+            </div>
         </div>
     </div>
     <div class="pub-2">

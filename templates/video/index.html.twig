@@ -1,0 +1,121 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Voir toutes nos vidéos' %}
+
+{% block body %}
+    <style>
+    </style>
+    <div class="td-category-header mt-0 mb-2">
+        <div class="container">
+            <br>
+            <div class="crumb mb-0 pb-0">
+                <span>
+                    <a href="{{ path('home') }}">Accueil</a>
+                </span>
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                    <a>Vidéos</a>
+                </span>
+            </div>
+            <h1>
+                <span style="font-weight: 700;">Nos dernières vidéos</span>
+            </h1>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <div class="row cat-high-body">
+            {% for video in playlist %}
+                <div class="col-md-4 cat-post-details video">
+                    <div class="card-mt-4">
+                        <div class="cat-post-img">
+                            <img src="{{ video.snippet.thumbnails.high.url }}" alt="" class="card-img-top">
+                            <a class="play-btn" data-toggle="modal" data-target="#videoModal" data-video="https://www.youtube.com/embed/{{ video.contentDetails.videoId }}">
+                                <i class="far fa-play-circle"></i>
+                            </a>
+                        </div>
+                        <div class="card-body cat-post-body pt-0">
+                            <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><h5>{{ video.snippet.title }}</h5></a>
+                            <div class="cat-post-excerpt">
+                                {{ video.snippet.description | striptags | truncate(100) }}
+                            </div>
+                            <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body bg-dark p-0">
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        <iframe class="embed-responsive-item" allowfullscreen></iframe>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {#<div class="card text-center" style="margin: 20px 0">
+                        <img src="{{ video.snippet.thumbnails.high.url }}" alt="" class="card-img-top">
+                        <div class="card-body">
+                        <h5 class="card-title">{{ video.snippet.title }}</h5>
+                        <!-- <p class="card-text">{{ video.snippet.description | nl2br }}</p> -->
+                        <!-- <p class="text-muted">{{ video.contentDetails.duration | duration }}</p> -->
+                        
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#videoModal" data-video="https://www.youtube.com/embed/{{ video.contentDetails.videoId }}">Voir cette vidéo</button>
+                        
+                        <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <!-- <div class="modal-header bg-dark border-dark">
+                                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+                                </div> -->
+                                <div class="modal-body bg-dark p-0">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" allowfullscreen></iframe>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+            
+                        </div>
+                    </div>#}
+                </div>
+            {% endfor %}
+        
+        </div>
+        <a href="https://www.youtube.com/channel/UCB0erOivnkO7jkdHFQ_pa7Q" class="btn btn-primary">Voir plus de vidéos</a>
+        <br>
+        <br>
+    
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item" allowfullscreen src="https://www.youtube.com/embed/lQAUq_zs-XU" frameborder="0"></iframe>
+              </div>
+            </div>
+          </div>
+        </div> -->
+    
+        </div>
+        <script>
+        $(document).ready(function() {
+          // Set iframe attributes when the show instance method is called
+          $("#videoModal").on("show.bs.modal", function(event) {
+            let button = $(event.relatedTarget); // Button that triggered the modal
+            let url = button.data("video");      // Extract url from data-video attribute
+        
+            $(this).find("iframe").attr({
+                src: url,
+                allow : "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            });
+          });
+        
+          // Remove iframe attributes when the modal has finished being hidden from the user
+          $("#videoModal").on("hidden.bs.modal", function() {
+            $("#videoModal iframe").removeAttr("src allow");
+          });
+        });
+        </script>
+    </div>
+    <br>
+{% endblock  %}

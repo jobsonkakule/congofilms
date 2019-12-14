@@ -51,6 +51,11 @@ class Comment
      */
     private $email;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
@@ -129,6 +134,18 @@ class Comment
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): self
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

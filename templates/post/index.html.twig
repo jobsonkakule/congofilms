@@ -3,18 +3,52 @@
 {% block title 'Voir tous nos biens' %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1>Tous les articles</h1>
-        <div class="row">
-            {% for post in posts %}
-                <div class="col-md-4">
-                    {% include "post/_post.html.twig" %}
-                </div>
-            {% endfor %}
-        </div>
-        <div class="pagination">
-                {{ knp_pagination_render(posts) }}
+    <div class="td-category-header mt-0 mb-2">
+        <div class="container">
+            <br>
+            <div class="crumb mb-0 pb-0">
+                <span>
+                <a href="{{ path('home') }}">Accueil</a>
+                </span>
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                    {% if tag %}
+                        <a>{{ tag }}</a>
+                    {% else %}
+                        <a>Tous les articles</a>
+                    {% endif %}
+                </span>
+            </div>
+            <h1>
+                {% if tag %}
+                    Articles par tag : <span style="color: rgb(0, 153, 255);font-weight:700;">{{ tag }}</span>
+                {% else %}
+                    <span style="font-weight: 700;">Tous les articles</span>
+                {% endif %}
+            </h1>
         </div>
     </div>
-
+    <div class="container mt-4">
+        {% if posts is not empty %}
+            <div class="row cat-high-body">
+                {% for p in posts %}
+                {% set post = p[0] %}
+                    <div class="col-md-4 cat-post-details">
+                        {% include "post/_post.html.twig" %}
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="pagination justify-content-center">
+                    {{ knp_pagination_render(posts) }}
+            </div>
+        {% else %}
+            <div class="justify-content-center mt-8 mb-8">
+                <h1 style="color:rgb(177, 177, 177);" class="text-center">Aucun article ne correspond à ce tag</h1>
+                <br>
+                <br>
+            </div>
+        {% endif %}
+    </div>
+    <br>
 {% endblock  %}

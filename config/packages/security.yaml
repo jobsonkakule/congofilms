@@ -30,7 +30,9 @@ security:
     access_control:
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: '^/admin/users', roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        # - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
+        - { path: ^/admin/categories, roles: [ROLE_ADMIN] }
+        - { path: ^/admin, roles: [ROLE_EDITOR, ROLE_ADMIN] }
     encoders:
         App\Entity\User: 
             algorithm: auto

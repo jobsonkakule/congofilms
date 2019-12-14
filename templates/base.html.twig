@@ -5,12 +5,14 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         
         <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700|Roboto:400,500,700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700,900|Roboto:400,500,700,900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('js/tagsinput/tagsinput.css') }}">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.7/flatpickr.css">
         {% endblock %}
     </head>
     <body>
@@ -22,8 +24,20 @@
                         <span>Goma, RDCongo</span>
                         <span>{{ "now" | localizeddate('long', 'none') }}</span>
                         <span><a href="">Contact</a></span>
-                        <span>+243975843988</span>
+                        {% if is_granted('ROLE_EDITOR') %}
+                        <span><a href="{{ path('admin.index') }}" style="color: rgb(172, 194, 255)">Administration</a></span>
+                        {% endif %}
                         {% if app.user %}
+                        <span><a href="{{path('profil.show', {id: app.user.id})}}">
+                            <div style="width: 30px; display:inline-block;">
+                                {% if app.user.filename %}
+                                    <img src="{{ vich_uploader_asset(app.user, 'imageFile') }}" alt="{{ app.user.username }}" style="border-radius: 50%;">
+                                {% else %}
+                                    <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ app.user.username }}" style="border-radius: 50%;">
+                                {% endif %}
+                            </div>
+                            Mon compte
+                        </a></span>
                         <span><a href="/logout" style="color: rgb(248, 104, 104)">Déconnexion</a></span>
                         {% else %}
                         <span><a href="{{ path('login') }}">Inscription/Connexion</a></span>
@@ -52,54 +66,87 @@
                 </div>
                 <div class="container">
                     <nav class="menu">
+                        {% set categories = cat.findAll() %}
+                        {% set cat1, cat2, cat3, cat4, cat5, cat6, cat7 = categories[0], categories[1], categories[2], categories[3], categories[4], categories[5], categories[6] %}
                         <ul>
+                            {% if post.category.slug is defined %}
+                                {% set category_slug = post.category.slug %}
+                                {% if (category_slug == cat6.slug) or (category_slug == cat7.slug) %}
+                                    {% set category_slug = 'video' %}
+                                {% endif %}
+                                {% set current_menu = category_slug %}
+                            {% endif %}
+                            {% if (current_menu == cat6.slug) or (current_menu == cat7.slug) %}
+                                {% set current_menu = 'video' %}
+                            {% endif %}
+                            {% set var = false %}
+                            {% for c in categories | slice(8, 10) %}
+                                {% set var = var or (current_menu == c.slug) %}
+                            {% endfor %}
                             <a href=""><img class="hide-logo" src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme"></a>
-                            <li class="active">
+                            <li class="{% if current_menu == 'news' %}active{% endif %}">
                                 <a href="{{ path('home') }}">News</a>
                             </li>
-                            <li>
-                                <a href="#">Politique</a>
+                            <li class="{% if current_menu == cat1.slug %}active{% endif %}">
+                                <a href="{{ path('category.show', {id: cat1.id, slug: cat1.slug}) }}">
+                                    {{ cat1.title }}
+                                </a>
                             </li>
-                            <li class="sub-menu">
-                                <a class="dropdown-label" href="#">Societe<i class="fas fa-chevron-down"></i></a>
+                            {% set resultActive = '' %}
+                            {% if (current_menu == cat2.slug) or var %}
+                                {% set resultActive = 'active' %}
+                            {% endif %}
+                            <li class="sub-menu {{ resultActive }}">
+                                <a class="dropdown-label" href="{{ path('category.show', {id: cat2.id, slug: cat2.slug}) }}">{{ cat2.title }}<i class="fas fa-chevron-down"></i></a>
                                 <ul>
-                                    <a href="">
-                                        <li>économie</li>
+                                    {% for cat in categories |slice(8, 15) %}
+                                        <a href="{{ path('category.show', {id: cat.id, slug: cat.slug}) }}">
+                                            <li>{{ cat.title }}</li>
+                                        </a>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            <li class="{% if current_menu == cat3.slug %}active{% endif %}">
+                                <a href="{{ path('category.show', {id: cat3.id, slug: cat3.slug}) }}">{{ cat3.title }}</a>
+                            </li>
+                            <li class="{% if current_menu == cat4.slug %}active{% endif %}">
+                                <a href="{{ path('category.show', {id: cat4.id, slug: cat4.slug}) }}">{{ cat4.title }}</a>
+                            </li>
+                            <li class="sub-menu {% if current_menu == 'video' %}active{% endif %}">
+                                <a href="{{ path('video.index') }}">Vidéos<i class="fas fa-chevron-down"></i></a>
+                                <ul>
+                                    <a href="{{ path('category.show', {id: cat6.id, slug: cat6.slug}) }}">
+                                        <li>{{ cat6.title }}</li>
                                     </a>
-                                    <a href="">
-                                        <li>Sécurité</li>
-                                    </a>
-                                    <a href="">
-                                        <li>Science</li>
-                                    </a>
-                                    <a href="">
-                                        <li>Culture</li>
+                                    <a href="{{ path('category.show', {id: cat7.id, slug: cat7.slug}) }}">
+                                        <li>{{ cat7.title }}</li>
                                     </a>
                                 </ul>
                             </li>
-                            <li>
-                                <a href="#">Sports</a>
-                            </li>
-                            <li>
-                                <a href="#">Gospel</a>
-                            </li>
-                            <li class="sub-menu">
-                                <a href="#">Vidéos<i class="fas fa-chevron-down"></i></a>
-                                <ul>
-                                    <a href="">
-                                        <li>nos dernières vidéos</li>
-                                    </a>
-                                    <a href="">
-                                        <li>Nos émissions</li>
-                                    </a>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Internationales</a>
+                            <li class="{% if current_menu == cat5.slug %}active{% endif %}">
+                                <a href="{{ path('category.show', {id: cat5.id, slug: cat5.slug}) }}">{{ cat5.title }}</a>
                             </li>
                             <li class="login-link">
                                 {% if app.user %}
-                                <a href="/logout">Déconnexion</a>
+                                <div class="mb-0">
+                                    <a href="{{path('profil.show', {id: app.user.id})}}" title="Mon compte">
+                                        <div>
+                                            {% if app.user.filename %}
+                                                <img src="{{ vich_uploader_asset(app.user, 'imageFile') }}" alt="Mon compte" style="border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.651); width:50px">
+                                            {% else %}
+                                                <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="Mon compte" style="border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.733); width:50px">
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="mt-0">
+                                    <span style="font-size: 12px;font-weight:normal;">
+                                        <a href="/logout">Déconnexion | </a>
+                                        {% if is_granted('ROLE_EDITOR') %}
+                                        <a href="{{ path('admin.index') }}" style="color: rgb(172, 194, 255)">Administration</a>
+                                        {% endif %}
+                                    </span>
+                                </div>
                                 {% else %}
                                 <a href="{{ path('login') }}">Connexion/Inscription</a>
                                 {% endif %}
@@ -111,12 +158,25 @@
                             </li>
                         </ul>
                     </nav>
-                    <div class="search-icon">
+                    <div class="search-icon" style="z-index: 5;">
                         <a href="" class="search-link">
                             <i class="fas fa-search"></i>
                         </a>
                         <div class="search-bar" id="search-bar">
-                            {#{% if form %}
+                            
+                            <form action="{{ path('home') }}" method="get">
+                                <div class="form-row align-items-end">
+                                    <div class="col-9 pr-0">
+                                        <input type="text" name="query" class="form-control" placeholder="Entrer un mot-clé">
+                                    </div>
+                                    <div class="col-3 pl-0">
+                                        <button class="btn btn-primary">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                            {#{% if form is defined and form.query is defined %}
                                 {{ form_start(form) }}
                                 <div class="form-row align-items-end">
                                     <div class="col-9 pr-0">{{ form_widget(form.query) }}</div>
@@ -137,6 +197,7 @@
                 <footer class="footer">
                     <div class="container">
                         {{ footer() }}
+                        <a style="color: #fff;" class="text-center" href="{{ path('post.index') }}">Explorer nos articles</a>
                         <hr>
                         <div class="row">
                         <div class="col-md-2 logo-footer">
@@ -152,7 +213,7 @@
                             <h4>Nos adresses</h4>
                             <ul class="fa-ul">
                             <li><span class="fa-li"><i class="fas fa-map-marker-alt"></i></span>188, Avenue de la Paix, Q. Himbi, Ville de Goma, Nord-Kivu, RD Congo</li>
-                            <li><span class="fa-li"><i class="fas fa-phone-alt"></i></span>+243(0)812519400, +243(0)997700547</li>
+                            <li><span class="fa-li"><i class="fas fa-phone-alt"></i></span>+243(0)975843988, +243(0)993821940</li>
                             <li style="word-wrap:break-word;"><span class="fa-li"><i class="far fa-envelope"></i></span>sylamcoordination@gmail.com</li>
                             </ul>
                             Suivez-nous également sur :
@@ -177,7 +238,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.locales.min.js"></script>
 
         {{ encore_entry_script_tags('app') }}
         <script src="{{ asset('build/app.js') }}"></script>
@@ -185,6 +247,20 @@
         <script src="{{ asset('js/tagsinput/tagsinput.js') }}"></script>
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="https://kit.fontawesome.com/da855b0ce0.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.7/flatpickr.js"></script>
+        
+        <script>
+            timeago().render(document.querySelectorAll('.timeago'), 'fr')
+        </script>
+        <script>
+          flatpickr('.datepicker', {
+            enableTime: true,
+            altInput: true,
+            altFormat: 'j F Y, H:i',
+            dateFormat: 'Y-m-d H:i:S'
+          })
+        </script>
+
         <script>
             var didScroll;
             var lastScrollTop = 0;

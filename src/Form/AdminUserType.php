@@ -36,7 +36,8 @@ class AdminUserType extends AbstractType
     {
         $output = [
             'Utilisateur' => 'ROLE_USER' ,
-            'Redacteur' => 'ROLE_ADMIN',
+            'Redacteur' => 'ROLE_EDITOR',
+            'Modérateur' => 'ROLE_ADMIN',
             'Administrateur' => 'ROLE_SUPER_ADMIN'
         ];
         return $output;

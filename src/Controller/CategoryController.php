@@ -29,10 +29,7 @@ class CategoryController extends AbstractController
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
 
-        return $this->render('category/index.html.twig', [
-            'current_menu' => 'categories',
-            'categories' => $this->repository->findAll()
-        ]);
+        return $this->render('category/index.html.twig', []);
     }
 
     /**
@@ -59,7 +56,8 @@ class CategoryController extends AbstractController
         return $this->render('category/show.html.twig', [
             'category' => $category,
             'posts' => $posts->findWithCategory($category->getId(), $request->query->getInt('page', 1)),
-            'current_menu' => 'categories'
+            'topPosts' => $posts->findTopPosts($category->getId()),
+            'current_menu' => $category->getSlug()
         ]);
     }
 }

@@ -11,6 +11,16 @@
     {% if not form.vars.valid %}
         <div class="alert alert-danger">Veuillez remplir les champs avec les bonnes informations</div>
     {% endif %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% if error is defined %}
+        <div class="alert alert-danger">
+            {{ error.messageKey | trans(error.messagedata, 'security')}}
+        </div>
+    {% endif %}
     <div class="comment-section">
         {{ form_start(form, {'attr': {'id': 'form-comment', 'action': '#comments'}}) }}
             {% if app.user %}
@@ -21,6 +31,9 @@
                     {{ form_row(form.author, {'attr': {'value': app.user.username}}) }}
                 {% endif %}
                 {{ form_row(form.email, {'attr': {'value': app.user.email}}) }}
+                {% if app.user.filename %}
+                    {{ form_row(form.avatar, {'attr': {'value': app.user.filename}}) }}
+                {% endif %}
             </div>
             {% else %}
             <div class="row">
@@ -43,11 +56,15 @@
             {% if comment.parentId < 1 %}
             <div>
                 <div id="comment-{{ comment.id }}" class="comment row" style="background-color: #f4f4f4;border: 1px solid #ebebeb;font-size: .9em;">
-                    <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="Auteur" width="100%" class="comment-avatar">
+                    {% if comment.avatar %}
+                        <img src="/media/users/{{ comment.avatar }}" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                    {% else %}
+                        <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                    {% endif %}
                     <div style="margin: 5px 0 0 5px;">
                         <p>
                             <strong>{{ comment.author }}</strong> - 
-                            <span class="text-muted" style="font-size: 75%;"><em>{{ comment.createdAt | date("d F, Y  H:i") }}</em></span> - 
+                            <span class="text-muted" style="font-size: 75%;"><em>{{ comment.createdAt | ago }}</em></span> - 
                             <span class="reply" data-id="{{ comment.id }}" data-parent="{{ comment.id }}" style="font-size: 75%;color:rgba(72, 151, 253, 0.973);text-decoration: underline;cursor:pointer;">Répondre</span>&nbsp;
                             {% if app.user and comment.email == app.user.email %}
                             <a href="{{ path('comment.delete', {id: comment.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ comment.id) }}" data-id="{{ comment.id }}" onsubmit="return confirm('Etes-vous vraiment sûr ?')">Supprimer</a>
@@ -63,11 +80,15 @@
                     {% if reply.parentId > 0 and reply.parentId == comment.id %}
                     <div style="padding-left: 70px; font-size: .9em;">
                         <div id="comment-{{ reply.id }}" class="comment row" style="background-color: #f4f4f4;border: 1px solid #ebebeb;">
-                            <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="Auteur" width="100%" class="comment-avatar">
+                            {% if reply.avatar %}
+                                <img src="/media/users/{{ reply.avatar }}" alt="{{ reply.author }}" width="100%" class="comment-avatar">
+                            {% else %}
+                                <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                            {% endif %}
                             <div style="margin: 5px 0 0 5px;">
                                 <p>
                                     <strong>{{ reply.author }}</strong> - 
-                                    <span class="text-muted" style="font-size: 75%;"><em>{{ reply.createdAt | date("d F, Y  H:i") }}</em></span> - 
+                                    <span class="text-muted" style="font-size: 75%;"><em>{{ reply.createdAt | ago }}</em></span> - 
                                     <span class="reply" data-id="{{ comment.id }}" data-parent="{{ reply.id }}" style="font-size: 75%;color:rgba(72, 151, 253, 0.973);text-decoration: underline;cursor:pointer;">Répondre</span>&nbsp;
                                     {% if app.user and reply.email == app.user.email %}
                                     <a href="{{ path('comment.delete', {id: reply.id}) }}" comment-delete style="font-size: 75%; text-decoration:underline; color: red;" data-token="{{ csrf_token('delete' ~ reply.id) }}" data-id="{{ reply.id }}" onsubmit="return confirm('Etes-vous vraiment sûr ?')">Supprimer</a>
