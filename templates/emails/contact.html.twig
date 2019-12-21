@@ -99,9 +99,9 @@
               <tr>
                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                   <div style="font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:1;text-align:left;color:#000000;">
-                    <h1>Demande de contact {{ contact.property.title }}</h1>
+                    <h1>Grands Lacs News : Nouveau message </h1>
                     <p>
-                      Une nouvelle personne souhaiterait obtenir plus d'information à propos du bien <a href="{{ url('property.show', {id: contact.property.id, slug: contact.property.slug}) }}">{{ contact.property.title }}</a>
+                      {{ contact.firstname }} vous a envoyé un message
                     </p>
                   </div>
                 </td>
@@ -133,23 +133,19 @@
                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                   <table cellpadding="0" cellspacing="0" width="100%" border="0" style="cellspacing:0;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;">
                     <tr>
-                      <td style="font-weight:bold;">Prénom</td>
-                      <td>{{ contact.firstname }}</td>
-                    </tr>
-                    <tr>
                       <td style="font-weight:bold;">Nom</td>
-                      <td>{{ contact.lastname }}</td>
-                    </tr>
-                    <tr>
-                      <td style="font-weight:bold;">Téléphone</td>
-                      <td>{{ contact.phone }}</td>
+                      <td>{{ contact.firstname }}</td>
                     </tr>
                     <tr>
                       <td style="font-weight:bold;">Email</td>
                       <td>{{ contact.email }}</td>
                     </tr>
                     <tr>
-                      <td style="font-weight:bold;">Message</td>
+                      <td style="font-weight:bold;">Sujet</td>
+                      <td>{{ contact.subject }}</td>
+                    </tr>
+                    <tr>
+                      <td style="font-weight:normal;">Message</td>
                       <td>{{ contact.message | nl2br }}</td>
                     </tr>
                   </table>

@@ -9,9 +9,12 @@
                 <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" class="card-img-top">
             </a>
         {% endif %}
+        {% if is_granted('ROLE_EDITOR') %}
+            <a class="post-menu" href="{{ path('admin.post.edit', {id: post.id}) }}"><i class="fas fa-ellipsis-v"></i></a>
+        {% endif %}
         <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}" class="item-cat">{{ p.title }}</a>
     </div>
-    <div class="card-body cat-post-body pt-0">
+    <div class="card-body cat-post-body pt-0 pl-0 pr-0">
         <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
         <div class="cat-post-infos">
         <span class="td-post-author-name">

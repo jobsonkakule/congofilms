@@ -1,12 +1,20 @@
 import Places from 'places.js'
 import Map from './modules/map'
 import Tips from './modules/tips'
+import Filter from './modules/filter'
+import PostToggle from './modules/postToggle'
+import RandomPosts from './modules/randomPost'
 import 'slick-carousel'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import tinymce from 'tinymce/tinymce'
+import noUiSlider from 'nouislider'
+import 'nouislider/distribute/nouislider.css'
 
 import 'tinymce/themes/silver'
+new Filter(document.querySelector('.js-filter'))
+new PostToggle(document.querySelector('.js-show'))
+new RandomPosts(document.querySelector('.js-home'))
 
 // Tagsinput
 // import './tagsinput/tagsinput.css'
@@ -170,12 +178,40 @@ tinymce.init({
     image_description: true,
     image_caption: true,
 });
+
+// Slider
+const slider = document.getElementById('score-slider');
+if (slider) {
+    const min = document.getElementById('min')
+    const max = document.getElementById('max')
+    const minValue = parseInt(slider.dataset.min, 10)
+    const maxValue = parseInt(slider.dataset.max, 10)
+    const range = noUiSlider.create(slider, {
+        start: [min.value || minValue, max.value || maxValue],
+        connect: true,
+        range: {
+            'min': minValue,
+            'max': maxValue
+        }
+    });
+    range.on('slide', function (values, handle) {
+        if (handle === 0) {
+            min.value = Math.round(values[0])
+        }
+        if (handle === 1) {
+            max.value = Math.round(values[1])
+        }
+    })
+    range.on('end', function (values, handle) {
+        min.dispatchEvent(new Event('change'))
+    })
+}
 // Responsive button
 Tips.iconBar()
 Tips.comment()
 Tips.replyComment()
 Tips.copyLink()
-Tips.toggleAuthor()
+// Tips.toggleAuthor()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');

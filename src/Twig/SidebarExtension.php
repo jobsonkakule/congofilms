@@ -36,8 +36,6 @@ class SidebarExtension extends AbstractExtension {
         return [
             new TwigFunction('sidebar', [$this, 'getSidebar'], ['is_safe' => ['html']]),
             new TwigFunction('footer', [$this, 'getFooter'], ['is_safe' => ['html']]),
-            new TwigFunction('lastPosts', [$this, 'getLastPosts'], ['is_safe' => ['html']]),
-            new TwigFunction('emergency', [$this, 'getEmergency'], ['is_safe' => ['html']])
         ];
     }
 
@@ -58,22 +56,6 @@ class SidebarExtension extends AbstractExtension {
         });
     }
 
-    public function getLastPosts()
-    {
-        return $this->cache->get('lastPosts', function (ItemInterface $item) {
-            $item->tag(['lastPosts']);
-            return $this->renderLastPosts();
-        });
-    }
-
-    public function getEmergency()
-    {
-        return $this->cache->get('emergency', function (ItemInterface $item) {
-            $item->tag(['lastPosts']);
-            return $this->renderEmergency();
-        });
-    }
-
     private function renderSidebar(): string {
         $posts = $this->postRepository->findForSidebar();
         return $this->twig->render('partials/sidebar.html.twig', [
@@ -89,20 +71,6 @@ class SidebarExtension extends AbstractExtension {
             'posts' => $posts,
             'popularPosts' => $popularPosts,
             'categories' => $categories
-        ]);
-    }
-
-    private function renderLastPosts(): string {
-        $lastPosts = $this->postRepository->findLastPosts();
-        return $this->twig->render('partials/lastposts.html.twig', [
-            'lastPosts' => $lastPosts
-        ]);
-    }
-
-    private function renderEmergency(): string {
-        $lastPosts = $this->postRepository->findLastestPosts();
-        return $this->twig->render('partials/emergency.html.twig', [
-            'lastPosts' => $lastPosts
         ]);
     }
 }

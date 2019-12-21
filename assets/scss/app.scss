@@ -526,6 +526,18 @@ a { text-decoration: none; color:inherit; }
             color: $theme-title!important;
         }
     }
+    .post-menu {
+        display: block;
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        color: $theme-title;
+        transition: all 0.2s ease;
+        // &:hover {
+        //     background-color: $last-article;
+        //     color: $theme-title!important;
+        // }
+    }
 }
 
 .cat-highlights {
@@ -1402,7 +1414,45 @@ h1 {
         }
     }
 }
+.profil-75 {
+    width: 75%;
+}
 
+.filter {
+    display: block;
+    position: sticky;
+    top: 20px;
+} 
+.is-loading {
+
+    .js-loading {
+        position: absolute;
+        top: calc(50% - 1rem);
+        left: calc(50% - 1rem);
+        z-index: 3;
+    }
+    &::before {
+        content: '';
+        top: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        opacity: .5;
+        z-index: 2;
+    }
+}
+
+
+.sidebar-item {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+    height: 100%;
+}
 
 /*------------------------------------*\
     $RESPONSIVE

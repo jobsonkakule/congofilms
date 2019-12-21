@@ -16,9 +16,8 @@ class ContactType extends AbstractType
     {
         $builder
             ->add('firstname', TextType::class)
-            ->add('lastname', TextType::class)
-            ->add('phone', TextType::class)
             ->add('email', EmailType::class)
+            ->add('subject', TextType::class)
             ->add('message', TextareaType::class)
         ;
     }
@@ -26,7 +25,8 @@ class ContactType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Contact::class
+            'data_class' => Contact::class,
+            'translation_domain' => 'forms'
         ]);
     }
 }

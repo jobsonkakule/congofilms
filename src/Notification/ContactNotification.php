@@ -19,7 +19,7 @@ class ContactNotification
     }
 
     public function notify(Contact $contact) {
-        $message = (new \Swift_Message('Agence : ' . $contact->getProperty()->getTitle()))
+        $message = (new \Swift_Message('Quelqu\'un vous a contacté | Grands Lacs News '))
             ->setFrom($this->mailFrom)
             ->setTo('contact@grandslacsnews.com')
             ->setReplyTo($contact->getEmail())

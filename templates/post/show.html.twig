@@ -150,47 +150,20 @@
                 </a>
                 </div>
                 <hr>
-                <div class="cat-high-toggle">
-                <h6>
-                    <a href="" class="toggle-item cat-high-selected">articles associés</a>
-                    <a href="" class="toggle-item">Plus de l'auteur</a>
-                </h6>
-                </div>
-                <div class="row last-articles">
-                    {% set others = [] %}
-                    {% for p in associatedPosts %}
-                      {% set postItem = p[0] %}
-                      {% if (postItem.id != post.id) %}
-                        {% set others = others | merge([p]) %}
-                      {% endif %}
-                    {% endfor %}
-                    {% if others %}
-                        {% for p in others | slice(0, 3) %}
-                        {% set postItem = p[0] %}
-                            <div class="col-md-4 last-art-item">
-                                <div class="cat-post-img">
-                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}">
-                                    {% if postItem.picture %}
-                                        <img src="{{ vich_uploader_asset(postItem.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                                    {% else %}
-                                        <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ postItem.title }}"></a>
-                                    {% endif %}
-                                <a href="{{ path('category.show', {id: p.id, slug: postItem.category.slug}) }}" class="item-cat">{{ p.title }}</a>
-                                </div>
-                                <div class="cat-post-body">
-                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}"><h6>{{ postItem.title }}</h6></a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <div class="justify-content-center">
-                            <h3 style="color: #777;">Aucun contenu à afficher</h3>
-                        </div>
-                    {% endif %}
-                </div>
-                <br>
-                <div class="pagination justify-content-center">
-                    {{ knp_pagination_render(associatedPosts) }}
+                <div class="js-show">
+                    <div class="cat-high-toggle js-show-title">
+                        <h6>
+                            <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}" class="toggle-item cat-high-selected">articles associés</a>
+                            <a href="?author={{ post.author.id }}" class="toggle-item">Plus de l'auteur</a>
+                        </h6>
+                    </div>
+                    <div class="row last-articles js-show-content" style="position: relative;">
+                        {% include "post/_associatedPosts.html.twig" %}
+                    </div>
+                    <br>
+                    <div class="pagination justify-content-center js-show-pagination">
+                        {% include "post/_postPagination.html.twig" %}
+                    </div>
                 </div>
                 {% include "post/_form.html.twig" %}
             </div>
