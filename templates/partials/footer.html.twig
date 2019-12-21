@@ -4,6 +4,7 @@
         <div class="col-md-4">
             <h4>à ne pas manquer</h4>
             <div class="cat-items">
+                {% set item1, item2, item3 = posts[0], posts[1], posts[2] %}
                 {% for post in posts | slice(0, 3) %}
                     <div class="cat-item-post">
                         <div class="item-thumb">
@@ -28,7 +29,14 @@
         <div class="col-md-4">
             <h4>articles populaires</h4>
             <div class="cat-items">
-                {% for p in popularPosts | slice(0, 3) %}
+                {% set others = [] %}
+                {% for p in popularPosts %}
+                    {% set post = p[0] %}
+                    {% if (post.id != item1.id) and (post.id != item2.id) and (post.id != item3.id) %}
+                        {% set others = others | merge([p]) %}
+                    {% endif %}
+                {% endfor %}
+                {% for p in others | slice(0, 3) %}
                 {% set post = p[0] %}
                     <div class="cat-item-post">
                         <div class="item-thumb">

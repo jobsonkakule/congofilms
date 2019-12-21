@@ -50,7 +50,7 @@
                 <h5 class="text-muted text-center">
                     Description
                 </h5>
-                <div class="text-center w-75 m-auto">
+                <div class="profil-75 text-center m-auto">
                     <p class="lead">
                         {{ user.description }}
                     </p>
@@ -74,12 +74,18 @@
                     </a>
                 </div>
             {% endif %}
-            <div class="w-75 m-auto">
+            <div class="profil-75 m-auto">
                 {% if authorPosts %}
-                    <hr>
                     <div class="cat-high-toggle">
                         <h6>
-                            <a href="" class="toggle-item cat-high-selected">Ces derniers articles</a>
+                            <a href="" class="toggle-item cat-high-selected">
+                                
+                            {% if app.user and app.user.email == user.email %}
+                                Mes derniers articles
+                            {% else %}
+                                Ses derniers articles
+                            {% endif %}
+                            </a>
                         </h6>
                     </div>
                     <div class="row last-articles">

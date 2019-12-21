@@ -35,12 +35,17 @@ class AdminPostController extends AbstractController
     public function index(Request $request)
     {
         $repository = $this->repository;
+        $postQuery = $request->query->get('postQuery');
         if ($tag = $request->query->get('tag')) {
             $posts = $repository->paginatePostForTag($request->query->getInt('page', 1), $tag);
-        } else {
-            $posts = $repository->paginatePostForTag($request->query->getInt('page', 1));
+        } elseif($postQuery) {
+            $posts = $repository->paginatePostForTag($request->query->getInt('page', 1), null, $postQuery);
         }
-        return $this->render('admin/post/index.html.twig', compact('posts'));
+        else {
+            $posts = $repository->paginatePostForTag($request->query->getInt('page', 1));
+            $postQuery;
+        }
+        return $this->render('admin/post/index.html.twig', compact('posts', 'postQuery'));
     }
 
     /**
@@ -91,7 +96,7 @@ class AdminPostController extends AbstractController
                 $pics[] = $targetPath;
                 $this->resizeImage($targetPath);
             }
-            $cache->invalidateTags(['posts','lastPosts']);
+            $cache->invalidateTags(['posts']);
 
             $this->addFlash('success', 'Elément bien modifié avec succès');
             return $this->redirectToRoute('admin.post.index');
@@ -116,7 +121,7 @@ class AdminPostController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Bien suprimé avec succès');
         }
-        $cache->invalidateTags(['posts','lastPosts']);
+        $cache->invalidateTags(['posts']);
 
         return $this->redirectToRoute('admin.post.index');
 

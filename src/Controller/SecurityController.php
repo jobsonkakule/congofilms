@@ -43,6 +43,10 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils)
     {
+        if ($this->getUser()) {
+            $this->addFlash('success', 'Vous êtes déjà connecté');
+            return $this->redirectToRoute('home');
+        }
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
         return $this->render('security/login.html.twig', [

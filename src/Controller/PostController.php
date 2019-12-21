@@ -1,12 +1,15 @@
 <?php
 namespace App\Controller;
 
+use App\Data\SearchData;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Form\CommentType;
+use App\Form\SearchForm;
 use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,17 +32,33 @@ class PostController extends AbstractController
      */
     public function index(Request $request): Response
     {
+        $data = new SearchData();
+        $form = $this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
+        [$min, $max] = $this->repository->findMinMax($data);
         $tag = '';
-
         if ($request->query->get('tag')) {
             $tag = $request->query->get('tag');
             $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 12);
         } else {
-            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, null, 12);
+            $posts = $this->repository->filterPosts($data, $request->query->getInt('page', 1), 12);
+        }
+        if ($request->get('ajax')) {
+            return new JsonResponse([
+                'content' => $this->renderView('post/_posts.html.twig', ['posts' => $posts]),
+                'sorting' => $this->renderView('post/_sorting.html.twig', ['posts' => $posts]),
+                'pagination' => $this->renderView('post/_pagination.html.twig', ['posts' => $posts]),
+                'pages' => ceil($posts->getTotalItemCount() / $posts->getItemNumberPerPage()),
+                'min' => $min,
+                'max' => $max
+            ]);
         }
         return $this->render('post/index.html.twig', [
             'posts' => $posts,
-            'tag' => $tag
+            'tag' => $tag,
+            'form' => $form->createView(),
+            'min' => $min,
+            'max' => $max
         ]);
     }
 
@@ -82,19 +101,31 @@ class PostController extends AbstractController
         $post->setViews($post->getViews()+1);
         $this->em->persist($post);
         $this->em->flush();
-        $authorPosts = $postRepository->findPostsByField($request->query->getInt('page', 1), 'author', $post->getAuthor()->getId());
+        
         $tags = $post->getTags();
         $sets = [];
         foreach ($tags as $tag) {
             $sets[] = $tag->getName();
         }
-        $associatedPosts = $postRepository->findLatest($request->query->getInt('page', 1), null, $sets, 4);
+        if ( $autorId = $request->query->get('author')) {
+            $authorPosts = $postRepository->findPostsByField($request->query->getInt('page', 1), 'author', $autorId, $post->getId());
+            $associatedPosts = $authorPosts;
+        } else {
+            $relatedPosts = $postRepository->findLatest($request->query->getInt('page', 1), null, $sets, 3, $post->getId());
+            $associatedPosts = $relatedPosts;
+        }
+        if ($request->get('ajax')) {
+            return new JsonResponse([
+                'content' => $this->renderView('post/_associatedPosts.html.twig', ['associatedPosts' => $associatedPosts]),
+                'pagination' => $this->renderView('post/_postPagination.html.twig', ['associatedPosts' => $associatedPosts]),
+                'pages' => ceil($associatedPosts->getTotalItemCount() / $associatedPosts->getItemNumberPerPage())
+            ]);
+        }
         // dump($associatedPosts);
         $cache->invalidateTags(['popularPosts']);
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'associatedPosts' => $associatedPosts,
-            'authorPosts' => $authorPosts,
             'form' => $form->createView()
         ]);
     }

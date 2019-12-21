@@ -17,7 +17,9 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "flip-toolkit": "^7.0.7",
         "leaflet": "^1.5.1",
+        "nouislider": "^14.1.1",
         "places.js": "^1.17.0",
         "select2": "^4.0.12",
         "slick-carousel": "^1.8.1",

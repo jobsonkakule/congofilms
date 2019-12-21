@@ -1,0 +1,26 @@
+<div id="spinner-none" class="spinner-border js-loading" role="status" aria-hidden="true" style="display: none;">
+    <div class="sr-only">Chargement...</div>
+</div>
+{% if associatedPosts %}
+    {% for p in associatedPosts | slice(0, 3) %}
+    {% set postItem = p[0] %}
+        <div class="col-md-4 last-art-item" id="postItem-{{ postItem.id }}">
+            <div class="cat-post-img">
+            <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}">
+                {% if postItem.picture %}
+                    <img src="{{ vich_uploader_asset(postItem.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
+                {% else %}
+                    <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ postItem.title }}"></a>
+                {% endif %}
+            <a href="{{ path('category.show', {id: p.id, slug: postItem.category.slug}) }}" class="item-cat">{{ p.title }}</a>
+            </div>
+            <div class="cat-post-body">
+            <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}"><h6>{{ postItem.title }}</h6></a>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="justify-content-center">
+        <h3 style="color: #777;">Aucun contenu à afficher</h3>
+    </div>
+{% endif %}

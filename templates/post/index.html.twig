@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title 'Voir tous nos biens' %}
+{% block title 'Voir tous nos articles' %}
 
 {% block body %}
     <div class="td-category-header mt-0 mb-2">
@@ -28,27 +28,33 @@
             </h1>
         </div>
     </div>
-    <div class="container mt-4">
-        {% if posts is not empty %}
-            <div class="row cat-high-body">
-                {% for p in posts %}
-                {% set post = p[0] %}
-                    <div class="col-md-4 cat-post-details">
-                        {% include "post/_post.html.twig" %}
+    <div class="container js-filter">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                {% include "post/_filter.html.twig" %}
+            </div>
+            <div class="col-md-9">
+                {% if posts is not empty %}
+                    <div class="d-flex justify-content-end mb-2 js-filter-sorting">
+                        {% include "post/_sorting.html.twig" %}
                     </div>
-                {% endfor %}
+                    <div class="row cat-high-body js-filter-content">
+                        {% include "post/_posts.html.twig" %}
+                    </div>
+                    <br>
+                    <div class="pagination justify-content-center js-filter-pagination">
+                        {% include "post/_pagination.html.twig" %}
+                    </div>
+                {% else %}
+                    <div class="justify-content-center mt-8 mb-8">
+                        <h1 style="color:rgb(177, 177, 177);" class="text-center">Aucun article ne correspond à ce filtre</h1>
+                        <br>
+                        <br>
+                    </div>
+                {% endif %}
+                
             </div>
-            <br>
-            <div class="pagination justify-content-center">
-                    {{ knp_pagination_render(posts) }}
-            </div>
-        {% else %}
-            <div class="justify-content-center mt-8 mb-8">
-                <h1 style="color:rgb(177, 177, 177);" class="text-center">Aucun article ne correspond à ce tag</h1>
-                <br>
-                <br>
-            </div>
-        {% endif %}
+        </div>
     </div>
     <br>
 {% endblock  %}

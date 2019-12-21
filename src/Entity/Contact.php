@@ -9,7 +9,7 @@ class Contact {
     /**
      * @var string|null
      * @Assert\NotBlank()
-     * @Assert\Length(min=2, max=100)
+     * @Assert\Length(min=2, max=50)
      */
     private $firstname;
 
@@ -18,11 +18,10 @@ class Contact {
      * @Assert\NotBlank()
      * @Assert\Length(min=2, max=100)
      */
-    private $lastname;
+    private $subject;
 
     /**
      * @var string|null
-     * @Assert\NotBlank()
      * @Assert\Regex(
      *  pattern="/[0-9]{10}/"
      * )
@@ -68,30 +67,6 @@ class Contact {
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of lastname
-     *
-     * @return  string|null
-     */ 
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-    /**
-     * Set the value of lastname
-     *
-     * @param  string|null  $lastname
-     *
-     * @return  self
-     */ 
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
 
         return $this;
     }
@@ -188,6 +163,30 @@ class Contact {
     public function setProperty($property)
     {
         $this->property = $property;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of subject
+     *
+     * @return  string|null
+     */ 
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * Set the value of subject
+     *
+     * @param  string|null  $subject
+     *
+     * @return  self
+     */ 
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
 
         return $this;
     }

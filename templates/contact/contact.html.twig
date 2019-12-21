@@ -1,0 +1,46 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Nous contacter | Grands Lacs News' %}
+
+{% block body %}
+    <div class="td-category-header mt-0 mb-2">
+        <div class="container">
+            <br>
+            <div class="crumb mb-0 pb-0">
+                <span>
+                <a href="{{ path('home') }}">Accueil</a>
+                </span>
+                <i class="fas fa-chevron-right"></i>
+                <span>
+                <a>Nous contacter</a>
+                </span>
+            </div>
+            <h1 style="font-weight: 700;">
+                Nous contacter
+            </h1>
+        </div>
+    </div>
+    <div class="container mt-4">
+        <p>
+            Vous voulez nous contacter, prière le faire via mobile aux numéros suivants :
+            <span class="font-weight-bold">+243 975 843 988</span>, <span class="font-weight-bold">+243 993 821 940</span>.
+        </p>
+        <p>Vous pouvez egalement nous envoyer un email :</p>
+        {{ form_start(form) }}
+            <div class="row">
+                <div class="col-md-4">{{ form_row(form.firstname) }}</div>
+                <div class="col-md-4">{{ form_row(form.email) }}</div>
+                <div class="col-md-4">{{ form_row(form.subject) }}</div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">{{ form_row(form.message, {'attr': {'rows': '5'}}) }}</div>
+            </div>
+
+        {{ form_rest(form) }}
+            <button class="btn btn-primary">Envoyer</button>
+        {{ form_end(form) }}
+        <br>
+        <p>Si vous êtes également journaliste ou informateur, et voulez contribuer avec du contenu "<span class="font-weight-bold">ORIGINAL</span>", commencez par <a href="{{ path('signup') }}">créer un compte</a> ensuite en faire la demande</p>
+    </div>
+    <br>
+{% endblock  %}

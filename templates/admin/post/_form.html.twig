@@ -6,7 +6,8 @@
     </div>
     <div class="row">
         <div class="col-md-4">{{ form_row(form.category) }}</div>
-        <div class="col-md-4">{{ form_row(form.created_at, { 'attr': {'class': 'datepicker'}}) }}</div>
+        
+        <div class="col-md-4" {% if post.id %}style="display:none;"{% endif %}>{{ form_row(form.created_at, { 'attr': {'class': 'datepicker'}}) }}</div>
         <div class="col-md-4">{{ form_row(form.online, { 'attr': {'class': 'form-control'}}) }}</div>
     </div>
     <div class="row">
