@@ -3,6 +3,7 @@ namespace App\Controller\Admin;
 
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use App\Repository\PubRepository;
 use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,13 +21,15 @@ class AdminIndexController extends AbstractController
         PostRepository $postRepository,
         CategoryRepository $categoryRepository,
         TagRepository $tagRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        PubRepository $pubRepository
     )
     {
-        $nbPosts = count($postRepository->findAll());
-        $nbCategories = count($categoryRepository->findAll());
+        $nbPosts = $postRepository->countAll();
+        $nbCategories = $categoryRepository->countAll();
         $nbTags = count($tagRepository->adminFindAll());
-        $nbUsers = count($userRepository->findAll());
-        return $this->render('admin/index.html.twig', compact('nbPosts', 'nbCategories', 'nbTags', 'nbUsers'));
+        $nbUsers = $userRepository->countAll();
+        $nbPubs = $pubRepository->countAll();
+        return $this->render('admin/index.html.twig', compact('nbPosts', 'nbCategories', 'nbTags', 'nbUsers', 'nbPubs'));
     }
 }

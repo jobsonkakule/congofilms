@@ -63,7 +63,13 @@ class AdminPostController extends AbstractController
             $post->setAuthor($this->getUser());
             $this->em->persist($post);
             $this->em->flush();
-
+            
+            $pics = [];
+            foreach ($post->getPictures() as $picture) {
+                $targetPath = 'media/posts/' .  $picture->getFileName();
+                $pics[] = $targetPath;
+                $this->resizeImage($targetPath);
+            }
             $this->addFlash('success', 'Elément bien créé avec succès');
 
             $cache->invalidateTags(['posts', 'lastPosts']);

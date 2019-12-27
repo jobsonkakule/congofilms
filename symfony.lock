@@ -120,6 +120,9 @@
     "elasticsearch/elasticsearch": {
         "version": "v6.7.2"
     },
+    "facebook/graph-sdk": {
+        "version": "5.7.0"
+    },
     "fig/link-util": {
         "version": "1.0.0"
     },

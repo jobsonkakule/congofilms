@@ -1,0 +1,34 @@
+{{ form_start(form) }}
+
+    <div class="row">
+        <div class="col-md-9">
+            {{ form_row(form.title) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_row(form.promo, { 'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            {{ form_row(form.link) }}
+        </div>
+        <div class="col-md-4">{{ form_row(form.imageSmallfile) }}</div>
+        <div class="col-md-3 pb-3">
+            {% if vich_uploader_asset(pub, 'imageSmallfile') is not null %}
+            <img src="{{ vich_uploader_asset(pub, 'imageSmallfile') }}" alt="{{ pub.title }}" width="100%">
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">{{ form_row(form.imageLargefile) }}</div>
+        <div class="col-md-8">
+            {% if vich_uploader_asset(pub, 'imageLargefile') is not null %}
+            <img src="{{ vich_uploader_asset(pub, 'imageLargefile') }}" alt="{{ pub.title }}" width="100%">
+            {% endif %}
+        </div>
+    </div>
+{{ form_rest(form) }}
+    <br>
+    <button class="btn btn-primary">{{ button|default('Enregistrer') }}</button>
+{{ form_end(form) }}
+<br>

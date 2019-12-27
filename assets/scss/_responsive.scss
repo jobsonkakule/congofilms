@@ -13,6 +13,9 @@ $theme-mobile: rgb(34, 34, 34);
         .em-title {
             margin: auto;
         }
+        .container-fluid {
+            width: 90%;
+        }
     }
     .header{
         position: fixed;
@@ -302,5 +305,8 @@ $theme-mobile: rgb(34, 34, 34);
     }
     .profil-75 {
         width: 100%;
+    }
+    .pub-2 {
+        width: 95%;
     }
 }

@@ -35,6 +35,8 @@ export default class Filter {
             if (e.target.tagName === 'A') {
                 e.preventDefault()
                 this.loadUrl(e.target.getAttribute('href'))
+            } else {
+                e.preventDefault()
             }
         } 
         this.sorting.addEventListener('click', e => {
@@ -59,14 +61,18 @@ export default class Filter {
     }
 
     async loadMore () {
+        
         const button = this.pagination.querySelector('button')
         button.setAttribute('disabled', 'disabled')
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Voir plus'
         this.page++
         const url = new URL(window.location.href)
         const params = new URLSearchParams(url.search)
         params.set('page', this.page)
         await this.loadUrl(url.pathname + '?' + params.toString(), true)
         button.removeAttribute('disabled')
+        button.innerHTML = 'Voir plus'
+
     }
 
     async loadForm () {

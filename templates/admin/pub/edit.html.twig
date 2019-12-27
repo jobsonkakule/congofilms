@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Editer la publicité' %}
+
+{% block body %}
+    
+    <div class="container mt-4">
+        <h1>Editer la publicité</h1>
+        {{ include("admin/pub/_form.html.twig", {button: 'Editer'}) }}
+    </div>
+
+{% endblock %}

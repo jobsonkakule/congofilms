@@ -2,11 +2,37 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Grands Lacs News | Accueil{% endblock %}</title>
         
-        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="description" content="Magazine d'informations et actualités de la sous-région des Grands Lacs en particulier et de la RDCongo en général">
+        <meta http-equiv="content-language" content="fr">
+        <meta name="language" content="fr">
+        <meta name="copyright" content="//grandslacsnews.com">
+        <meta name="author" content="Job KAKULE">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#78AB4E">
+        <meta name="keywords" content="actualités,informations,news,goma,grandslacs,congo,media">
+        <!-- <script data-ad-client="ca-pub-5317542016635903" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+        {% block metadata %}
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:site" content="https://www.grandslacsnews.com/">
+        <meta name="twitter:author" content="@jobkakule2">
+        <meta name="twitter:title" content="Grands Lacs News">
+        <meta name="twitter:description" content="Magazine d'informations et actualités de la sous-région des Grands Lacs en particulier et de la RDCongo en général">
+        <meta name="twitter:image" content="/images/logo.png">
+
+        <meta property="og:site_name" content="grandslacsnews.com">
+        <meta property="og:title" content="Grands Lacs News">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://www.grandslacsnews.com/">
+        <meta property="og:language" content="fr">
+        <meta property="og:image" content="/images/logo.png">
+
+        {% endblock %}
+
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700,900|Roboto:400,500,700,900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
@@ -17,6 +43,8 @@
     </head>
     <body>
         <div class="site-container">
+            <div id="p">
+            </div>
             <div class="top-title">
                 <div class="container">
                     <div class="top-left">
@@ -56,7 +84,7 @@
                     <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme">
                 </div>
                 <div class="pub">
-                    Publicité
+                    {{ topPub() }}
                 </div>
             </div>
             <header class="header nav-down">
@@ -80,7 +108,7 @@
                                 {% set current_menu = 'video' %}
                             {% endif %}
                             {% set var = false %}
-                            {% for c in categories | slice(8, 10) %}
+                            {% for c in categories | slice(7, 10) %}
                                 {% set var = var or (current_menu == c.slug) %}
                             {% endfor %}
                             <a href=""><img class="hide-logo" src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme"></a>
@@ -99,7 +127,7 @@
                             <li class="sub-menu {{ resultActive }}">
                                 <a class="dropdown-label" href="{{ path('category.show', {id: cat2.id, slug: cat2.slug}) }}">{{ cat2.title }}<i class="fas fa-chevron-down"></i></a>
                                 <ul>
-                                    {% for cat in categories |slice(8, 15) %}
+                                    {% for cat in categories |slice(7, 20) %}
                                         <a href="{{ path('category.show', {id: cat.id, slug: cat.slug}) }}">
                                             <li>{{ cat.title }}</li>
                                         </a>

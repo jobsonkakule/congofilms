@@ -311,6 +311,14 @@ class PostRepository extends ServiceEntityRepository
         // return [0, 10];
     }
 
+    public function countAll()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('COUNT(p.id) AS tot')
+            ->getQuery()
+            ->getResult();
+    }
+
     private function getSearchQuery (SearchData $search, $ignoreScore = false): QueryBuilder
     {
         $query = $this->findVisibleQuery()

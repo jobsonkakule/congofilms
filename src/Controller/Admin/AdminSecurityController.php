@@ -17,7 +17,7 @@ class AdminSecurityController extends AbstractController
 
     public function __construct(UserRepository $repository, ObjectManager $em)
     {
-        $this->repository =$repository;
+        $this->repository = $repository;
         $this->em = $em;
     }
 
@@ -26,7 +26,11 @@ class AdminSecurityController extends AbstractController
      */
     public function index(Request $request)
     {
-        $users = $this->repository->findAll();
+        $page = $request->query->get('page', 1);
+        if (!is_numeric($page) || $page < 1) {
+            $page = 1;
+        }
+        $users = $this->repository->adminFindAll($page);
         return $this->render('admin/user/index.html.twig', compact('users'));
     }
 

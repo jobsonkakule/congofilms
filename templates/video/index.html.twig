@@ -33,7 +33,7 @@
                                 <i class="far fa-play-circle"></i>
                             </a>
                         </div>
-                        <div class="card-body cat-post-body pt-0">
+                        <div class="card-body cat-post-body pt-0 pl-0 pr-0">
                             <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><h5>{{ video.snippet.title }}</h5></a>
                             <div class="cat-post-excerpt">
                                 {{ video.snippet.description | striptags | truncate(100) }}
@@ -84,7 +84,10 @@
         <a href="https://www.youtube.com/channel/UCB0erOivnkO7jkdHFQ_pa7Q" class="btn btn-primary float-right">Voir plus de vidéos</a>
         <br>
         <br>
-    
+        <br>
+        <div class="pub-2">
+            {{ topPub() }}
+        </div>
         </div>
         <script>
         $(document).ready(function() {

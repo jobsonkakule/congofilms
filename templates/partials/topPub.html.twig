@@ -1,0 +1,5 @@
+{% if vich_uploader_asset(topPub, 'imageLargefile') is not null %}
+    <a href="{{ topPub.link }}">
+        <img src="{{ vich_uploader_asset(topPub, 'imageLargefile') }}" alt="{{ topPub.title }}" width="100%" title="{{ topPub.title }}">
+    </a>
+{% endif %}

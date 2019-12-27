@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,11 +16,31 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, User::class);
+        $this->paginator = $paginator;
     }
 
+    public function countAll()
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id) AS tot')
+            ->getQuery()
+            ->getResult();
+    }
+    public function adminFindAll(int $page, int $limit = 12): PaginationInterface
+    {
+        $query = $this->createQueryBuilder('u')
+            ->getQuery();
+        return $this->paginator->paginate(
+            $query,
+            $page,
+            $limit
+        );
+    }
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

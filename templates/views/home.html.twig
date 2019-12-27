@@ -1,5 +1,4 @@
 {% extends "base.html.twig" %}
-{% block title 'Grands Lacs News | Acceuil' %}
 {% block stylesheets %}
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700|Roboto:400,500,700&display=swap" rel="stylesheet">
 {% endblock %}
@@ -244,38 +243,12 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="cat-high-title social-panel-title">
-          <h6>Restez connectés</h6>
-        </div>
-        <div class="connect-link">
-          <div>
-            <a href="">
-              <span class="connect-icon"><i class="fab fa-facebook-f"></i></span>
-              {# <span class="text-connect">1000 Likes</span> #}
-              <span class="connect-action">Liker</span>
-            </a>
-          </div>
-          <div>
-            <a href="">
-                <span class="connect-icon"><i class="fab fa-twitter"></i></span>
-                {# <span class="text-connect">1630 Followers</span> #}
-                <span class="connect-action">Follow</span>
-            </a>
-          </div>
-          <div>
-            <a href="">
-              <span class="connect-icon"><i class="fab fa-youtube"></i></span>
-              {# <span class="text-connect">9361 Abonnés</span> #}
-              <span class="connect-action">S'abonner</span>
-            </a>
-          </div>
-        </div>
-        <hr>
-        <div class="cat-high-title popular-articles-title">
+        {{ social() }}
+        <div class="cat-high-title popular-articles-title mb-0">
           <h6>articles populaires</h6>
         </div>
-        <div class="bd-example carousel-last-posts">
-          <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+        <div class="bd-example carousel-last-posts mt-0">
+          <div id="carouselExampleCaptions" class="carousel slide mt-0 pt-0" data-ride="carousel">
             <div class="carousel-inner">
               {% for p in popularPosts %}
               {% set post = p[0] %}
@@ -311,8 +284,8 @@
             </a>
           </div>
         </div>
-        <br>
-        <div class="pub-1">
+        <div class="pub-1 mt-2">
+          {{ pub() }}
         </div>
       </div>
     </div>
@@ -367,6 +340,7 @@
     </div>
     <hr>
     <div class="pub-2">
+      {{ topPub() }}
     </div>
   </div>
   <br>

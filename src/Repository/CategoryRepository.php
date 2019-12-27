@@ -50,4 +50,12 @@ class CategoryRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+    public function countAll()
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c.id) AS tot')
+            ->getQuery()
+            ->getResult();
+    }
 }
