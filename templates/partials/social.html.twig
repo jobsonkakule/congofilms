@@ -1,0 +1,41 @@
+<div class="cat-high-title social-panel-title">
+	<h6>Restez connectés</h6>
+	</div>
+	<div class="connect-link">
+		<div>
+			<a href="https://web.facebook.com/rtglpe/">
+			<span class="connect-icon"><i class="fab fa-facebook-f"></i></span>
+			<span class="text-connect">
+				{% if likes %}
+				{{ likes }}
+				{% endif %} 
+				Likes
+			</span>
+			<span class="connect-action">Liker</span>
+			</a>
+		</div>
+		<div>
+			<a href="https://twitter.com/GrandsLacsNews">
+				<span class="connect-icon"><i class="fab fa-twitter"></i></span>
+				<span class="text-connect">
+				{% if followers %}
+					{{ followers }}
+				{% endif %}  
+				Followers
+				</span>
+				<span class="connect-action">Suivre</span>
+			</a>
+		</div>
+		<div>
+			<a href="https://www.youtube.com/channel/UCB0erOivnkO7jkdHFQ_pa7Q">
+			<span class="connect-icon"><i class="fab fa-youtube"></i></span>
+			<span class="text-connect">
+				{% if subscribers %}
+				{{ subscribers }}
+				{% endif %}
+				Abonnés
+			</span>
+			<span class="connect-action">S'abonner</span>
+		</a>
+	</div>
+</div>

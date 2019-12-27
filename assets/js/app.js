@@ -26,6 +26,7 @@ import 'tinymce/plugins/paste'
 import 'tinymce/plugins/link'
 import 'tinymce/plugins/image'
 import 'tinymce/plugins/lists'
+import 'tinymce/plugins/media'
 
 Map.init()
 
@@ -166,6 +167,7 @@ $('.carousel-inner div:first-child').addClass('active')
 
 
 // Tinymce
+
 tinymce.init({
     selector: '#post_content',
     setup: function (editor) {
@@ -173,10 +175,15 @@ tinymce.init({
             editor.save();
         });
     },
-    plugins: ['paste', 'link', 'image', 'lists'],
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    plugins: ['paste', 'link', 'image', 'lists', 'media'],
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media",
     image_description: true,
     image_caption: true,
+    video_template_callback: function(data) {
+        return '<video width="' + data.width + '" height="' + data.height + '"' + (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' + '<source src="' + data.source1 + '"' + (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' + (data.source2 ? '<source src="' + data.source2 + '"' + (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') + '</video>';
+    },
+    // mediaembed_service_url: "SERVICE_URL",
+    // mediaembed_max_width: 450
 });
 
 // Slider
@@ -206,11 +213,65 @@ if (slider) {
         min.dispatchEvent(new Event('change'))
     })
 }
+
+// Progressbar
+let progressBar = {
+	countElmt : 0,
+	loadedElmt : 0,
+
+	init : function(){
+		var that = this;
+		this.countElmt = $('img').length;
+
+		// Construction et ajout progress bar
+		var $progressBarContainer = $('<div/>').attr('id', 'progress-bar-container');
+		$progressBarContainer.append($('<div/>').attr('id', 'progress-bar'));
+		$progressBarContainer.appendTo($('#p'));
+
+		// Ajout container d'élements
+		var $container = $('<div/>').attr('id', 'progress-bar-elements');
+		$container.appendTo($('body'));
+
+		// Parcours des éléments à prendre en compte pour le chargement
+		$('img').each(function(){
+			$('<img/>')
+				.attr('src', $(this).attr('src'))
+				.on('load error', function(){
+					that.loadedElmt++;
+					that.updateProgressBar();
+				})
+				.appendTo($container)
+			;
+		});
+	},
+
+	updateProgressBar : function(){
+		$('#progress-bar').stop().animate({
+			'width'	: (progressBar.loadedElmt/progressBar.countElmt)*100 + '%'
+		}, function(){
+			if(progressBar.loadedElmt == progressBar.countElmt){
+				setTimeout(function(){
+					$('#progress-bar-container').animate({
+						'top' : '-8px'
+					}, function(){
+						$('#progress-bar-container').remove();
+						$('#progress-bar-elements').remove();
+					});
+				}, 500);
+			}
+		});
+	}
+};
+
+// progressBar.init();
+
 // Responsive button
 Tips.iconBar()
 Tips.comment()
 Tips.replyComment()
 Tips.copyLink()
+Tips.responsiveEmbed()
+Tips.socialButtons()
 // Tips.toggleAuthor()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.

@@ -55,7 +55,7 @@
         {% for comment in post.comments | sort((b, a) => date(a.createdAt) <=> date(b.createdAt)) %}
             {% if comment.parentId < 1 %}
             <div>
-                <div id="comment-{{ comment.id }}" class="comment row" style="background-color: #f4f4f4;border: 1px solid #ebebeb;font-size: .9em;">
+                <div id="comment-{{ comment.id }}" class="comment row ml-1 mr-1" style="background-color: #f4f4f4;border: 1px solid #ebebeb;font-size: .9em;">
                     {% if comment.avatar %}
                         <img src="/media/users/{{ comment.avatar }}" alt="{{ comment.author }}" width="100%" class="comment-avatar">
                     {% else %}
@@ -79,7 +79,7 @@
                 {% for reply in post.comments %}
                     {% if reply.parentId > 0 and reply.parentId == comment.id %}
                     <div style="padding-left: 70px; font-size: .9em;">
-                        <div id="comment-{{ reply.id }}" class="comment row" style="background-color: #f4f4f4;border: 1px solid #ebebeb;">
+                        <div id="comment-{{ reply.id }}" class="comment row ml-1 mr-1" style="background-color: #f4f4f4;border: 1px solid #ebebeb;">
                             {% if reply.avatar %}
                                 <img src="/media/users/{{ reply.avatar }}" alt="{{ reply.author }}" width="100%" class="comment-avatar">
                             {% else %}
