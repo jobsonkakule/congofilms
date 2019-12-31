@@ -181,16 +181,17 @@ class SidebarExtension extends AbstractExtension {
         ]);
         
         try {
-            $response = $fb->get('/1551753125052468?fields=fan_count', 'EAAGdhYjUkrgBAEpNIlmkZCR8kYChAdcajnHnPQtuWZBWPFxfMvTpONiTDrj9sZAZA8vaZCKEiqCXSZBmCASIZAZAlStUdFMU9EqNJek9VvElkJTgHbB1urhcOHjDQ5LNy21ZCpElEwDxY0GWZAEoLw9DGIaa5X2by4cnUYhkUUJ1QrQGBKo3UhQmXynu36VfThPuLMZAd4GKXKn1AZDZD');
+            $response = $fb->get('/1551753125052468?fields=fan_count&access_token=EAAGdhYjUkrgBAO9zTJOOmZBrbZBCCzBTIMV7IM8z2yDcrZA6C8zaZBXrm1WPKoUlnkEHmmwHIIlLj8F2vrH4QZC5cgEnbXeSW6ZAkZBkx12mKCLShurU890qUceQbP39ZBVVgKYnYK9CAKy2Kis1M7RgWKKmkS84o08GQBlh8ZCNG5DASplLOSyCmZBTR4An73augZD', 'EAAGdhYjUkrgBAO9zTJOOmZBrbZBCCzBTIMV7IM8z2yDcrZA6C8zaZBXrm1WPKoUlnkEHmmwHIIlLj8F2vrH4QZC5cgEnbXeSW6ZAkZBkx12mKCLShurU890qUceQbP39ZBVVgKYnYK9CAKy2Kis1M7RgWKKmkS84o08GQBlh8ZCNG5DASplLOSyCmZBTR4An73augZD');
+            $graphNode = $response->getGraphNode();
+            $likes = $graphNode['fan_count'];
         } catch(FacebookResponseException $e) {
             echo 'Graph returned an error: ' . $e->getMessage();
-            return 0;
+            
+            return $likes = 1001;
         } catch(FacebookSDKException $e) {
             echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            return 0;
+            return $likes = 1002;
         }
-        $graphNode = $response->getGraphNode();
-        $likes = $graphNode['fan_count'];
         return $likes;
     }
 }

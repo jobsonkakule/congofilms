@@ -15,7 +15,10 @@
     <br>
     <button class="btn btn-lg btn-primary btn-block">{{ button|default('Enregistrer') }}</button>
     <br>
-    <p class="mt-5 mb-3 text-muted text-center">&copy;G-L&#9865;News, 2019-2020</p>
+    <p class="mt-5 mb-3 text-muted text-center">
+        {% set year = "now"|date("Y") %}
+        &copy;G-L&#9865;News, {{ year }}-{{ year + 1 }}
+    </p>
 {{ form_end(form) }}
 
 

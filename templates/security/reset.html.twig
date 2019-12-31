@@ -32,7 +32,10 @@
             </div>
             <p><a href="{{ path('auth.password') }}"></a>Veuiller retenir le nouveau mot de passe pour une prochaine connexion</a></p>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Mettre à jour</button>
-            <p class="mt-5 mb-3 text-muted text-center">&copy;G-L&#9865;News, 2019-2020</p>
+            <p class="mt-5 mb-3 text-muted text-center">
+                {% set year = "now"|date("Y") %}
+                &copy;G-L&#9865;News, {{ year }}-{{ year + 1 }}
+            </p>
         </form>
     </div>
 

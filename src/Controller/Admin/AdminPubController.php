@@ -84,11 +84,11 @@ class AdminPubController extends AbstractController
             
             if ($pub->getSmallfile()) {
                 $targetPath = 'media/pubs/' .  $pub->getSmallfile();
-                $this->resizeImage($targetPath, 300, 200);
+                $this->resizeImage($targetPath, 350, 230);
             }
             if ($pub->getLargefile()) {
                 $targetPath = 'media/pubs/' .  $pub->getLargefile();
-                $this->resizeImage($targetPath, 800, 90);
+                $this->resizeImage($targetPath, 830, 100);
             }
 
             $this->addFlash('success', 'La publicité a été mise à jour avec succès');

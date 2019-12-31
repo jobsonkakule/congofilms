@@ -36,6 +36,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         {{ encore_entry_link_tags('app') }}
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        <link rel="icon" href="/images/favicon.ico">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('js/tagsinput/tagsinput.css') }}">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.5.7/flatpickr.css">
@@ -80,8 +81,10 @@
                 </div>
             </div>
             <div class="header__logo container">
-                <div>
-                    <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme">
+                <div class="top-logo">
+                    <a href="{{ path('home') }}">
+                        <img src="/images/logo.png" alt="Grands Lacs News" title="Grands Lacs News">
+                    </a>
                 </div>
                 <div class="pub">
                     {{ topPub() }}
@@ -89,8 +92,8 @@
             </div>
             <header class="header nav-down">
                 <a href="#" class="header__icon" id="header__icon"></a>
-                <div class="logo-mobile">
-                    <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme" width="75%">
+                <div class="logo-mobile" style="padding-right:53px;">
+                    <img src="/images/whitelogo.png" alt="Grands Lacs News" title="Grands Lacs News" style="margin:auto;">
                 </div>
                 <div class="container">
                     <nav class="menu">
@@ -111,7 +114,9 @@
                             {% for c in categories | slice(7, 10) %}
                                 {% set var = var or (current_menu == c.slug) %}
                             {% endfor %}
-                            <a href=""><img class="hide-logo" src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme"></a>
+                            <!-- <a href="{{ path('home') }}">
+                                <img src="/images/logo.png" alt="Grands Lacs News" title="Grands Lacs News">
+                            </a> -->
                             <li class="{% if current_menu == 'news' %}active{% endif %}">
                                 <a href="{{ path('home') }}">News</a>
                             </li>
@@ -223,13 +228,13 @@
             <div class="site-content" style="position: relative;">
                 {% block body %}{% endblock %}
                 <footer class="footer">
-                    <div class="container">
+                    <div class="container clear-container">
                         {{ footer() }}
                         <a style="color: #fff;" class="text-center" href="{{ path('post.index') }}">Explorer nos articles</a>
                         <hr>
                         <div class="row">
                         <div class="col-md-2 logo-footer">
-                            <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Newspaper WordPress Theme" title="Newspaper WordPress Theme">
+                            <img src="/images/whitelogo.png" alt="Grands Lacs News" title="Grands Lacs News">
                         </div>
                         <div class="col-md-6">
                             <h4>à propos de nous</h4>
@@ -252,14 +257,14 @@
                         </div>
                         <hr>
                         <div class="copyright text-center">
-                            &copy;G-L&#9865;News, 2019-2020
+                            {% set year = "now"|date("Y") %}
+                            &copy;G-L&#9865;News, {{ year }}-{{ year + 1 }}
                         </div>
                     </div>
                 </footer>
                 <div class="gotop">
                     <i class="fas fa-arrow-circle-up fa-3x"></i>
                 </div>
-
             </div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>

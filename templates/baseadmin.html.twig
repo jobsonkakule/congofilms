@@ -197,7 +197,8 @@
                         </div>
                         <hr>
                         <div class="copyright text-center">
-                            &copy;G-L&#9865;News, 2019-2020
+                            {% set year = "now"|date("Y") %}
+                            &copy;G-L&#9865;News, {{ year }}-{{ year + 1 }}
                         </div>
                     </div>
                 </footer>
