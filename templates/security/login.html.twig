@@ -1,5 +1,5 @@
 {% extends "base.html.twig" %}
-{% block title 'Se connecter' %}
+{% block title 'Se connecter | Grands Lacs News' %}
 
 {% block body %}
 
@@ -14,22 +14,9 @@
                 {{ error.messageKey | trans(error.messagedata, 'security')}}
             </div>
         {% endif %}
-        {#<form action="{{ path('login') }}" method="post">
-            <div class="form-group">
-                <label for="username">Nom d'utilisateur</label>
-                <input type="text" id="username" name="_username" class="form-control" value="{{ last_username }}">
-            </div>
-            <div class="form-group">
-                <label for="password">Mot de passe</label>
-                <input type="password" id="password" name="_password" class="form-control">
-            </div>
-            <p><a href="{{ path('auth.password') }}">Mot de passe oublié ?</a></p>
-            <button type="submit" class="btn btn-primary">Se connecter</button>
-        </form>#}
-
         <form class="form-signin" action="{{ path('login') }}" method="post">
             <div class="text-center mb-4">
-              <img src="https://demo.tagdiv.com/newspaper/wp-content/uploads/2018/08/logo-mobile.png" alt="Grands Lacs News Logo" title="Grands Lacs News Logo">
+              <img src="/images/logo.png" alt="Grands Lacs News" title="Grands Lacs News" style="width: 80%;">
               <h1 class="h3 mb-3 font-weight-bold">Se connecter </h1>
               <p>Veullez entrer vos identifiants pour vous connecter : </p>
             </div>
@@ -51,7 +38,10 @@
             </div>
             <p class="text-center"><a href="{{ path('auth.password') }}">Mot de passe oublié ?</a> ou <a href="{{ path('signup') }}">Créer un compte</a></p>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
-            <p class="mt-5 mb-3 text-muted text-center">&copy;G-L&#9865;News, 2019-2020</p>
+            <p class="mt-5 mb-3 text-muted text-center">
+              {% set year = "now"|date("Y") %}
+              &copy;G-L&#9865;News, {{ year }}-{{ year + 1 }}
+            </p>
         </form>
     </div>
 

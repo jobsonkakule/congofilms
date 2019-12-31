@@ -138,18 +138,18 @@
           <div class="cat-high-menu">
             <ul>
               <li>
-                  <a href="">Tout</a>
+                  <a href="{{ path('post.index') }}">Tout</a>
               </li>
-              {% for c in categories | slice(0, 3) %}
+              {% for c in categories | slice(7, 2) %}
                 <li>
-                  <a href="">{{ c.title }}</a>
+                  <a href="{{ path('category.show', {id: c.id, slug: c.slug}) }}">{{ c.title }}</a>
                 </li>
               {% endfor %}
               <li class="sub-menu">
                   Plus&nbsp;&nbsp;<i class="fas fa-chevron-down"></i>
                 <ul>
-                  {% for c in categories | slice(3, 20) %}
-                    <a href="">
+                  {% for c in categories | slice(9, 20) %}
+                    <a href="{{ path('category.show', {id: c.id, slug: c.slug}) }}">
                       <li>{{ c.title }}</li>
                     </a>
                   {% endfor %}

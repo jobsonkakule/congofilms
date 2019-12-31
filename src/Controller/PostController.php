@@ -129,4 +129,18 @@ class PostController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+
+    /**
+     * likePost
+     *
+     * @param  mixed $request
+     * @Route("/like/{id}", name="like.add", methods={"POST"})
+     * @return void
+     */
+    public function likePost(Request $request)
+    {
+        $ip = $request->getClientIp();
+        return new JsonResponse(['success' => 1]);
+    }
 }

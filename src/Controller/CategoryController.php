@@ -7,6 +7,7 @@ use App\Repository\PostRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,17 +47,27 @@ class CategoryController extends AbstractController
         PostRepository $posts
     ): Response
     {
+        $topPosts = $posts->findTopPosts($category->getId());
+        $posts = $posts->findWithCategory($category->getId(), $request->query->getInt('page', 1));
         if ($category->getSlug() !== $slug) {
             return $this->redirectToRoute('category.show', [
                 'id' => $category->getId(),
                 'slug' => $category->getSlug()
             ], 301);
         }
-
+        if ($request->get('ajax')) {
+            return new JsonResponse([
+                'content' => $this->renderView('category/_CategoryPosts.html.twig', 
+                    ['topPosts' => $topPosts, 'posts' => $posts]
+                ),
+                'pagination' => $this->renderView('category/_CategoryPagination.html.twig', ['posts' => $posts]),
+                'pages' => ceil($posts->getTotalItemCount() / $posts->getItemNumberPerPage())
+            ]);
+        }
         return $this->render('category/show.html.twig', [
             'category' => $category,
-            'posts' => $posts->findWithCategory($category->getId(), $request->query->getInt('page', 1)),
-            'topPosts' => $posts->findTopPosts($category->getId()),
+            'posts' => $posts,
+            'topPosts' => $topPosts,
             'current_menu' => $category->getSlug()
         ]);
     }

@@ -1,6 +1,6 @@
 {% extends "base.html.twig" %}
 
-{% block title category.title %}
+{% block title category.title ~ ' | Grands Lacs News' %}
     
 {% block body %}
     <div class="td-category-header mt-0 mb-2">
@@ -116,58 +116,14 @@
             </div>
         {% endif %}
         <br>
+        <div class="scroll-div mb-2"></div>
         <div class="row">
-            <div class="col-md-8 top-articles">
-                {% if topPosts and topPosts | length > 3 %}
-                    {% set others = [] %}
-                    {% for p in posts %}
-                        {% set post = p[0] %}
-                        {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) %}
-                            {% set others = others | merge([p]) %}
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% set others = posts %}
-                {% endif %}
-                {% for p in others | slice(0, 5) %}
-                {% set post = p[0] %}
-                    <div class="row cat-item-post">
-                    <div class="col-md-4 item-thumb">
-                        <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                        {% if post.picture %}
-                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                        {% else %}
-                            <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}">
-                        {% endif %}
-                        </a>
-                    </div>
-                        <div class="col-md-8 item-details">
-                            <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h5>{{ post.title }}</h5></a>
-                            <div class="cat-post-infos">
-                                <span class="td-post-author-name">
-                                    <a href="{{ path('profil.show', {id: p.authorId }) }}">
-                                    {% if p.pseudo is not null %}
-                                        {{ p.pseudo }}
-                                    {% else %}
-                                        {{ p.username }}
-                                    {% endif %}
-                                    </a>
-                                <span>
-                                </span> - </span>
-                                {#<span class="td-post-date">{{ post.createdAt | localizeddate('long', 'none') }}</span>#}
-                                <span class="td-post-date">{{ post.createdAt | ago }}</span>
-                                <div class="td-module-comments">
-                                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ p.commentsNb }}</a>
-                                </div>
-                            </div>
-                            <div class="cat-post-excerpt">
-                            {{ post.content | striptags | truncate(200) }}
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                <div class="pagination justify-content-center">
-                    {{ knp_pagination_render(posts) }}
+            <div class="col-md-8 top-articles js-home">
+                <div class="js-home-content" style="position: relative;">
+                    {% include "category/_categoryPosts.html.twig" %}
+                </div>
+                <div class="pagination justify-content-center js-home-pagination">
+                    {% include "category/_categoryPagination.html.twig" %}
                 </div>
             </div>
             <div class="col-md-4 article-reminder">

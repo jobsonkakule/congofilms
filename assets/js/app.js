@@ -104,6 +104,7 @@ document.querySelectorAll('[data-delete]').forEach(a => {
     })
 })
 
+
 document.querySelectorAll('[comment-delete]').forEach(a => {
     a.addEventListener('click', e => {
         e.preventDefault()

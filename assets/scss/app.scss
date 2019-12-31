@@ -33,7 +33,11 @@ html, body{
 }
 a { text-decoration: none; color:inherit; }
 .container{
-    margin: 0 20px;
+    // margin: 0 20px;
+    // @include clearfix;
+}
+.clear-container{
+    // margin: 0 20px;
     @include clearfix;
 }
 
@@ -70,9 +74,6 @@ a { text-decoration: none; color:inherit; }
 }
 .site-content{ 
     padding-top: 10px;
-    .container-fluid {
-        width: 85%;
-    }
 }
 
 /*------------------------------------*\
@@ -89,6 +90,7 @@ a { text-decoration: none; color:inherit; }
     text-transform: uppercase;
     // box-shadow: 0 1px 6px -1px rgba(32,33,36,0.28);
     box-shadow: 0px 15px 10px -15px rgba(17, 17, 17, 0.205);
+    height: 50px;
     line-height: 48px;
     color:$front-color;
 
@@ -128,24 +130,33 @@ a { text-decoration: none; color:inherit; }
 .header__logo{
     display: flex;
     height: 100px;
-    font-weight: bold;
     align-items: center;
     margin: 10px 0 5px 0;
-    img {
-        background: $theme-back-color;
+    .top-logo {
+        margin-right: 30px;
+        img {
+            &:hover {
+                filter: unset;
+            }
+        }
     }
     .pub {
-        margin-left: 20px;
         width: 100%;
         height: 100%;
         img:hover {
             filter: unset;
+        }
+        img {
+            object-fit: contain;
         }
     }
 }
 
 .logo-mobile {
     display: none;
+    img:hover {
+        filter: unset;
+    }
 }
 /*------------------------------------*\
     $MENU
@@ -957,7 +968,7 @@ img {
 }
 .pub-2 {
     width: 80%;
-    height: 90px;
+    height: 100px;
     margin: auto;
     img {
         object-position: left center;
