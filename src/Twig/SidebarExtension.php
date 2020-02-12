@@ -161,15 +161,16 @@ class SidebarExtension extends AbstractExtension {
 
     private function getFollowers()
     {
-        $tw_username = 'GrandsLacsNews'; 
-        $data = file_get_contents('https://cdn.syndication.twimg.com/widgets/followbutton/info.json?screen_names='.$tw_username); 
-        $parsed =  json_decode($data,true);
-        $followers =  $parsed[0]['followers_count'];
-        if ($followers && is_numeric($followers)) {
-            return $followers;
-        } else {
-            return 0;
-        }
+        // $tw_username = 'GrandsLacsNews'; 
+        // $data = file_get_contents('https://cdn.syndication.twimg.com/widgets/followbutton/info.json?screen_names='.$tw_username); 
+        // $parsed =  json_decode($data,true);
+        // $followers =  $parsed[0]['followers_count'];
+        // if ($followers && is_numeric($followers)) {
+        //     return $followers;
+        // } else {
+        //     return 0;
+        // }
+        return 10;
     }
 
     private function getLikes()
@@ -181,7 +182,7 @@ class SidebarExtension extends AbstractExtension {
         ]);
         
         try {
-            $response = $fb->get('/1551753125052468?fields=fan_count&access_token=EAAGdhYjUkrgBAO9zTJOOmZBrbZBCCzBTIMV7IM8z2yDcrZA6C8zaZBXrm1WPKoUlnkEHmmwHIIlLj8F2vrH4QZC5cgEnbXeSW6ZAkZBkx12mKCLShurU890qUceQbP39ZBVVgKYnYK9CAKy2Kis1M7RgWKKmkS84o08GQBlh8ZCNG5DASplLOSyCmZBTR4An73augZD', 'EAAGdhYjUkrgBAO9zTJOOmZBrbZBCCzBTIMV7IM8z2yDcrZA6C8zaZBXrm1WPKoUlnkEHmmwHIIlLj8F2vrH4QZC5cgEnbXeSW6ZAkZBkx12mKCLShurU890qUceQbP39ZBVVgKYnYK9CAKy2Kis1M7RgWKKmkS84o08GQBlh8ZCNG5DASplLOSyCmZBTR4An73augZD');
+            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBAD0PoM93ThY7BRYhnvERnhIWV8yVtbl6LkyBkUnYt4NbfVtkF8TjHAJ0ST39O4XntFZCmEgfpmaTlG4peIbeviCSt7pOQK0gmoyiju7mERLlNK7h8ZBnSkCA4nbZCTvZBBcdyKOxZCXWd6A4xI8VP5Us19sUr0wZDZD', 'EAAGdhYjUkrgBAD0PoM93ThY7BRYhnvERnhIWV8yVtbl6LkyBkUnYt4NbfVtkF8TjHAJ0ST39O4XntFZCmEgfpmaTlG4peIbeviCSt7pOQK0gmoyiju7mERLlNK7h8ZBnSkCA4nbZCTvZBBcdyKOxZCXWd6A4xI8VP5Us19sUr0wZDZD');
             $graphNode = $response->getGraphNode();
             $likes = $graphNode['fan_count'];
         } catch(FacebookResponseException $e) {

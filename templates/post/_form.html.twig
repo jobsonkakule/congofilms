@@ -47,7 +47,7 @@
             <div style="display: none;">{{ form_row(form.parent_id, {'attr': {'value': 0}}) }}</div>
             {{ form_rest(form) }}
             <div class="form-group">
-                <button class="btn btn-primary">Envoyer</button>
+                <button class="btn btn-primary">Commenter</button>
             </div>
         {{ form_end(form) }}
     </div>
@@ -55,14 +55,16 @@
         {% for comment in post.comments | sort((b, a) => date(a.createdAt) <=> date(b.createdAt)) %}
             {% if comment.parentId < 1 %}
             <div>
-                <div id="comment-{{ comment.id }}" class="comment row ml-1 mr-1" style="background-color: #f4f4f4;border: 1px solid #ebebeb;font-size: .9em;">
-                    {% if comment.avatar %}
-                        <img src="/media/users/{{ comment.avatar }}" alt="{{ comment.author }}" width="100%" class="comment-avatar">
-                    {% else %}
-                        <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
-                    {% endif %}
-                    <div style="margin: 5px 0 0 5px;">
-                        <p>
+                <div id="comment-{{ comment.id }}" class="comment w-100 mb-3" style="background-color: #f4f4f4;border: 1px solid #ebebeb;font-size: .9em; display:inline-flex;">
+                    <div>
+                        {% if comment.avatar %}
+                            <img src="/media/users/{{ comment.avatar }}" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                        {% else %}
+                            <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                        {% endif %}
+                    </div>
+                    <div style="margin: 10px 0 0 5px;">
+                        <p class="">
                             <strong>{{ comment.author }}</strong> - 
                             <span class="text-muted" style="font-size: 75%;"><em>{{ comment.createdAt | ago }}</em></span> - 
                             <span class="reply" data-id="{{ comment.id }}" data-parent="{{ comment.id }}" style="font-size: 75%;color:rgba(72, 151, 253, 0.973);text-decoration: underline;cursor:pointer;">Répondre</span>&nbsp;
@@ -79,12 +81,14 @@
                 {% for reply in post.comments %}
                     {% if reply.parentId > 0 and reply.parentId == comment.id %}
                     <div style="padding-left: 70px; font-size: .9em;">
-                        <div id="comment-{{ reply.id }}" class="comment row ml-1 mr-1" style="background-color: #f4f4f4;border: 1px solid #ebebeb;">
-                            {% if reply.avatar %}
-                                <img src="/media/users/{{ reply.avatar }}" alt="{{ reply.author }}" width="100%" class="comment-avatar">
-                            {% else %}
-                                <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
-                            {% endif %}
+                        <div id="comment-{{ reply.id }}" class="comment row w-100" style="background-color: #f4f4f4;border: 1px solid #ebebeb;display:inline-flex;">
+                            <div>
+                                {% if reply.avatar %}
+                                    <img src="/media/users/{{ reply.avatar }}" alt="{{ reply.author }}" width="100%" class="comment-avatar">
+                                {% else %}
+                                    <img src="https://1.gravatar.com/avatar/f14e046fc73f0f06b36ce29864b33120?s=200&r=pg&d=mm" alt="{{ comment.author }}" width="100%" class="comment-avatar">
+                                {% endif %}
+                            </div>
                             <div style="margin: 5px 0 0 5px;">
                                 <p>
                                     <strong>{{ reply.author }}</strong> - 

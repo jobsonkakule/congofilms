@@ -3,34 +3,47 @@
 {% block title post.title %}
 
 {% block metadata %}
+    <meta property="op:markup_version" content="v1.0">
 
+    <!-- The URL of the web version of your article --> 
+    <link rel="canonical" href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+    
+    <!-- The style to be used for this article --> 
+    <meta property="fb:article_style" content="myarticlestyle">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@bouclierjoseph">
+    <meta name="twitter:site" content="@GrandsLacsNews">
     <meta name="twitter:author" content="@jobkakule2">
     <meta name="twitter:title" content="{{ post.title }}">
-    <meta name="twitter:description" content="{{ post.content | striptags | truncate(100) }}">
+    <meta name="twitter:description" content="{{ post.content | striptags | truncate(100) | raw }}">
     {% if post.pictures is not empty %}
-        <meta name="twitter:image" content="{{ vich_uploader_asset(post.pictures[0], 'imageFile') | imagine_filter('thumb') }}">
+        <meta name="twitter:image" content="{{ vich_uploader_asset(post.pictures[0], 'imageFile') | imagine_filter('medium') }}">
     {% else %}
-        <meta name="twitter:image" content="{{ '/images/logo.png'| imagine_filter('thumb') }}">
+        <meta name="twitter:image" content="{{ '/images/logo.png'| imagine_filter('medium') }}">
     {% endif %}
     
 
-    <meta property="og:site_name" content="grandslacsnews.com">
+    <meta property="og:site_name" content="www.grandslacsnews.com">
     <meta property="og:title" content="{{ post.title }}">
-    <meta property="og:description" content="{{ post.content | striptags | truncate(100) }}">
+    <meta property="og:description" content="{{ post.content | striptags | raw }}">
     <meta property="og:type" content="article">
     <meta property="og:article:published_time" content="{{ post.createdAt | date("d F, Y") }}">
     <meta property="og:article:author" content="{{ post.author.username }}">
-    <meta property="og:article:section" content="Blog">
+    <meta property="og:article:section" content="Magazine">
     <meta property="og:article:tag" content="{{ post.category.title }}">
-    <meta property="og:url" content="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
+    <meta property="og:url" content="https://www.grandslacsnews.com{{ path('post.show', {id: post.id, slug: post.slug}) }}">
     <meta property="og:language" content="fr">
     <meta property="og:created_time" content="{{ post.createdAt | date("d F, Y") }}">
+    {#<meta property="og:site_name" content="www.grandslacsnews.com">
+    <meta property="og:title" content="{{ post.title }}">
+    <meta property="og:description" content="{{ post.content | striptags | raw }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.grandslacsnews.com/">
+    <meta property="og:language" content="fr">#}
+
     {% if post.pictures is not empty %}
-        <meta property="og:image" content="{{ vich_uploader_asset(post.pictures[0], 'imageFile') | imagine_filter('thumb')  }}">
+        <meta property="og:image" content="{{ vich_uploader_asset(post.pictures[0], 'imageFile') | imagine_filter('medium')  }}">
     {% else %}
-        <meta property="og:image" content="{{ '/images/logo.png'| imagine_filter('thumb') }}">
+        <meta property="og:image" content="{{ '/images/logo.png'| imagine_filter('medium') }}">
     {% endif %}
 
 {% endblock %}
@@ -84,7 +97,7 @@
                             - 
                         </div>
                         {#<span class="post-date">{{ post.createdAt | date("d F, Y") }}</span>#}
-                        <span class="post-date">{{ post.createdAt | localizeddate('long', 'short') }}</span>
+                        <span class="post-date op-published">{{ post.createdAt | localizeddate('long', 'short') }}</span>
                         <div class="post-stat">
                         <a href="#comments" title="Commentaires">
                             <i class="fas fa-comments"></i>
@@ -100,7 +113,7 @@
             </div>
             <div class="sharing-post">
                 <span><i class="fas fa-share-alt"></i></span>
-                <a href="" class="share_facebook">
+                <a href="" class="share_facebook" title="Partager sur Facebook">
                     <div class="share-icon">
                         <i class="fab fa-facebook-f"></i>
                     </div>
@@ -108,7 +121,7 @@
                         Facebook
                     </div>
                 </a>
-                <a href="" class="share_twitter">
+                <a href="" class="share_twitter" title="Partager sur Twitter">
                     <div class="share-icon" style="background: #29c5f6">
                         <i class="fab fa-twitter"></i>
                     </div>
@@ -116,7 +129,7 @@
                         Twitter
                     </div>
                 </a>
-                <a href="" class="share_whatsapp">
+                <a href="" class="share_whatsapp" title="Partager sur Whatsapp">
                     <div class="share-icon" style="background: #7bbf6a">
                         <i class="fab fa-whatsapp"></i>
                     </div>
@@ -135,9 +148,7 @@
             <div class="post-content">
                 <div data-slider class="post-featured-img">
                     {% if post.pictures is not empty %}
-                        {% for picture in post.pictures %}
-                            <img src="{{ vich_uploader_asset(picture, 'imageFile') }}" alt="" title="{{ post.title }}">
-                        {% endfor %}
+                        <img src="{{ vich_uploader_asset(post.pictures[0], 'imageFile') }}" alt="" title="{{ post.title }}">
                     {% endif %}
                 </div>
                 <div>
@@ -159,32 +170,30 @@
                 <hr>
                 <div id="fb-root"></div>
                 <div class="sharing-post sharing-bottom">
-                    <div class="fb-like" data-href="{{ path('post.show', {id: post.id, slug: post.slug}) }}" data-width="" data-layout="button_count" data-action="like" data-size="small" data-share="false"></div>
-                    &nbsp;
-                    et
-                    &nbsp;
-                    <span><i class="fas fa-share-alt"></i></span>
-                    <a href="">
-                        <div class="share-icon">
-                        <i class="fab fa-facebook-f"></i>
-                        </div>
-                    </a>
-                    <a href="">
-                        <div class="share-icon" style="background: #29c5f6">
-                        <i class="fab fa-twitter"></i>
-                        </div>
-                    </a>
-                    <a href="">
-                        <div class="share-icon" style="background: #7bbf6a">
-                        <i class="fab fa-whatsapp"></i>
-                        </div>
-                    </a>
-                    ou
-                    <a href="" class="post-comment">
-                        <div class="share-icon" style="background: #1b2e3f; color:#FFF;">
-                        <i class="far fa-comment"></i>
-                        </div>
-                    </a>
+                    <div class="fb-like" data-href="{{ path('post.show', {id: post.id, slug: post.slug}) }}" data-width="100" data-layout="button_count" data-action="like" data-size="small" data-share="false"></div>
+                    <div class="standards">
+                        <span><i class="fas fa-share-alt"></i></span>
+                        <a href="" class="share_facebook" title="Partager sur Facebook">
+                            <div class="share-icon">
+                            <i class="fab fa-facebook-f"></i>
+                            </div>
+                        </a>
+                        <a href="" class="share_twitter" title="Partager sur Facebook">
+                            <div class="share-icon" style="background: #29c5f6">
+                            <i class="fab fa-twitter"></i>
+                            </div>
+                        </a>
+                        <a href="" class="share_whatsapp" title="Partager sur Facebook">
+                            <div class="share-icon" style="background: #7bbf6a">
+                            <i class="fab fa-whatsapp"></i>
+                            </div>
+                        </a>
+                        <a href="" class="post-comment" title="Commenter cet article">
+                            <div class="share-icon" style="background: #1b2e3f; color:#FFF;">
+                            <i class="far fa-comment"></i>
+                            </div>
+                        </a>
+                    </div>
                 </div>
                 <hr>
                 <div class="js-show">
@@ -214,7 +223,7 @@
             </div>
         </div>
         <br>
-        <div class="pub-2">
+        <div class="pub-2 op-ad">
             {{ topPub() }}
         </div>
     </div>

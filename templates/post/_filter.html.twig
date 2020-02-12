@@ -16,6 +16,8 @@
     </div>
     <div class="ml-3 mr-3" id="score-slider" data-min="{{ min }}" data-max="{{ max }}"></div>
     <br>
-    {{ form_row(form.online) }}
+    <div style="display: none;">
+        {{ form_row(form.online) }}
+    </div>
     <button type="submit" class="btn btn-primary w-100">Filtrer</button>
 {{ form_end(form) }}

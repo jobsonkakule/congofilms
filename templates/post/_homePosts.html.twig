@@ -3,7 +3,14 @@
     {% set post = p[0] %}
     {% set excludedPosts = excludedPosts | merge([post.id]) %}
 {% endfor %}
-{% for last in lastPosts | slice(3, 3) %}
+{% set othersLastPosts = [] %}
+{% for p in lastPosts %}
+    {% set post = p[0] %}
+    {% if post.id not in excludedPosts %}
+        {% set othersLastPosts = othersLastPosts | merge([p]) %}
+    {% endif %}
+{% endfor %}
+{% for last in othersLastPosts | slice(1, 3) %}
     {% set post = last[0] %}
     {% set excludedPosts = excludedPosts | merge([post.id]) %}
 {% endfor %}
@@ -14,6 +21,7 @@
         {% set others = others | merge([p]) %}
     {% endif %}
 {% endfor %}
+
 <div id="spinner-none" class="spinner-border js-loading" role="status" aria-hidden="true" style="display: none;">
     <div class="sr-only">Chargement...</div>
 </div>
@@ -49,7 +57,7 @@
             </div>
         </div>
         <div class="cat-post-excerpt">
-            {{ post.content | striptags | truncate(200) }}
+            {{ post.content | striptags | truncate(200) | raw }}
         </div>
     </div>
 </div>

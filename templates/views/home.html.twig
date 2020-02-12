@@ -164,10 +164,11 @@
               <div class="cat-post-img">
                 {% if topPosts | length > 8 %}
                   {% set topItems = topPosts %}
+                  {% set topItem = topPosts[4][0] %}
                 {% else %}
                   {% set topItems = posts %}
+                  {% set topItem = posts[4][0] %}
                 {% endif %}
-                {% set topItem = topItems[4][0] %}
                 <a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}">
                   {% if topItem.picture %}
                     <img src="{{ vich_uploader_asset(topItem.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
@@ -191,10 +192,10 @@
                   <span>
                   </span> - </span>
                   <span class="td-post-date">{{ topItem.createdAt | ago }}</span>
-                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}#comments">{{ posts[0].commentsNb }}</a></div>
+                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}#comments">{{ topItems[4].commentsNb }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
-                  {{ topItem.content | striptags | truncate(100) }}
+                  {{ topItem.content | striptags | truncate(100) | raw }}
                 </div>
               </div>
             </div>
@@ -223,7 +224,14 @@
           <h6>Derniers articles</h6>
         </div>
         <div class="row last-articles">
-          {% for p in lastPosts | slice(3, 3) %}
+          {% set others = [] %}
+          {% for p in lastPosts %}
+            {% set post = p[0] %}
+            {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) and (post.id != topItem.id) %}
+              {% set others = others | merge([p])  %}
+            {% endif %}
+          {% endfor %}
+          {% for p in others | slice(0, 3) %}
           {% set post = p[0] %}
           <div class="col-md-4 last-art-item">
               <div class="cat-post-img">

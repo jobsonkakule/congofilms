@@ -14,12 +14,13 @@ class CommentFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr_FR');
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $comment = new Comment();
-            $post = new Post();
             $comment
                 ->setContent($faker->words(8, true))
-                ->setParentId(1);
+                ->setParentId(0)
+                ->setAuthor('Job Kakule')
+                ->setEmail('jobkakule10@gmail.com')
                 ;
             $manager->persist($comment);
         }

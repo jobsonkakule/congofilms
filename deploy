@@ -1,0 +1,4 @@
+#!/bin/sh
+npm run build
+rsync -av ./ m09am_jobson@bouclierjoseph.com:~/grandslacsnews --include=public/build --include=public/.htaccess --exclude-from=.gitignore --exclude=".*"
+ssh m09am_jobson@bouclierjoseph.com 'cd ~/grandslacsnews && php bin/console cache:clear'

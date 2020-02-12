@@ -70,6 +70,7 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // $user->setUpdatedAt(new \DateTime());
             $user->setPassword($this->encoder->encodePassword($user, $user->getPassword()));
             $user->setRoles(['ROLE_USER']);
             $this->em->persist($user);
@@ -135,12 +136,13 @@ class SecurityController extends AbstractController
             } else {
                 $pass = $request->request->get('password');
                 $confirm = $request->request->get('confirm');
-                dump($pass, $confirm);
+                // dump($pass, $confirm);
                 if (!empty($pass) && strlen($pass) > 5) {
                     if ($pass === $confirm ) {
                         $testUser->setPassword($this->encoder->encodePassword($testUser, $pass));
                         $testUser->setPasswordReset(null);
                         $testUser->setPasswordResetAt(null);
+                        $testUser->setUpdatedAt(new \DateTime());
                         $this->getDoctrine()->getManager()->persist($testUser);
                         $this->getDoctrine()->getManager()->flush();
                         $this->addFlash('success', 'Votre mot de passe a bien été mis à jour, Veuillez vous connecter');

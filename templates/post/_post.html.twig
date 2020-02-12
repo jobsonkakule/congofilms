@@ -31,7 +31,7 @@
         <div class="td-module-comments"><a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}#comments">{{ p.commentsNb }}</a></div>
         </div>
         <div class="cat-post-excerpt">
-        {{ post.content | striptags | truncate(100) }}
+        {{ post.content | striptags | truncate(100) | raw }}
         </div>
     </div>
 </div>

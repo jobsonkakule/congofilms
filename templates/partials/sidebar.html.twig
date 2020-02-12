@@ -31,10 +31,10 @@
                     <span>-</span> 
                 </span>
                 <span class="td-post-date">{{ topPost.createdAt | ago }}</span>
-                <div class="td-module-comments"><a href="">{{ topPost.comments | length }}</a></div>
+                <div class="td-module-comments"><a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}#comments">{{ topPost.comments | length }}</a></div>
             </div>
             <div class="cat-post-excerpt">
-                {{ topPost.content | striptags | truncate(200) }}
+                {{ topPost.content | striptags | truncate(200) | raw }}
             </div>
         </div>
     </div>

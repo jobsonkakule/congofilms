@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="cat-post-excerpt">
-        {{ post.content | striptags | truncate(200) }}
+        {{ post.content | striptags | truncate(200) | raw }}
         </div>
     </div>
 </div>
