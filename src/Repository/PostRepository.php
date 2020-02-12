@@ -7,7 +7,7 @@ use App\Entity\Picture;
 use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
- use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -43,7 +43,7 @@ class PostRepository extends ServiceEntityRepository
         return $posts;
     }
 
-    public function findLatest(int $page, ?string $key = null, $tags = [], $limit = 11, $exclude = null): PaginationInterface
+    public function findLatest(int $page, ?string $key = null, $tags = [], $limit = 13, $exclude = null): PaginationInterface
     {
         $query = $this->findVisibleQuery()
             ->addSelect('c.id', 'c.title', 'a.id AS authorId', 'a.username', 'a.pseudo', 'COUNT(com.id) AS commentsNb')
@@ -112,9 +112,11 @@ class PostRepository extends ServiceEntityRepository
 
     
 
-    public function filterPosts(SearchData $search, int $page, $limit = 11): PaginationInterface
+    public function filterPosts(SearchData $search, int $page, $limit = 12): PaginationInterface
     {
         $query = $this->getSearchQuery($search)
+            ->addOrderBy('p.score', 'DESC')
+            ->addOrderBy('p.id', 'DESC')
             ->groupBy('p.id');
         $posts = $this->paginator->paginate(
             $query->getQuery(),
@@ -166,7 +168,7 @@ class PostRepository extends ServiceEntityRepository
             ->groupBy('p.id')
             ->addOrderBy('p.created_at', 'DESC')
             ->addOrderBy('p.score', 'DESC')
-            ->setMaxResults(6)
+            ->setMaxResults(8)
             ->getQuery()
             ->getResult();
         $hydratePosts = [];
@@ -209,11 +211,14 @@ class PostRepository extends ServiceEntityRepository
 
     public function findPopularPosts(): array
     {
-        $posts = $this->findVisibleQuery()
+        $posts = $this->createQueryBuilder('p')
+            ->andWhere('p.online = 1')
+            ->andWhere('p.created_at >= :period')
             ->addSelect('c.id', 'c.title')
             ->leftJoin('p.category', 'c')
             ->groupBy('p.id')
             ->addOrderBy('p.views', 'DESC')
+            ->setParameter('period', (new \DateTime())->sub(new \DateInterval('P7D')))
             ->setMaxResults(8)
             ->getQuery()
             ->getResult();
@@ -317,6 +322,18 @@ class PostRepository extends ServiceEntityRepository
             ->select('COUNT(p.id) AS tot')
             ->getQuery()
             ->getResult();
+    }
+    public function adminRestScore()
+    {
+        $db = $this->getEntityManager()->getConnection();
+        $query = '
+            UPDATE post
+            SET score = 1 
+            WHERE created_at < date_sub(now(),interval 48 hour) 
+            AND score > 1
+        ';
+        // $db->query($query)->execute();
+        $db->executeUpdate($query);
     }
 
     private function getSearchQuery (SearchData $search, $ignoreScore = false): QueryBuilder

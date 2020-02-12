@@ -1,5 +1,5 @@
 $menu-width:250px!default;
-$theme-mobile: rgb(34, 34, 34);
+$theme-mobile: #000;
 
 @media only screen and (max-width: 768px) {
     $header-bg: $theme-mobile;
@@ -305,5 +305,14 @@ $theme-mobile: rgb(34, 34, 34);
     }
     .pub-2 {
         width: 95%;
+    }
+
+    .fb-like {
+        display: block;
+        width: 100%;
+    }
+    .standards {
+        display: block;
+        margin-top: 10px;
     }
 }

@@ -47,11 +47,11 @@
             </h5>
             {% if user.description %}
                 <br>
-                <h5 class="text-muted text-center">
+                <h5 class="text-center">
                     Description
                 </h5>
                 <div class="profil-75 text-center m-auto">
-                    <p class="lead">
+                    <p>
                         {{ user.description }}
                     </p>
                 </div>
@@ -63,7 +63,7 @@
                         <div class="share-icon">
                             <i class="fab fa-facebook-f"></i>
                         </div>
-                        <div class="share-text">
+                        <div class="share-text" style="display: inline-block;">
                             {% if app.user and app.user.email == user.email %}
                                 Mon compte
                             {% else %}
@@ -74,6 +74,7 @@
                     </a>
                 </div>
             {% endif %}
+            <hr>
             <div class="profil-75 m-auto">
                 {% if authorPosts %}
                     <div class="cat-high-toggle">

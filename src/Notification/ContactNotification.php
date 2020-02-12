@@ -20,8 +20,9 @@ class ContactNotification
 
     public function notify(Contact $contact) {
         $message = (new \Swift_Message('Quelqu\'un vous a contacté | Grands Lacs News '))
+            // ->setFrom($contact->getEmail())
             ->setFrom($this->mailFrom)
-            ->setTo('contact@grandslacsnews.com')
+            ->setTo('jobkakule10@gmail.com')
             ->setReplyTo($contact->getEmail())
             ->setBody($this->renderer->render('emails/contact.html.twig', [
                 'contact' => $contact
@@ -34,7 +35,7 @@ class ContactNotification
         $message = (new \Swift_Message('Réinitialisation du mot de passe | Grands Lacs News'))
             ->setFrom($this->mailFrom)
             ->setTo($to)
-            ->setReplyTo('jobkakule10@outlook.com')
+            ->setReplyTo('jobkakule10@gmail.com')
             ->setBody($this->renderer->render('emails/password.html.twig', [
                 'params' => $params
             ]), 'text/html');

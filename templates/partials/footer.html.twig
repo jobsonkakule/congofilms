@@ -18,7 +18,7 @@
                         </div>
                         <div class="item-details">
                             <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                <h6>{{ post.title }} Lorem ipsum dolor sit amet consectetur.</h6>
+                                <h6>{{ post.title }}</h6>
                             </a>
                             <span>{{ post.createdAt | ago }}</span>
                         </div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="item-details">
                             <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                                <h6>{{ post.title }} Lorem ipsum dolor sit amet consectetur.</h6>
+                                <h6>{{ post.title }}</h6>
                             </a>
                             {#<span>{{ post.createdAt | localizeddate('medium') }}</span>#}
                             <span>{{ post.createdAt | ago }}</span>

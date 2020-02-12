@@ -12,12 +12,12 @@ class PostFixture extends Fixture
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr_FR');
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $post = new Post();
             $post
                 ->setTitle($faker->words(8, true))
                 ->setContent($faker->sentences(50, true))
-                ->setOnline(false)
+                ->setOnline(true)
                 ->setViews(0)
                 ;
             $manager->persist($post);

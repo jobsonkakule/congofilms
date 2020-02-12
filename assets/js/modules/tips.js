@@ -65,40 +65,36 @@ export default class Tips {
             popup.focus();
             return true;
         };
-        
-        let twitterShare = document.querySelector('.share_twitter')
-        if (twitterShare) {
-            twitterShare.addEventListener('click', function(e){
+        document.querySelectorAll('.share_twitter').forEach(a => {
+            a.addEventListener('click', function(e){
                 e.preventDefault();
                 // var url = this.getAttribute('data-url');
                 var url = $(location).attr("href");
                 var shareUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(document.title) +
-                    "&via=Bouclier_Joseph_com" +
+                    // "&via=Bouclier_Joseph_com" +
                     "&url=" + encodeURIComponent(url);
                 popupCenter(shareUrl, "Partager sur Twitter");
             });
-        }
+        })
     
-        let facebookShare = document.querySelector('.share_facebook')
-        if (facebookShare) {
-            facebookShare.addEventListener('click', function(e){
+        document.querySelectorAll('.share_facebook').forEach(a => {
+            a.addEventListener('click', function(e){
                 e.preventDefault();
                 var url = $(location).attr("href");
                 // var url = this.getAttribute('data-url');
                 var shareUrl = "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(url);
                 popupCenter(shareUrl, "Partager sur facebook");
             });
-        }
-        let whatsappShare = document.querySelector('.share_whatsapp')
-        if (whatsappShare) {
-            whatsappShare.addEventListener('click', function(e){
+        })
+        document.querySelectorAll('.share_whatsapp').forEach(a => {
+            a.addEventListener('click', function(e){
                 e.preventDefault();
                 // var url = this.getAttribute('data-url');
                 var url = $(location).attr("href");
                 var shareUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent(url);
                 popupCenter(shareUrl, "Partager sur Whatsapp");
             });
-        }
+        })
     }
 }
 

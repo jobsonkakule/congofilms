@@ -71,7 +71,7 @@ class AdminPostController extends AbstractController
                 $this->resizeImage($targetPath);
             }
             $this->addFlash('success', 'Elément bien créé avec succès');
-
+            $this->repository->adminRestScore();
             $cache->invalidateTags(['posts', 'lastPosts']);
 
             return $this->redirectToRoute('admin.post.index');
@@ -102,6 +102,7 @@ class AdminPostController extends AbstractController
                 $pics[] = $targetPath;
                 $this->resizeImage($targetPath);
             }
+            $this->repository->adminRestScore();
             $cache->invalidateTags(['posts']);
 
             $this->addFlash('success', 'Elément bien modifié avec succès');

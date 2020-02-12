@@ -76,7 +76,7 @@ $('[data-slider]').slick({
 // Suppression des elements
 // Serach-bar 
 
-$('#search-bar').hide()
+// $('#search-bar').hide()
 $('.search-link').click(function(e) {
     e.preventDefault()
     $('#search-bar').slideToggle()

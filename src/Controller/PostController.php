@@ -39,9 +39,10 @@ class PostController extends AbstractController
         $tag = '';
         if ($request->query->get('tag')) {
             $tag = $request->query->get('tag');
-            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 12);
+            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 13);
         } else {
-            $posts = $this->repository->filterPosts($data, $request->query->getInt('page', 1), 12);
+            // $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [], 13);
+            $posts = $this->repository->filterPosts($data, $request->query->getInt('page', 1));
         }
         if ($request->get('ajax')) {
             return new JsonResponse([
@@ -92,6 +93,8 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $commentController->add($comment);
             $this->addFlash('success', 'Votre commentaire a bien été posté');
+            $cache->invalidateTags(['posts']);
+
             return $this->redirectToRoute('post.show', [
                 'id' => $post->getId(),
                 'slug' => $post->getSlug()
@@ -128,19 +131,5 @@ class PostController extends AbstractController
             'associatedPosts' => $associatedPosts,
             'form' => $form->createView()
         ]);
-    }
-
-
-    /**
-     * likePost
-     *
-     * @param  mixed $request
-     * @Route("/like/{id}", name="like.add", methods={"POST"})
-     * @return void
-     */
-    public function likePost(Request $request)
-    {
-        $ip = $request->getClientIp();
-        return new JsonResponse(['success' => 1]);
     }
 }

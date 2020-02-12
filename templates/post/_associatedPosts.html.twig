@@ -2,9 +2,9 @@
     <div class="sr-only">Chargement...</div>
 </div>
 {% if associatedPosts %}
-    {% for p in associatedPosts | slice(0, 3) %}
+    {% for p in associatedPosts %}
     {% set postItem = p[0] %}
-        <div class="col-md-4 last-art-item" id="postItem-{{ postItem.id }}">
+        <div class="col-md-4 mb-2 last-art-item" id="postItem-{{ postItem.id }}">
             <div class="cat-post-img">
             <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}">
                 {% if postItem.picture %}
