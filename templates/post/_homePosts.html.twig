@@ -10,7 +10,7 @@
         {% set othersLastPosts = othersLastPosts | merge([p]) %}
     {% endif %}
 {% endfor %}
-{% for last in othersLastPosts | slice(1, 3) %}
+{% for last in othersLastPosts | slice(0, 3) %}
     {% set post = last[0] %}
     {% set excludedPosts = excludedPosts | merge([post.id]) %}
 {% endfor %}

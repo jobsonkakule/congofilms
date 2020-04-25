@@ -67,9 +67,6 @@
                 </span>
             {% endif %}
             <i class="fas fa-chevron-right"></i>
-            <span>
-            <a>{{ post.title }}</a>
-            </span>
         </div>
         <div class="row">
             <div class="col-md-8">
@@ -216,6 +213,7 @@
             </div>
             <div class="col-md-4 article-reminder">
                 <div class="pub-1">
+                    <span class="td-adspot-title mb-1">- Publicité -</span>
                     {{ pub() }}
                 </div>
                 <br>
@@ -223,11 +221,11 @@
             </div>
         </div>
         <br>
-        <div class="pub-2 op-ad">
+        <div class="pub-2 op-ad mb-5">
+            <span class="td-adspot-title mb-1">- Publicité -</span>
             {{ topPub() }}
         </div>
     </div>
-    <br>
 {% endblock %}
 {% block javascripts %}
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
