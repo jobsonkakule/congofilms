@@ -1,6 +1,7 @@
 <?php
 namespace App\Twig;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
 use App\Repository\PubRepository;
@@ -161,16 +162,14 @@ class SidebarExtension extends AbstractExtension {
 
     private function getFollowers()
     {
-        // $tw_username = 'GrandsLacsNews'; 
-        // $data = file_get_contents('https://cdn.syndication.twimg.com/widgets/followbutton/info.json?screen_names='.$tw_username); 
-        // $parsed =  json_decode($data,true);
-        // $followers =  $parsed[0]['followers_count'];
-        // if ($followers && is_numeric($followers)) {
-        //     return $followers;
-        // } else {
-        //     return 0;
-        // }
-        return 10;
+        $oauth = new TwitterOAuth("cWAgBW4u1vFvVII7xP29TOSyO", "b3fdKw1fFSwzxpFHpPzQgcP5aHH84ZeWV0fbdEm7gHoj0FyP9x");
+        $accessToken = $oauth->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
+
+        $twitter = new TwitterOAuth("cWAgBW4u1vFvVII7xP29TOSyO", "b3fdKw1fFSwzxpFHpPzQgcP5aHH84ZeWV0fbdEm7gHoj0FyP9x", null, $accessToken->access_token);
+        $user = $twitter->get('users/show', [
+            'screen_name' => 'GrandsLacsNews'
+        ]);
+        return (int)$user->followers_count;
     }
 
     private function getLikes()
@@ -182,7 +181,7 @@ class SidebarExtension extends AbstractExtension {
         ]);
         
         try {
-            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBAD0PoM93ThY7BRYhnvERnhIWV8yVtbl6LkyBkUnYt4NbfVtkF8TjHAJ0ST39O4XntFZCmEgfpmaTlG4peIbeviCSt7pOQK0gmoyiju7mERLlNK7h8ZBnSkCA4nbZCTvZBBcdyKOxZCXWd6A4xI8VP5Us19sUr0wZDZD', 'EAAGdhYjUkrgBAD0PoM93ThY7BRYhnvERnhIWV8yVtbl6LkyBkUnYt4NbfVtkF8TjHAJ0ST39O4XntFZCmEgfpmaTlG4peIbeviCSt7pOQK0gmoyiju7mERLlNK7h8ZBnSkCA4nbZCTvZBBcdyKOxZCXWd6A4xI8VP5Us19sUr0wZDZD');
+            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBALy5JN2k12VeE27kzZBDKmvayeFfMZCq2IzRle29sMwuqYch9ZBJfpbsr5Ag8y88jAZAzyOWe8148X5QGU3kXdpIqiZCFVZCnPhQrZAmsRWN0ZAVOHkze1tR0KKIoDXGBfZBPbjdHAy6cZAGRc2FT7fste87zJRqyVcAZDZD', 'EAAGdhYjUkrgBALy5JN2k12VeE27kzZBDKmvayeFfMZCq2IzRle29sMwuqYch9ZBJfpbsr5Ag8y88jAZAzyOWe8148X5QGU3kXdpIqiZCFVZCnPhQrZAmsRWN0ZAVOHkze1tR0KKIoDXGBfZBPbjdHAy6cZAGRc2FT7fste87zJRqyVcAZDZD');
             $graphNode = $response->getGraphNode();
             $likes = $graphNode['fan_count'];
         } catch(FacebookResponseException $e) {

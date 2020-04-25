@@ -57,10 +57,10 @@ class CategoryController extends AbstractController
         }
         if ($request->get('ajax')) {
             return new JsonResponse([
-                'content' => $this->renderView('category/_CategoryPosts.html.twig', 
+                'content' => $this->renderView('category/_categoryPosts.html.twig', 
                     ['topPosts' => $topPosts, 'posts' => $posts]
                 ),
-                'pagination' => $this->renderView('category/_CategoryPagination.html.twig', ['posts' => $posts]),
+                'pagination' => $this->renderView('category/_categoryPagination.html.twig', ['posts' => $posts]),
                 'pages' => ceil($posts->getTotalItemCount() / $posts->getItemNumberPerPage())
             ]);
         }

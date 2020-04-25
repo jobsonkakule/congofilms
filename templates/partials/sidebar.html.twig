@@ -15,7 +15,7 @@
             </a>
             <a href="{{ path('category.show', {id: topPost.category.id, slug: topPost.category.slug}) }}" class="item-cat">{{ topPost.category.title }}</a>
         </div>
-        <div class="cat-post-body">
+        <div class="cat-post-body mb-3">
             <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
                 <h5>{{ topPost.title }}</h5>
             </a>
@@ -38,7 +38,6 @@
             </div>
         </div>
     </div>
-    <br>
     <div class="cat-items">
         {% for post in posts | slice(1, 4) %}
             <div class="cat-item-post">

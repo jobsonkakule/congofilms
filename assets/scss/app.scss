@@ -95,7 +95,7 @@ a { text-decoration: none; color:inherit; }
     color:$front-color;
 
     background-color: $header-bg;
-    z-index: 1500;
+    z-index: 1000;
 
     a {
         text-decoration: none;
@@ -978,7 +978,12 @@ img {
             filter: unset;
         }
     }
-    
+}
+.td-adspot-title {
+    color: #bbb;
+    font-size: 10px;
+    text-align: center;
+    display: block;
 }
 .gotop {
     position: fixed;
