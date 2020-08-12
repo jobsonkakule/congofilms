@@ -1,0 +1,57 @@
+{% set cat1, cat2, cat3, cat4, cat5, cat6, cat7 = categories[0], categories[1], categories[2], categories[3], categories[4], categories[5], categories[6] %}
+{% if post.category.slug is defined %}
+    {% set category_slug = post.category.slug %}
+    {% if (category_slug == cat6.slug) or (category_slug == cat7.slug) %}
+        {% set category_slug = 'video' %}
+    {% endif %}
+    {% set current_menu = category_slug %}
+{% endif %}
+{% if (current_menu == cat6.slug) or (current_menu == cat7.slug) %}
+    {% set current_menu = 'video' %}
+{% endif %}
+{% set var = false %}
+{% for c in categories | slice(7, 10) %}
+    {% set var = var or (current_menu == c.slug) %}
+{% endfor %}
+<li class="{% if current_menu == 'news' %}active{% endif %}">
+    <a href="{{ path('home') }}">News</a>
+</li>
+<li class="{% if current_menu == cat1.slug %}active{% endif %}">
+    <a href="{{ path('category.show', {id: cat1.id, slug: cat1.slug}) }}">
+        {{ cat1.title }}
+    </a>
+</li>
+{% set resultActive = '' %}
+{% if (current_menu == cat2.slug) or var %}
+    {% set resultActive = 'active' %}
+{% endif %}
+<li class="sub-menu {{ resultActive }}">
+    <a class="dropdown-label" href="{{ path('category.show', {id: cat2.id, slug: cat2.slug}) }}">{{ cat2.title }}<i class="fas fa-chevron-down"></i></a>
+    <ul>
+        {% for cat in categories |slice(7, 20) %}
+            <a href="{{ path('category.show', {id: cat.id, slug: cat.slug}) }}">
+                <li>{{ cat.title }}</li>
+            </a>
+        {% endfor %}
+    </ul>
+</li>
+<li class="{% if current_menu == cat3.slug %}active{% endif %}">
+    <a href="{{ path('category.show', {id: cat3.id, slug: cat3.slug}) }}">{{ cat3.title }}</a>
+</li>
+<li class="{% if current_menu == cat4.slug %}active{% endif %}">
+    <a href="{{ path('category.show', {id: cat4.id, slug: cat4.slug}) }}">{{ cat4.title }}</a>
+</li>
+<li class="sub-menu {% if current_menu == 'video' %}active{% endif %}">
+    <a href="https://www.youtube.com/channel/UCB0erOivnkO7jkdHFQ_pa7Q">Vidéos<i class="fas fa-chevron-down"></i></a>
+    <ul>
+        <a href="{{ path('category.show', {id: cat6.id, slug: cat6.slug}) }}">
+            <li>{{ cat6.title }}</li>
+        </a>
+        <a href="{{ path('category.show', {id: cat7.id, slug: cat7.slug}) }}">
+            <li>{{ cat7.title }}</li>
+        </a>
+    </ul>
+</li>
+<li class="{% if current_menu == cat5.slug %}active{% endif %}">
+    <a href="{{ path('category.show', {id: cat5.id, slug: cat5.slug}) }}">{{ cat5.title }}</a>
+</li>

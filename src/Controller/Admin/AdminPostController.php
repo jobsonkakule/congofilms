@@ -72,7 +72,7 @@ class AdminPostController extends AbstractController
             }
             $this->addFlash('success', 'Elément bien créé avec succès');
             $this->repository->adminRestScore();
-            $cache->invalidateTags(['posts', 'lastPosts']);
+            $cache->invalidateTags(['posts', 'topPosts']);
 
             return $this->redirectToRoute('admin.post.index');
         }
@@ -102,8 +102,7 @@ class AdminPostController extends AbstractController
                 $pics[] = $targetPath;
                 $this->resizeImage($targetPath);
             }
-            $this->repository->adminRestScore();
-            $cache->invalidateTags(['posts']);
+            $cache->invalidateTags(['posts', 'topPosts']);
 
             $this->addFlash('success', 'Elément bien modifié avec succès');
             return $this->redirectToRoute('admin.post.index');
@@ -128,7 +127,7 @@ class AdminPostController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Bien suprimé avec succès');
         }
-        $cache->invalidateTags(['posts']);
+        $cache->invalidateTags(['posts', 'topPosts']);
 
         return $this->redirectToRoute('admin.post.index');
 

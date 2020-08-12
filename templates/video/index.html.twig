@@ -36,7 +36,7 @@
                         <div class="card-body cat-post-body pt-0 pl-0 pr-0">
                             <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><h5>{{ video.snippet.title }}</h5></a>
                             <div class="cat-post-excerpt">
-                                {{ video.snippet.description | striptags | truncate(100) | raw }}
+                                {{ video.snippet.description | striptags | truncate(100, '...') | raw }}
                             </div>
                             <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
                                 <div class="modal-dialog modal-lg" role="document">
@@ -85,10 +85,10 @@
         <br>
         <br>
         <br>
-        <div class="pub-2 mb-3">
+        {#<div class="pub-2 mb-3">
             <span class="td-adspot-title mb-1">- Publicité -</span>
             {{ topPub() }}
-        </div>
+        </div>#}
         </div>
         <script>
         $(document).ready(function() {

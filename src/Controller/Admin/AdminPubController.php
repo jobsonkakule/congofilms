@@ -61,7 +61,7 @@ class AdminPubController extends AbstractController
             }
             $this->addFlash('success', 'Elément bien créé avec succès');
 
-            $cache->invalidateTags(['largePub', 'smallPub']);
+            $cache->invalidateTags(['topPub', 'pub']);
 
             return $this->redirectToRoute('admin.pub.index');
         }
@@ -92,7 +92,7 @@ class AdminPubController extends AbstractController
             }
 
             $this->addFlash('success', 'La publicité a été mise à jour avec succès');
-            $cache->invalidateTags(['largePub', 'smallPub']);
+            $cache->invalidateTags(['topPub', 'pub']);
 
             return $this->redirectToRoute('admin.pub.index');
         }

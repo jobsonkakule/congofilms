@@ -29,6 +29,12 @@ class SidebarExtension extends AbstractExtension {
 
     private $cache;
 
+    private $posts;
+
+    private $categories;
+
+    private $pub;
+
     private $socialCache;
 
     public function __construct(
@@ -55,13 +61,16 @@ class SidebarExtension extends AbstractExtension {
             new TwigFunction('topPub', [$this, 'getTopPub'], ['is_safe' => ['html']]),
             new TwigFunction('pub', [$this, 'getPub'], ['is_safe' => ['html']]),
             new TwigFunction('social', [$this, 'getSocial'], ['is_safe' => ['html']]),
+            new TwigFunction('menu', [$this, 'getMenu'], ['is_safe' => ['html']]),
+            new TwigFunction('submenu', [$this, 'getSubmenu'], ['is_safe' => ['html']]),
+            new TwigFunction('reports', [$this, 'getReports'], ['is_safe' => ['html']])
         ];
     }
 
     public function getSidebar(): string
     {
         return $this->cache->get('sidebar', function (ItemInterface $item) {
-            $item->tag(['posts']);
+            $item->tag(['topPosts']);
             return $this->renderSidebar();
         });
     }
@@ -69,7 +78,7 @@ class SidebarExtension extends AbstractExtension {
     public function getFooter(): string
     {
         return $this->cache->get('footer', function (ItemInterface $item) {
-            $item->tag(['posts', 'categories', 'popularPosts']);
+            $item->tag(['posts', 'categories']);
             return $this->renderFooter();
         });
     }
@@ -77,7 +86,7 @@ class SidebarExtension extends AbstractExtension {
     public function getTopPub(): string
     {
         return $this->cache->get('topPub', function (ItemInterface $item) {
-            $item->tag(['largePub', 'smallPub']);
+            $item->tag(['topPub']);
             return $this->renderTopPub();
         });
     }
@@ -85,7 +94,7 @@ class SidebarExtension extends AbstractExtension {
     public function getPub(): string
     {
         return $this->cache->get('pub', function (ItemInterface $item) {
-            $item->tag(['largePub', 'smallPub']);
+            $item->tag(['pub']);
             return $this->renderPub();
         });
     }
@@ -98,15 +107,60 @@ class SidebarExtension extends AbstractExtension {
         });
     }
 
+    public function getMenu(): string
+    {
+        return $this->cache->get('menu', function (ItemInterface $item) {
+            $item->tag(['categories']);
+            return $this->renderMenu();
+        });
+    }
+
+    public function getSubmenu(): string
+    {
+        return $this->cache->get('submenu', function (ItemInterface $item) {
+            $item->tag(['categories']);
+            return $this->renderSubmenu();
+        });
+    }
+
+    public function getReports(): string
+    {
+        return $this->cache->get('reports', function (ItemInterface $item) {
+            $item->tag(['categories']);
+            return $this->renderReports();
+        });
+    }
+
+    private function getPosts() {
+        if ($this->posts === null) {
+            $this->posts = $this->postRepository->findForSidebar();
+        }
+        return $this->posts;
+    }
+
+    private function getAd() {
+        if ($this->pub === null) {
+            $this->pub = $this->pubRepository->findOneBy(['promo' => 1]);
+        }
+        return $this->pub;
+    }
+
+    private function getCategories() {
+        if ($this->categories === null) {
+            $this->categories = $this->categoryRepository->findAll();
+        }
+        return $this->categories;
+    }
+
     private function renderSidebar(): string {
-        $posts = $this->postRepository->findForSidebar();
+        $topPosts = $this->getPosts();
         return $this->twig->render('partials/sidebar.html.twig', [
-            'posts' => $posts
+            'topPosts' => $topPosts
         ]);
     }
 
     private function renderFooter(): string {
-        $posts = $this->postRepository->findForSidebar();
+        $posts = $this->getPosts();
         $popularPosts = $this->postRepository->findPopularPosts();
         $categories = $this->categoryRepository->findForFooter();
         return $this->twig->render('partials/footer.html.twig', [
@@ -117,19 +171,39 @@ class SidebarExtension extends AbstractExtension {
     }
 
     private function renderTopPub(): string {
-        $pub = $this->pubRepository->findOneBy(['promo' => 1]);
+        $topPub = $this->getAd();
         return $this->twig->render('partials/topPub.html.twig', [
-            'topPub' => $pub
+            'topPub' => $topPub
         ]);
     }
 
     private function renderPub(): string {
-        $pub = $this->pubRepository->findOneBy(['promo' => 1]);
+        $pub = $this->getAd();
         return $this->twig->render('partials/pub.html.twig', [
             'pub' => $pub
         ]);
     }
 
+    private function renderMenu(): string {
+        $categories = $this->getCategories();
+        return $this->twig->render('partials/menu.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
+    private function renderReports(): string {
+        $categories = $this->getCategories();
+        return $this->twig->render('partials/reports.html.twig', [
+            'categories' => $categories
+        ]);
+    }
+
+    private function renderSubmenu(): string {
+        $categories = $this->getCategories();
+        return $this->twig->render('partials/submenu.html.twig', [
+            'categories' => $categories
+        ]);
+    }
     
     private function renderSocial(): string {
         $subscribers = number_format($this->getSubsribers(), 0, '', ' ');
@@ -181,7 +255,7 @@ class SidebarExtension extends AbstractExtension {
         ]);
         
         try {
-            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBALy5JN2k12VeE27kzZBDKmvayeFfMZCq2IzRle29sMwuqYch9ZBJfpbsr5Ag8y88jAZAzyOWe8148X5QGU3kXdpIqiZCFVZCnPhQrZAmsRWN0ZAVOHkze1tR0KKIoDXGBfZBPbjdHAy6cZAGRc2FT7fste87zJRqyVcAZDZD', 'EAAGdhYjUkrgBALy5JN2k12VeE27kzZBDKmvayeFfMZCq2IzRle29sMwuqYch9ZBJfpbsr5Ag8y88jAZAzyOWe8148X5QGU3kXdpIqiZCFVZCnPhQrZAmsRWN0ZAVOHkze1tR0KKIoDXGBfZBPbjdHAy6cZAGRc2FT7fste87zJRqyVcAZDZD');
+            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBAH07rbdfSJRCPUKq2tHYLnCwLsbVQN7WVkzhyIHrrPNcCx8hUjKkgalGC6qeZC5peR3Uovl6trry6ZBMCnt7D5GK11tRAzM6Yj8lkDhTpV8X97q8CyP7tW6lXMZBADVX8ca4uAO442kVwmSp9MQ5FxjBGSrPgZDZD', 'EAAGdhYjUkrgBAH07rbdfSJRCPUKq2tHYLnCwLsbVQN7WVkzhyIHrrPNcCx8hUjKkgalGC6qeZC5peR3Uovl6trry6ZBMCnt7D5GK11tRAzM6Yj8lkDhTpV8X97q8CyP7tW6lXMZBADVX8ca4uAO442kVwmSp9MQ5FxjBGSrPgZDZD');
             $graphNode = $response->getGraphNode();
             $likes = $graphNode['fan_count'];
         } catch(FacebookResponseException $e) {

@@ -39,7 +39,7 @@ class PostController extends AbstractController
         $tag = '';
         if ($request->query->get('tag')) {
             $tag = $request->query->get('tag');
-            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 13);
+            $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [$tag], 12);
         } else {
             // $posts = $this->repository->findLatest($request->query->getInt('page', 1), null, [], 13);
             $posts = $this->repository->filterPosts($data, $request->query->getInt('page', 1));
@@ -93,7 +93,7 @@ class PostController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $commentController->add($comment);
             $this->addFlash('success', 'Votre commentaire a bien été posté');
-            $cache->invalidateTags(['posts']);
+            $cache->invalidateTags(['posts', 'topPosts']);
 
             return $this->redirectToRoute('post.show', [
                 'id' => $post->getId(),
@@ -124,8 +124,6 @@ class PostController extends AbstractController
                 'pages' => ceil($associatedPosts->getTotalItemCount() / $associatedPosts->getItemNumberPerPage())
             ]);
         }
-        // dump($associatedPosts);
-        $cache->invalidateTags(['popularPosts']);
         return $this->render('post/show.html.twig', [
             'post' => $post,
             'associatedPosts' => $associatedPosts,

@@ -181,7 +181,6 @@ class PostRepository extends ServiceEntityRepository
 
     public function findPostsByField(int $page, $field, $cond, $exclude = null): PaginationInterface
     {
-        
         $query = $this->findVisibleQuery();
         if ($exclude) {
             $query = $query->andWhere('p.id != ' . $exclude);
@@ -316,12 +315,17 @@ class PostRepository extends ServiceEntityRepository
         // return [0, 10];
     }
 
-    public function countAll()
+    public function countAll($where = null)
     {
-        return $this->createQueryBuilder('p')
-            ->select('COUNT(p.id) AS tot')
-            ->getQuery()
-            ->getResult();
+        $query = $this->createQueryBuilder('p')
+            ->select('COUNT(p.id) AS tot');
+        if ($where) {
+            $query = $query->andWhere('p.author = :auth')
+            ->setParameter('auth', $where);
+        }
+        return $query
+                ->getQuery()
+                ->getResult();
     }
     public function adminRestScore()
     {

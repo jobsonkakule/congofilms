@@ -36,12 +36,10 @@ class HomeController extends AbstractController
      */
     public function index(PostRepository $repository, Request $request, TagAwareAdapterInterface $cache): Response
     {
-        // Cacche invalidation
+        // Cache invalidation
         // $cache->invalidateTags(['lastPosts']);
         $posts = $repository->findLatest($request->query->getInt('page', 1));
         $topPosts = $repository->findTopPosts();
-        // $categories = $this->getParameter('cat').findAll();
-        // dump($categories);
         $lastPosts = $repository->findLastPosts();
         $popularPosts = $repository->findPopularPosts();
         $filteredPosts = $this->filterPosts($topPosts);

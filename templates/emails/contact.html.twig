@@ -133,20 +133,36 @@
                 <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                   <table cellpadding="0" cellspacing="0" width="100%" border="0" style="cellspacing:0;color:#000000;font-family:Ubuntu, Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;table-layout:auto;width:100%;">
                     <tr>
-                      <td style="font-weight:bold;">Nom</td>
-                      <td>{{ contact.firstname }}</td>
+                      <td>
+                        <span style="font-weight:bold;">
+                          Nom
+                        </span><br>
+                        {{ contact.firstname }}
+                      </td>
                     </tr>
                     <tr>
-                      <td style="font-weight:bold;">Email</td>
-                      <td>{{ contact.email }}</td>
+                      <td>
+                        <span style="font-weight:bold;">
+                          Email
+                        </span><br>
+                        {{ contact.email }}
+                      </td>
                     </tr>
                     <tr>
-                      <td style="font-weight:bold;">Sujet</td>
-                      <td>{{ contact.subject }}</td>
+                      <td>
+                        <span style="font-weight:bold;">
+                          Sujet
+                        </span><br>
+                        {{ contact.subject }}
+                      </td>
                     </tr>
                     <tr>
-                      <td style="font-weight:normal;">Message</td>
-                      <td>{{ contact.message | nl2br }}</td>
+                      <td>
+                        <span style="font-weight:bold;">
+                          Message
+                        </span><br>
+                        {{ contact.message | nl2br }}
+                      </td>
                     </tr>
                   </table>
                 </td>

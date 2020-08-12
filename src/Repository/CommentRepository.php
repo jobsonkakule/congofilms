@@ -45,5 +45,18 @@ class CommentRepository extends ServiceEntityRepository
             ->getResult();
         return new ArrayCollection($comments);
     }
+
+    
+    public function updateAvatar($email, $avatar)
+    {
+        $db = $this->getEntityManager()->getConnection();
+        $query = "
+            UPDATE comment
+            SET avatar = :avatar 
+            WHERE email = :email
+        ";
+        // $db->query($query)->execute();
+        $db->executeUpdate($query, ['avatar' => $avatar,'email' => $email]);
+    }
 }
 

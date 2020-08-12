@@ -1,4 +1,7 @@
 {% extends "base.html.twig" %}
+{% block metadata %}
+  <script data-ad-client="ca-pub-9418812504960394" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+{% endblock %}
 {% block stylesheets %}
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700|Roboto:400,500,700&display=swap" rel="stylesheet">
 {% endblock %}
@@ -33,6 +36,8 @@
           </a>
       </div>
     </div>
+    
+    {% if topPosts | length > 3 %}
     {% set topPost, news2, news3, news4 = topPosts[0][0], topPosts[1][0], topPosts[2][0], topPosts[3][0]  %}
     <div class="top-news">
       <div class="top-post">
@@ -131,32 +136,12 @@
         </div>
       </div>
     </div>
+    {% endif %}
     <div class="row">
       <div class="col-md-8">
         <div class="cat-high-title">
           <h6>à ne pas manquer</h6>
-          <div class="cat-high-menu">
-            <ul>
-              <li>
-                  <a href="{{ path('post.index') }}">Tout</a>
-              </li>
-              {% for c in categories | slice(7, 2) %}
-                <li>
-                  <a href="{{ path('category.show', {id: c.id, slug: c.slug}) }}">{{ c.title }}</a>
-                </li>
-              {% endfor %}
-              <li class="sub-menu">
-                  Plus&nbsp;&nbsp;<i class="fas fa-chevron-down"></i>
-                <ul>
-                  {% for c in categories | slice(9, 20) %}
-                    <a href="{{ path('category.show', {id: c.id, slug: c.slug}) }}">
-                      <li>{{ c.title }}</li>
-                    </a>
-                  {% endfor %}
-                </ul>
-              </li>
-            </ul>
-          </div>
+          {{ submenu() }}
         </div>
         <div class="cat-highlights">
           <div class="row cat-high-body">
@@ -195,7 +180,7 @@
                   <div class="td-module-comments"><a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}#comments">{{ topItems[4].commentsNb }}</a></div>
                 </div>
                 <div class="cat-post-excerpt">
-                  {{ topItem.content | striptags | truncate(100) | raw }}
+                  {{ topItem.content | striptags | truncate(100, '...') | raw }}
                 </div>
               </div>
             </div>
@@ -292,10 +277,10 @@
             </a>
           </div>
         </div>
-        <div class="pub-1 mt-2">
+        {#<div class="pub-1 mt-2">
           <span class="td-adspot-title mb-1">- Publicité -</span>
           {{ pub() }}
-        </div>
+        </div>#}
       </div>
     </div>
     <div class="scroll-div mb-2"></div>
@@ -311,47 +296,13 @@
           {% include "post/_homePagination.html.twig" %}
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="cat-high-title top-articles-title">
-          <h6>analyses et reportages</h6>
-        </div>
-        <div class="reports">
-          {% for post in cat6.posts | sort((b, a) => a.id <=> b.id) | slice(1, 4) %}
-            <div class="report-item">
-              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-            </div>
-            <hr>
-          {% endfor %}
-          <a href="{{ path('category.show', {id: cat6.id, slug: cat6.slug}) }}"><span class="more">Voir plus</span></a>
-          <br>
-        </div>
-        <br>
-        <div class="cat-high-title social-panel-title">
-          <h6>émissions et interviews</h6>
-        </div>
-        <div class="reports">
-          {% for post in cat7.posts | sort((b, a) => a.id <=> b.id) | slice(1, 4) %}
-            <div class="report-item">
-              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-            </div>
-            <hr>
-          {% endfor %}
-          <a href="{{ path('category.show', {id: cat7.id, slug: cat7.slug}) }}"><span class="more">Voir plus</span></a>
-          <br>
-        </div>
-        <hr>
-        <div class="text-center">
-          <a href="{{ path('post.index') }}" class="btn btn-primary">
-            Explorer tous les articles
-          </a >
-        </div>
-      </div>
+      {{ reports() }}
     </div>
     <hr>
-    <div class="pub-2 mb-3">
+    {#<div class="pub-2 mb-3">
       <span class="td-adspot-title mb-1">- Publicité -</span>
       {{ topPub() }}
-    </div>
+    </div>#}
   </div>
   <br>
 {% endblock  %}

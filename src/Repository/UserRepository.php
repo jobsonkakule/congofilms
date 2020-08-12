@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Comment;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -34,6 +35,9 @@ class UserRepository extends ServiceEntityRepository
     public function adminFindAll(int $page, int $limit = 12): PaginationInterface
     {
         $query = $this->createQueryBuilder('u')
+            ->addSelect('count(p.id) as totalAuthor')
+            ->leftJoin('u.posts', 'p')
+            ->groupBy('u.id')
             ->getQuery();
         return $this->paginator->paginate(
             $query,

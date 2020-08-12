@@ -12,31 +12,44 @@
                 </button>
             </div>
         {% endfor %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Actions</th>
-                </tr>
-                <tbody>
-                    {% for user in users %}
-                        <tr>
-                            <td>{{ user.username }}</td>
-                            <td>{{ user.roles | last }}</td>
-                            <td>
-                                <a href="{{ path('admin.user.edit', {id: user.id}) }}" class="btn btn-secondary">Editer</a>
-                                <form method="post" action="{{ path('admin.user.delete', {id: user.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                                    <button class="btn btn-danger">Supprimer</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </thead>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Contribution</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tbody>
+                        {% for u in users %}
+                        {% set user = u[0] %}
+                            <tr>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.roles | last }}</td>
+                                <td>
+                                    <span class="font-weigth-bold">
+                                        {% if 'ROLE_EDITOR' in user.roles %}
+                                            {{ u.totalAuthor }}
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin.user.edit', {id: user.id}) }}" class="btn btn-secondary">Editer</a>
+                                    <form method="post" action="{{ path('admin.user.delete', {id: user.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </thead>
+            </table>
+        </div>
         <br>
         <div class="pagination justify-content-center">
             {{ knp_pagination_render(users) }}

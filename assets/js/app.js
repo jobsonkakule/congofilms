@@ -1,5 +1,3 @@
-import Places from 'places.js'
-import Map from './modules/map'
 import Tips from './modules/tips'
 import Filter from './modules/filter'
 import PostToggle from './modules/postToggle'
@@ -28,36 +26,8 @@ import 'tinymce/plugins/image'
 import 'tinymce/plugins/lists'
 import 'tinymce/plugins/media'
 
-Map.init()
-
-let inputAdress = document.querySelector('#property_adress')
-if (inputAdress !== null) {
-    let place = Places({
-        container: inputAdress
-    })
-    place.on('change', e => {
-        document.querySelector('#property_city').value = e.suggestion.city
-        document.querySelector('#property_postal_code').value = e.suggestion.postcode
-        document.querySelector('#property_lat').value = e.suggestion.latlng.lat
-        document.querySelector('#property_lng').value = e.suggestion.latlng.lng
-    })
-}
-
-let searchAdress = document.querySelector('#search_adress')
-if (searchAdress !== null) {
-    let place = Places({
-        container: searchAdress
-    })
-    place.on('change', e => {
-        document.querySelector('#lat').value = e.suggestion.latlng.lat
-        document.querySelector('#lng').value = e.suggestion.latlng.lng
-    })
-}
-
-
 let $ = require('jquery')
 
-require('../css/app.css');
 require('../scss/app.scss');
 
 require('select2')
@@ -215,67 +185,16 @@ if (slider) {
     })
 }
 
-// Progressbar
-let progressBar = {
-	countElmt : 0,
-	loadedElmt : 0,
-
-	init : function(){
-		var that = this;
-		this.countElmt = $('img').length;
-
-		// Construction et ajout progress bar
-		var $progressBarContainer = $('<div/>').attr('id', 'progress-bar-container');
-		$progressBarContainer.append($('<div/>').attr('id', 'progress-bar'));
-		$progressBarContainer.appendTo($('#p'));
-
-		// Ajout container d'élements
-		var $container = $('<div/>').attr('id', 'progress-bar-elements');
-		$container.appendTo($('body'));
-
-		// Parcours des éléments à prendre en compte pour le chargement
-		$('img').each(function(){
-			$('<img/>')
-				.attr('src', $(this).attr('src'))
-				.on('load error', function(){
-					that.loadedElmt++;
-					that.updateProgressBar();
-				})
-				.appendTo($container)
-			;
-		});
-	},
-
-	updateProgressBar : function(){
-		$('#progress-bar').stop().animate({
-			'width'	: (progressBar.loadedElmt/progressBar.countElmt)*100 + '%'
-		}, function(){
-			if(progressBar.loadedElmt == progressBar.countElmt){
-				setTimeout(function(){
-					$('#progress-bar-container').animate({
-						'top' : '-8px'
-					}, function(){
-						$('#progress-bar-container').remove();
-						$('#progress-bar-elements').remove();
-					});
-				}, 500);
-			}
-		});
-	}
-};
-
-// progressBar.init();
-
 // Responsive button
 Tips.iconBar()
 Tips.comment()
 Tips.replyComment()
 Tips.copyLink()
-Tips.responsiveEmbed()
+// Tips.responsiveEmbed()
 Tips.socialButtons()
 // Tips.toggleAuthor()
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to require it.
 // const $ = require('jquery');
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+// console.log('Hello Webpack Encore! Edit me in assets/js/app.js');

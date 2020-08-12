@@ -20,8 +20,8 @@
         <meta name="copyright" content="//grandslacsnews.com">
         <meta name="author" content="Job KAKULE">
         <meta name="apple-mobile-web-app-status-bar-style" content="#78AB4E">
-        <meta name="keywords" content="actualités,informations,goma,grands,lacs,news,,media,congo">
-        <!-- <script data-ad-client="ca-pub-5317542016635903" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+        <meta name="keywords" content="actualités,informations,goma,grands,lacs,news,media,congo">
+        
         {% block metadata %}
         <meta name="twitter:card" content="summary">
         <meta name="twitter:site" content="https://www.grandslacsnews.com/">
@@ -53,7 +53,6 @@
     </head>
     <body>
         <div class="site-container">
-
             <div class="top-title">
                 <div class="container">
                     <div class="top-left">
@@ -94,9 +93,9 @@
                         <img src="/images/logo.png" alt="Grands Lacs News" title="Grands Lacs News">
                     </a>
                 </div>
-                <div class="pub">
+                {#<div class="pub">
                     {{ topPub() }}
-                </div>
+                </div>#}
             </div>
             <header class="header nav-down">
                 <a href="#" class="header__icon" id="header__icon"></a>
@@ -107,68 +106,8 @@
                 </div>
                 <div class="container">
                     <nav class="menu">
-                        {% set categories = cat.findAll() %}
-                        {% set cat1, cat2, cat3, cat4, cat5, cat6, cat7 = categories[0], categories[1], categories[2], categories[3], categories[4], categories[5], categories[6] %}
                         <ul>
-                            {% if post.category.slug is defined %}
-                                {% set category_slug = post.category.slug %}
-                                {% if (category_slug == cat6.slug) or (category_slug == cat7.slug) %}
-                                    {% set category_slug = 'video' %}
-                                {% endif %}
-                                {% set current_menu = category_slug %}
-                            {% endif %}
-                            {% if (current_menu == cat6.slug) or (current_menu == cat7.slug) %}
-                                {% set current_menu = 'video' %}
-                            {% endif %}
-                            {% set var = false %}
-                            {% for c in categories | slice(7, 10) %}
-                                {% set var = var or (current_menu == c.slug) %}
-                            {% endfor %}
-                            <!-- <a href="{{ path('home') }}">
-                                <img src="/images/logo.png" alt="Grands Lacs News" title="Grands Lacs News">
-                            </a> -->
-                            <li class="{% if current_menu == 'news' %}active{% endif %}">
-                                <a href="{{ path('home') }}">News</a>
-                            </li>
-                            <li class="{% if current_menu == cat1.slug %}active{% endif %}">
-                                <a href="{{ path('category.show', {id: cat1.id, slug: cat1.slug}) }}">
-                                    {{ cat1.title }}
-                                </a>
-                            </li>
-                            {% set resultActive = '' %}
-                            {% if (current_menu == cat2.slug) or var %}
-                                {% set resultActive = 'active' %}
-                            {% endif %}
-                            <li class="sub-menu {{ resultActive }}">
-                                <a class="dropdown-label" href="{{ path('category.show', {id: cat2.id, slug: cat2.slug}) }}">{{ cat2.title }}<i class="fas fa-chevron-down"></i></a>
-                                <ul>
-                                    {% for cat in categories |slice(7, 20) %}
-                                        <a href="{{ path('category.show', {id: cat.id, slug: cat.slug}) }}">
-                                            <li>{{ cat.title }}</li>
-                                        </a>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                            <li class="{% if current_menu == cat3.slug %}active{% endif %}">
-                                <a href="{{ path('category.show', {id: cat3.id, slug: cat3.slug}) }}">{{ cat3.title }}</a>
-                            </li>
-                            <li class="{% if current_menu == cat4.slug %}active{% endif %}">
-                                <a href="{{ path('category.show', {id: cat4.id, slug: cat4.slug}) }}">{{ cat4.title }}</a>
-                            </li>
-                            <li class="sub-menu {% if current_menu == 'video' %}active{% endif %}">
-                                <a href="{{ path('video.index') }}">Vidéos<i class="fas fa-chevron-down"></i></a>
-                                <ul>
-                                    <a href="{{ path('category.show', {id: cat6.id, slug: cat6.slug}) }}">
-                                        <li>{{ cat6.title }}</li>
-                                    </a>
-                                    <a href="{{ path('category.show', {id: cat7.id, slug: cat7.slug}) }}">
-                                        <li>{{ cat7.title }}</li>
-                                    </a>
-                                </ul>
-                            </li>
-                            <li class="{% if current_menu == cat5.slug %}active{% endif %}">
-                                <a href="{{ path('category.show', {id: cat5.id, slug: cat5.slug}) }}">{{ cat5.title }}</a>
-                            </li>
+                            {{ menu() }}
                             <li class="login-link">
                                 {% if app.user %}
                                 <div class="mb-0">

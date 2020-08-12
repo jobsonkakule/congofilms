@@ -65,10 +65,10 @@ $theme-mobile: #000;
     }
     .menu {
         position: absolute;
-        top: 50px;
+        top: 49px;
         bottom: 0;
         min-width: 250px;
-        height: 100vh;
+        height: 102vh;
         left: -100%;
         background: $header-bg;
         transition: .3s ease;
@@ -93,7 +93,6 @@ $theme-mobile: #000;
                 
                 &.login-link {
                     display: block;
-                    position: absolute;
                     bottom: 70px;
                 }
             }

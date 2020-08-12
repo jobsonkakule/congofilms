@@ -1319,6 +1319,7 @@ footer {
             background: transparent;
             color: $text-color;
             margin: 0;
+            display: inline-block;
             &:hover {
                 text-decoration: none;
                 color: $text-color;

@@ -5,7 +5,7 @@
 <div class="sidebar-posts filter" style="top: -80px;">
     <div class="cat-post-details">
         <div class="cat-post-img">
-            {% set topPost = posts[0] %}
+            {% set topPost = topPosts[0] %}
             <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
                 {% if topPost.picture %}
                     <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}">
@@ -34,12 +34,12 @@
                 <div class="td-module-comments"><a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}#comments">{{ topPost.comments | length }}</a></div>
             </div>
             <div class="cat-post-excerpt">
-                {{ topPost.content | striptags | truncate(200) | raw }}
+                {{ topPost.content | striptags | truncate(200, '...') | raw }}
             </div>
         </div>
     </div>
     <div class="cat-items">
-        {% for post in posts | slice(1, 4) %}
+        {% for post in topPosts | slice(1, 4) %}
             <div class="cat-item-post">
                 <div class="item-thumb">
                     <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
