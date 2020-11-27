@@ -1,0 +1,49 @@
+{% extends "base.html.twig" %}
+{% block title 'Dashboard | Grands Lacs News' %}
+
+{% block body %}
+    <div class="mt-5 pt-5"></div>
+    <div class="container mt-4">
+        <h1>Gérer les vidéos</h1>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0px;">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        <div class="text-right">
+            <a href="{{ path('admin.video.new') }}" class="btn btn-primary">Ajouter une catégorie</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+                <tbody>
+                    {% for video in videos %}
+                        <tr>
+                            <td>{{ video.title }}</td>
+                            <td class="text-center">
+                                <a href="{{ path('admin.video.edit', {id: video.id}) }}" class="btn btn-secondary">Editer</a>
+                                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                    <form method="post" action="{{ path('admin.video.delete', {id: video.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ video.id) }}">
+                                        <button class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </thead>
+        </table>
+        <br>
+        <div class="pagination justify-content-center">
+            {{ knp_pagination_render(videos) }}
+        </div>
+    </div>
+{% endblock  %}

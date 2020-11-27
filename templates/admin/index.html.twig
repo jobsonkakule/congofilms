@@ -2,6 +2,8 @@
 {% block title 'Administration | Grands Lacs News' %}
 
 {% block body %}
+  <div class="mt-5 pt-5">
+  </div>
   <div class="td-category-header mt-0 mb-2">
     <div class="container">
       <br>
@@ -11,36 +13,29 @@
   <div class="container mt-4">
     <div class="row text-center justify-content-center">
       <div class="col-md-3">
-        <h1 style="font-weight: 700;font-size: 5rem">{{ nbPosts[0].tot }}</h1>
+        <h1 style="font-weight: 700;font-size: 5rem">{{ nbPhotos[0].tot }}</h1>
         <p class="text-muted">Total</p>
-        <a href="{{ path('admin.post.index') }}" class="btn btn-primary">
-          Gérer les articles
-        </a>
-      </div>
-      <div class="col-md-3">
-        <h1 style="font-weight: 700;font-size: 5rem">{{ nbTags }}</h1>
-        <p class="text-muted">Total</p>
-        <a href="{{ path('admin.tag.index') }}" class="btn btn-primary">
-          Gérer les Tags non utilisés
+        <a href="{{ path('admin.photo.index') }}" class="btn btn-primary">
+          Gérer les photos
         </a>
       </div>
       {% if is_granted('ROLE_ADMIN') %}
         <div class="col-md-3">
-          <h1 style="font-weight: 700;font-size: 5rem">{{ nbCategories[0].tot }}</h1>
+          <h1 style="font-weight: 700;font-size: 5rem">{{ nbVideos[0].tot }}</h1>
           <p class="text-muted">Total</p>
-          <a href="{{ path('admin.category.index') }}" class="btn btn-primary">
-            Gérer les catégories
+          <a href="{{ path('admin.video.index') }}" class="btn btn-primary">
+            Gérer les vidéos
           </a>
         </div>
       {% endif %}
       {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <h1 style="font-weight: 700;font-size: 5rem">{{ nbPubs[0].tot }}</h1>
           <p class="text-muted">Total</p>
           <a href="{{ path('admin.pub.index') }}" class="btn btn-primary">
             Gérer les publicités
           </a>
-        </div>
+        </div> -->
         <div class="col-md-3">
           <h1 style="font-weight: 700;font-size: 5rem">{{ nbUsers[0].tot }}</h1>
           <p class="text-muted">Total</p>

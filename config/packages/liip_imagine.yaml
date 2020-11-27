@@ -17,7 +17,7 @@ liip_imagine:
             quality: 75
             filters:
                 relative_resize:
-                    widen: 730
+                    widen: 1024
 
     # valid drivers options include "gd" or "gmagick" or "imagick"
     # driver: "gd"

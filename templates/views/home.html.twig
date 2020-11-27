@@ -1,308 +1,466 @@
 {% extends "base.html.twig" %}
 {% block metadata %}
-  <script data-ad-client="ca-pub-9418812504960394" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 {% endblock %}
 {% block stylesheets %}
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700|Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,700|Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/photoswipe/dist/default-skin/default-skin.css"> 
+    <link rel="stylesheet" href="/photoswipe/dist/photoswipe.css"> 
 {% endblock %}
 {% block body %}
-  <div class="container">
-    {% for message in app.flashes('success') %}
-        <div class="alert alert-success mb-0">
-            {{ message }}
-        </div>
-    {% endfor %}
-    <div class="emergency">
-      <div class="em-title">
-          dernière minute
-      </div>
-      <div id="carouselContent" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-          {% for p in lastPosts | slice(0, 4) %}
-          {% set post = p[0] %}
-            <div class="carousel-item">
-                <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                    <p>{{ post.title }}</p>
-                </a>
-            </div>
-          {% endfor %}
+  <section class="banner" id="banner" style="background-image:url('https://video.purposemedia.co.uk/wp-content/themes/pm-theme/video-landing/assets/img/banner-v2.png');background-size:cover;background-position:center;background-repeat:no-repeat;">
+      <span class="video-top">
+          <iframe class="video__item" width="560" height="315" src="https://www.youtube.com/embed/E61zIyOM6ls?autoplay=1&mute=1&loop=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <!-- <iframe class="video__item" src="https://www.youtube.com/watch?v=e5KwoaL8wAk" frameborder="0" volume="0" allowfullscreen></iframe> -->
+      </span>
+      <div>
+          <div class="content">
+              <h1 class="banner__heading h1">Congo Films Academy</h1>
           </div>
-          <a class="carousel-text-prev" href="#carouselContent" role="button" data-slide="prev">
-              <i class="fas fa-chevron-left"></i>
-          </a>
-          &nbsp;&nbsp;
-          <a class="carousel-text-next"  href="#carouselContent" role="button" data-slide="next">
-              <i class="fas fa-chevron-right"></i>
+      </div>
+      <div class="arrow-inner js-arrow">
+          <a href="#menu">
+              <i class="fas fa-arrow-up"></i>
           </a>
       </div>
-    </div>
-    
-    {% if topPosts | length > 3 %}
-    {% set topPost, news2, news3, news4 = topPosts[0][0], topPosts[1][0], topPosts[2][0], topPosts[3][0]  %}
-    <div class="top-news">
-      <div class="top-post">
-        <div class="post-container">
-          <a href="{{ path('post.show', {id: topPost.id, slug: topPost.slug}) }}">
-              {% if topPost.picture %}
-                <img src="{{ vich_uploader_asset(topPost.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
-              {% else %}
-                <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ topPost.title }}">
-              {% endif %}
-          </a>
-        </div>
-        <div class="post-infos">
-          <div class="post-infos-head">
-            <a href="{{ path('category.show', {id: topPosts[0].id, slug: topPost.category.slug}) }}" class="post-category">{{ topPosts[0].title }}</a>
-            <h3>
-              {{ topPost.title }}
-            </h3>
-          </div>
-          <div class="post-infos-details">
-            <a href="{{ path('profil.show', {id: topPosts[0].authorId }) }}">
-              <span class="post-author">
-                {% if posts[0].pseudo is not null %}
-                  {{ posts[0].pseudo }}
-                {% else %}
-                  {{ posts[0].username }}
-                {% endif %}
-              </span>
+      <span class="overlay"></span>
+  </section>
+
+  <nav class="stickyTop active">
+    <div>
+        <div class="sticky-nav__logo">
+            <a href="{{path('home')}}">
+                <img src="images/logo.png" alt="" width="150">
             </a>
-            <span>-</span>
-            <span>
-              {{ topPost.createdAt | ago }}
-            </span>
-          </div>
         </div>
-      </div>
-      <div class="last-news">
-        <div class="top-news-2">
-          <div class="post-container">
-            <a href="{{ path('post.show', {id: news2.id, slug: news2.slug}) }}">
-                {% if news2.picture %}
-                  <img src="{{ vich_uploader_asset(news2.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
-                {% else %}
-                  <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ news2.title }}">
-                {% endif %}
-            </a>
-          </div>
-          <div class="post-infos">
-            <div class="post-infos-head">
-              <a href="{{ path('category.show', {id: topPosts[1].id, slug: news2.category.slug}) }}" class="post-category">{{ topPosts[1].title }}</a>
-              <h6>
-                {{ news2.title }}
-              </h6>
+        <ul class="menu" id="menu">
+            <li class="menu__item js-services">
+                <a href="#about">à propos</a>
+            </li>
+            <li class="menu__item js-about">
+                <a href="#vision">vision</a>
+            </li>
+            <li class="menu__item js-about">
+                <a href="#team">team</a>
+            </li>
+            <li class="menu__item js-team">
+                <a href="#services">services</a>
+            </li>
+            <li class="menu__item js-team">
+                <a href="#training">atelier</a>
+            </li>
+            <li class="menu__item js-team">
+                <a href="#festival">festival</a>
+            </li>
+            <li class="menu__item js-work">
+                <a href="#videos">vidéos</a>
+            </li>
+            <li class="menu__item js-work">
+                <a href="#galery"></a>
+            </li>
+            <!-- <li class="menu__item js-process">process</li> -->
+            <li class="menu__item">
+                <a class="btn btn-outline-light" href="#contact">contact</a>
+            </li>
+        </ul>
+        <a href="#" id="burger" >
+            <div class="burger">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-times"></i>
             </div>
-          </div>
-        </div>
-        <div class="top-news-3">
-          <div class="post-item">
-            <div class="post-container">
-              <a href="{{ path('post.show', {id: news3.id, slug: news3.slug}) }}">
-                  {% if news3.picture %}
-                  <img src="{{ vich_uploader_asset(news3.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                  {% else %}
-                    <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" title="{{ news3.title }}">
-                  {% endif %}
-              </a>
-            </div>
-            <div class="post-infos">
-              <div class="post-infos-head">
-                <a href="{{ path('category.show', {id: topPosts[2].id, slug: news3.category.slug}) }}" class="post-category">{{ topPosts[2].title }}</a>
-                <h6>
-                  {{ news3.title }}
-                </h6>
-              </div>
-            </div>
-          </div>
-          <div class="post-item">
-            <div class="post-container">
-              <a href="{{ path('post.show', {id: news4.id, slug: news4.slug}) }}">
-                  {% if news4.picture %}
-                    <img src="{{ vich_uploader_asset(news4.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                  {% else %}
-                    <img src="{{ '/images/noimage.png' | imagine_filter('thumb') }}" alt="" title="{{ news4.title }}">
-                  {% endif %}
-              </a>
-            </div>
-            <div class="post-infos">
-              <div class="post-infos-head">
-                <a href="{{ path('category.show', {id: topPosts[3].id, slug: news4.category.slug}) }}" class="post-category">{{ topPosts[3].title }}</a>
-                <h6>
-                  {{ news4.title }}
-                </h6>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+        </a>
     </div>
-    {% endif %}
-    <div class="row">
-      <div class="col-md-8">
-        <div class="cat-high-title">
-          <h6>à ne pas manquer</h6>
-          {{ submenu() }}
+    <ul class="mobile-menu">
+        <li class="mobile-menu__item js-services">
+            <a href="#about">à propos</a>
+        </li>
+        <li class="mobile-menu__item js-about">
+            <a href="#vision">vision</a>
+        </li>
+        <li class="mobile-menu__item js-about">
+            <a href="#team">team</a>
+        </li>
+        <li class="mobile-menu__item js-team">
+            <a href="#services">services</a>
+        </li>
+        <li class="mobile-menu__item js-team">
+            <a href="#training">atelier</a>
+        </li>
+        <li class="mobile-menu__item js-team">
+            <a href="#festival">festival</a>
+        </li>
+        <li class="mobile-menu__item js-team">
+            <a href="#videos">vidéos</a>
+        </li>
+        <!-- <li class="mobile-menu__item js-process">process</li> -->
+        <li class="mobile-menu__item js-contact">
+            <a class="btn btn-outline-light" href="#contact">contact</a>
+        </li>
+    </ul>
+</nav>
+
+{# <div class="topb">
+  <div>
+      <a href="tel:01773864500" class="phone">01773 864500</a>
+      <a href="mailto:tdjack79@gmail.com">tdjack79@gmail.com</a>
+  </div>
+</div> #}
+
+<section class="about bg white" id="about">
+    <div>
+        <div class="about__heading">
+            <h1 class="h1">Qui sommes-nous</h2>
         </div>
-        <div class="cat-highlights">
-          <div class="row cat-high-body">
-            <div class="col-md-6 cat-post-details">
-              <div class="cat-post-img">
-                {% if topPosts | length > 8 %}
-                  {% set topItems = topPosts %}
-                  {% set topItem = topPosts[4][0] %}
-                {% else %}
-                  {% set topItems = posts %}
-                  {% set topItem = posts[4][0] %}
-                {% endif %}
-                <a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}">
-                  {% if topItem.picture %}
-                    <img src="{{ vich_uploader_asset(topItem.picture, 'imageFile') | imagine_filter('medium') }}" alt="">
-                  {% else %}
-                    <img src="{{ '/images/noimage.png' | imagine_filter('medium') }}" alt="" title="{{ topItem.title }}">
-                  {% endif %}
-                </a>
-                <a href="{{ path('category.show', {id: topItems[4].id, slug: topItem.category.slug}) }}" class="item-cat">{{ topItems[4].title }}</a>
-              </div>
-              <div class="cat-post-body">
-                <a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}"><h5>{{ topItem.title }}</h5></a>
-                <div class="cat-post-infos">
-                  <span class="td-post-author-name">
-                    <a href="{{ path('profil.show', {id: topItems[4].authorId }) }}">
-                      {% if topItems[4].pseudo is not null %}
-                        {{ topItems[4].pseudo }}
-                      {% else %}
-                        {{ topItems[4].username }}
-                      {% endif %}
-                    </a> 
-                  <span>
-                  </span> - </span>
-                  <span class="td-post-date">{{ topItem.createdAt | ago }}</span>
-                  <div class="td-module-comments"><a href="{{ path('post.show', {id: topItem.id, slug: topItem.slug}) }}#comments">{{ topItems[4].commentsNb }}</a></div>
-                </div>
-                <div class="cat-post-excerpt">
-                  {{ topItem.content | striptags | truncate(100, '...') | raw }}
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 cat-items">
-              {% for p in topItems | slice(5, 4) %}
-                {% set post = p[0] %}
-                <div class="cat-item-post">
-                  <div class="item-thumb">
-                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                        {% if post.picture %}
-                          <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                        {% else %}
-                          <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="{{ post.title }}" title="{{ post.title }}"></a>
-                        {% endif %}
-                  </div>
-                  <div class="item-details">
-                    <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-                    <span>{{ post.createdAt | ago }}</span>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          </div>
+        <br>
+        <div class="about__content">
+            <p>
+                Congo Films Academy est un Centre de formation audiovisuel Congolaise, pour la formation aux arts et métiers du Cinéma, avec des programmes d'éducation informelle à travers des ateliers intensifs de jour et une composante pratique élevée dans tous les domaines du cinéma. <br>
+            </p>
+            <p>
+                Nous mettons en place des formations généralistes en Audiovisuel qui donne aux étudiants l’accès d’utiliser les matériels (pour Images, Son et Montage).
+            </p>
+            <p>
+                Ces formations sont assurées par la société RPDFi en partenariat avec La semaine du cinéma au Kivu.
+            </p>
         </div>
-        <div class="cat-high-title last-articles-title">
-          <h6>Derniers articles</h6>
-        </div>
-        <div class="row last-articles">
-          {% set others = [] %}
-          {% for p in lastPosts %}
-            {% set post = p[0] %}
-            {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) and (post.id != topItem.id) %}
-              {% set others = others | merge([p])  %}
-            {% endif %}
-          {% endfor %}
-          {% for p in others | slice(0, 3) %}
-          {% set post = p[0] %}
-          <div class="col-md-4 last-art-item">
-              <div class="cat-post-img">
-              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                  {% if post.picture %}
-                      <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                  {% else %}
-                      <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
-                  {% endif %}
-              <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}" class="item-cat">{{ p.title }}</a>
-              </div>
-              <div class="cat-post-body">
-              <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}"><h6>{{ post.title }}</h6></a>
-              </div>
-          </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="col-md-4">
-        {{ social() }}
-        <div class="cat-high-title popular-articles-title mb-0">
-          <h6>articles populaires</h6>
-        </div>
-        <div class="bd-example carousel-last-posts mt-0">
-          <div id="carouselExampleCaptions" class="carousel slide mt-0 pt-0" data-ride="carousel">
-            <div class="carousel-inner">
-              {% for p in popularPosts %}
-              {% set post = p[0] %}
-                {% if (post.id != topPost.id) and (post.id != news2.id) and (post.id != news3.id) and (post.id != news4.id) and (post.id != topItem.id) %}
-                  <div class="carousel-item">
-                    <div class="carousel-post">
-                      <a href="{{ path('post.show', {id: post.id, slug: post.slug}) }}">
-                          {% if post.picture %}
-                            <img src="{{ vich_uploader_asset(post.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                          {% else %}
-                              <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ post.title }}"></a>
-                          {% endif %}
+        <h4></h4>
+        <hr>
+        <div class="portfolio-block row">
+            {% for video in videos %}
+                <div class="item col-md-6 ">
+                    {{ video.link | raw }}
+                    <div class="item__title my-4">
+                        <h2>
+                            {{ video.title }}
+                        </h2>
                     </div>
-                    <div class="post-infos">
-                      <div class="post-infos-head">
-                        <a href="{{ path('category.show', {id: p.id, slug: post.category.slug}) }}" class="post-category">{{ p.title }}</a>
-                        <h6>
-                          {{ post.title }}
-                        </h6>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<section class="about bg white" id="vision">
+    <div>
+        <div class="about__heading">
+            <h1 class="h1">Vision</h2>
+        </div>
+        <br>
+        <div class="about__content">
+            <p>
+                CONGO FILMS ACADEMY attend devenir une grande école de cinéma dans la partie Est de la République Démocratique du Congo.
+                Par cela, nous envisageons servir de cadre de référence pour renforcements des capacités des cinéastes de la Région, lieu adapte pour offrir les solutions audio- visuelles adaptées et aider à ceux aspirant au cinéma, d’avoir les compétences requises pour leur démarrage.
+            </p>
+        </div>
+        <h4></h4>
+    </div>
+</section>
+
+<section class="team bg grey" id="team">
+    <div>
+        <div class="team__content">
+            <div class="team__heading h1">
+                <h3 class="h1">Notre équipe</h3>
+            </div>
+        </div>
+        <div class="team-block row">
+            {% for user in users %}
+                <div class="item col-md-3">
+                    <div class="item__image mb-4  team-image">
+                        {% if user.pseudo %}
+                        {% set pseudo = user.pseudo %}
+                        {% else %}
+                        {% set pseudo = user.username %}
+                        {% endif %}
+                        {% if user.filename %}
+                          <img src="{{ vich_uploader_asset(user, 'imageFile') | imagine_filter('thumb') }}" alt="{{ pseudo }}" style="width: 100%; display: inline-block;">
+                        {% else %}
+                          <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="{{ pseudo }}" title="{{ pseudo }}" style="width: 100%; display: inline-block;"></a>
+                        {% endif %}
+                    </div>
+                    <div class="item__content mb-5">
+                        <div class="item__heading">
+                            <h2>{{ pseudo }}</h2>
+                        </div>
+                        <div class="item__text">
+                            <p>{{ user.title }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="features bg white" id="services">
+    <div>
+        <div class="features__heading h1">
+            <h3 class="h1">Services</h3>
+        </div>
+        <div class="feature-items row">
+            <div class="features__item item col-md-3">
+                <div class="item__heading h2">Production des films</div>
+                <div class="item__content mb-5">
+                    <p></p>
+                </div>
+            </div>
+            <div class="features__item item col-md-3">
+                <div class="item__heading h2">Couverture Médiatique</div>
+                <div class="item__content mb-5">
+                    <p></p>
+                </div>
+            </div>
+            <div class="features__item item col-md-3">
+                <div class="item__heading h2">Formation </div>
+                <div class="item__content mb-5">
+                    <p></p>
+                </div>
+            </div>
+            <div class="features__item item col-md-3">
+                <div class="item__heading h2">Fixing</div>
+                <div class="item__content mb-5">
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="about bg white" id="training">
+    <div>
+        <div class="about__heading">
+            <h1 class="h1">Atélier</h2>
+        </div>
+        <br>
+        <div class="about__content">
+            <p>
+                Dans le même cadre de formation les étudiants travailler sur plusieurs productions professionnelles : 
+            </p>
+            <p>
+                Documentaire, publicité, court métrage et organisation d’événements.  
+                Comme travail de fin d’étude les étudiants réalisent des courts métrage documentaire ou Fiction qui vont être envoyer dans plusieurs festivals partenaires au Monde  
+            </p>
+        </div>
+        <h4></h4>
+    </div>
+</section>
+<section class="about bg white" id="festival">
+    <div>
+        <div class="about__heading">
+            <h1 class="h1">Festival</h2>
+        </div>
+        <br>
+        <div class="about__content">
+            <p>
+                « Semaine du cinéma au Kivu » est un festival du cinéma qui a lieu dans la Ville de Goma.
+                Organisée par le Réseau de Production et de Diffusion des Films, RPDFI en sigle, ce festival projette pendant une semaine, des films des Grands Lacs, d’Afrique, et de partout au Monde, 
+                seuls qui véhiculent les messages et émotions  réels de notre société, 
+                offrant aussi aux artistes des Grands Lacs,
+                un espace de diffusion de leurs œuvres en vue d’apporter leur contribution
+                dans la consolidation de la paix et cohabitation pacifique entre populations
+                de différents âges, ethnies, classes sociales.
+            </p>
+            <p>
+                Mettant l’accent sur la promotion des artistes locaux et ceux des grands lacs,
+                la semaine du cinéma au Kivu cherche à promouvoir et à rendre public les artistes 
+                et œuvres de chez nous, habituant ainsi aux populations de consommer,
+                Suivre les films de la maison, 
+                Donner de l’espace et doter des compétences aux artistes de la Région, permet à ceux- ci de mieux exprimer l’histoire et émotions de la société, recourant à l’art comme forme expressive sociale. 
+                Documentaire, publicité, court métrage et organisation d’événements.  
+            </p>
+            <p>
+                Comme travail de fin d’étude les étudiants réalisent des courts métrage documentaire ou Fiction qui vont être envoyer dans plusieurs festivals partenaires au Monde  
+            </p>
+        </div>
+        <h4></h4>
+    </div>
+</section>
+<section class="team bg grey" id="videos">
+  <div>
+    <div class="team__content">
+      <div class="team__heading h1">
+          <h3 class="h1">Nos vidéos</h3>
+      </div>
+    </div>
+    <div class="team-block row">
+      {% for video in playlist %}
+        <div class="col-md-4 cat-post-details video">
+            <div class="card-mt-4">
+                <div class="cat-post-img">
+                    <img src="{{ video.snippet.thumbnails.high.url }}" alt="" class="card-img-top">
+                    <a class="play-btn" data-toggle="modal" data-target="#videoModal" data-video="https://www.youtube.com/embed/{{ video.contentDetails.videoId }}">
+                        <i class="far fa-play-circle"></i>
+                    </a>
+                </div>
+                <div class="card-body cat-post-body pt-0 pl-0 pr-0">
+                    <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><p>{{ video.snippet.title }}</p></a>
+                    <div class="cat-post-excerpt">
+                        {{ video.snippet.description | striptags | truncate(100, '...') | raw }}
+                    </div>
+                    <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body bg-dark p-0">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" allowfullscreen></iframe>
+                            </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+<section class="about bg white" id="galery">
+    <div>
+        <div class="about__heading">
+            <h1 class="h1">Galerie</h2>
+        </div>
+        <div class="my-gallery">
+            <div class="row">
+                {% for photo in photos | slice(0, 9) %}
+                    <figure class="pb-5" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
+                        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
+                            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
+                        </a>
+                        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
+                        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
+                    </figure>
+                {% endfor %}
+                {% for photo in photos | slice(9, 20) %}
+                    <figure style="display: none;" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
+                        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
+                            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
+                        </a>
+                        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
+                        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
+                    </figure>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<hr>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    
+    <!-- Background of PhotoSwipe. 
+         It's a separate element, as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. PhotoSwipe keeps only 3 slides in DOM to save memory. -->
+        <!-- don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
                       </div>
                     </div>
-                  </div>
-                {% endif %}
-              {% endfor %}
+                </div>
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="sr-only">Next</span>
-            </a>
-          </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
         </div>
-        {#<div class="pub-1 mt-2">
-          <span class="td-adspot-title mb-1">- Publicité -</span>
-          {{ pub() }}
-        </div>#}
-      </div>
     </div>
-    <div class="scroll-div mb-2"></div>
+</div>
+<section class="summary bg white" id="contact">
     <div class="row">
-      <div class="col-md-8 top-articles js-home">
-        <div class="cat-high-title top-articles-title">
-          <h6>à lire aussi</h6>
+        <div class="summary__left col-md-6">
+            <div class="summary__heading">
+                <h1 class="h2">Video content from Purpose Media directly targets your customers, crafted to communicate directly to them, to create the right perception of your brand.</h2>
+            </div>
+            <div class="summary__content">
+                <p>Working as your video partner we’ll develop an understanding of what your customers want to see, and where they’re like to see it, to provide video content that really delivers.</p>
+                <p>Video is proven to drive traffic and increase conversions, and our award-winning team have the skills and talent to create stunning film and animated content. Let’s get started…</p>
+            </div>
         </div>
-        <div class="js-home-content" style="position: relative;">
-          {% include "post/_homePosts.html.twig" %}
+        <div class="col-md-6" id="contact">
+            {{ form_start(form) }}
+                <div class="form-group">{{ form_widget(form.firstname,{'attr': {'placeholder': 'Noms'}} ) }}</div>
+                <div class="form-group">{{ form_widget(form.email,{'attr': {'placeholder': 'Email'}} ) }}</div>
+                <div class="form-group">{{ form_widget(form.phone,{'attr': {'placeholder': 'Téléphone'}} ) }}</div>
+                <div class="form-group">{{ form_widget(form.subject,{'attr': {'placeholder': 'Entreprise'}} ) }}</div>
+                <div class="form-group">{{ form_widget(form.message, {'attr': {'rows': '5','placeholder': 'Votre message ici...' }}) }}</div>
+            {{ form_rest(form) }}
+                <button class="btn btn-primary">Envoyer</button>
+            {{ form_end(form) }}
         </div>
-        <div class="pagination justify-content-center js-home-pagination">
-          {% include "post/_homePagination.html.twig" %}
-        </div>
-      </div>
-      {{ reports() }}
     </div>
-    <hr>
-    {#<div class="pub-2 mb-3">
-      <span class="td-adspot-title mb-1">- Publicité -</span>
-      {{ topPub() }}
-    </div>#}
+  </section>
+  <div class="container mt-5">
+      {% for message in app.flashes('success') %}
+          <div class="alert alert-success mb-0">
+              {{ message }}
+          </div>
+      {% endfor %}
+      {% if not form.vars.valid %}
+          <div class="alert alert-danger mb-5">
+              Erreur, veuillez renseigner les bonnes informations...
+          </div>
+      {% endif %}
   </div>
-  <br>
+  
+  <script>
+    $(document).ready(function() {
+      // Set iframe attributes when the show instance method is called
+      $("#videoModal").on("show.bs.modal", function(event) {
+        let button = $(event.relatedTarget); // Button that triggered the modal
+        let url = button.data("video");      // Extract url from data-video attribute
+    
+        $(this).find("iframe").attr({
+            src: url,
+            allow : "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        });
+      });
+    
+      // Remove iframe attributes when the modal has finished being hidden from the user
+      $("#videoModal").on("hidden.bs.modal", function() {
+        $("#videoModal iframe").removeAttr("src allow");
+      });
+    });
+  </script>
 {% endblock  %}
+{% block javascripts %}
+    <script src="/photoswipe/dist/photoswipe-ui-default.min.js"></script>
+    <script src="/photoswipe/dist/photoswipe.min.js"></script>
+{% endblock %}

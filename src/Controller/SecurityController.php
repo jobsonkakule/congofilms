@@ -172,21 +172,10 @@ class SecurityController extends AbstractController
      *
      * @return void
      */
-    public function show(User $user, Request $request, PostRepository $postRepository)
+    public function show(User $user, Request $request)
     {
-        $authorPosts = $postRepository->findPostsByField($request->query->getInt('page', 1), 'author', $user->getId());
-        $totalPosts = $postRepository->countAll()[0]['tot'];
-        $totalAuthor = $postRepository->countAll($user->getId())[0]['tot'];
-        $contribution = $totalAuthor / $totalPosts * 100;
-        $stats = [
-            'totalAuthor' => $totalAuthor,
-            'contribution' => number_format($contribution, 2, ',', ' ')
-        ];
-
         return $this->render('security/show.html.twig', [
-            'user' => $user,
-            'authorPosts' => $authorPosts,
-            'stats' => $stats
+            'user' => $user
         ]);
     }
 
@@ -222,8 +211,6 @@ class SecurityController extends AbstractController
                         $this->resizeImage($targetPath);
                     }
                     // Comment Avatar
-                    $this->em->getRepository(Comment::class)->updateAvatar($user->getEmail(), $user->getFilename());
-                    $this->addFlash('success', 'Votre compte a été modifié avec succès');
                     $this->addFlash('success', 'Votre compte a été modifié avec succès, Veuillez vous connecter de nouveau');
                     
                     return $this->redirect('/logout');
@@ -235,7 +222,6 @@ class SecurityController extends AbstractController
                         $this->resizeImage($targetPath);
                     }
                     // Comment Avatar
-                    $this->em->getRepository(Comment::class)->updateAvatar($user->getEmail(), $user->getFilename());
                     $this->addFlash('success', 'Votre compte a été modifié avec succès');
                     
                     return $this->redirectToRoute('home');

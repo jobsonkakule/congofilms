@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+{% block title 'Administration des photos' %}
+
+{% block body %}
+    <div class="mt-5 pt-5">
+    </div>
+    <div class="container mt-4">
+        <h1>Gérer les photos</h1>
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin: 0px;">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+        <div class="text-right">
+            <a href="{{ path('admin.photo.new') }}" class="btn btn-primary">Ajouter une photo</a>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tbody>
+                        {% for photo in photos %}
+                            <tr>
+                                <td>{{ photo.id }}</td>
+                                <td>{{ photo.caption }}</td>
+                                <td>
+                                    <a href="{{ path('admin.photo.edit', {id: photo.id}) }}" class="btn btn-secondary">Editer</a>
+                                    <form method="post" action="{{ path('admin.photo.delete', {id: photo.id}) }}" style="display: inline-block;" onsubmit="return confirm('Etes-vous vraiment sûr ?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ photo.id) }}">
+                                        <button class="btn btn-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </thead>
+            </table>
+        </div>
+        <br>
+        <div class="pagination justify-content-center">
+            {{ knp_pagination_render(photos) }}
+        </div>
+        <br>
+    </div>
+{% endblock  %}

@@ -4,12 +4,14 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Notification\ContactNotification;
+use App\Repository\PhotoRepository;
 use App\Repository\PostRepository;
+use App\Repository\UserRepository;
+use App\Repository\VideoRepository;
 use Google_Client;
 use Google_Service_YouTube;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
@@ -34,46 +36,40 @@ class HomeController extends AbstractController
      *
      * @return Response
      */
-    public function index(PostRepository $repository, Request $request, TagAwareAdapterInterface $cache): Response
+    public function index(UserRepository $userRepository, VideoRepository $videoRepository, PhotoRepository $photoRepository, TagAwareAdapterInterface $cache, Request $request, ContactNotification $notification): Response
     {
-        // Cache invalidation
-        // $cache->invalidateTags(['lastPosts']);
-        $posts = $repository->findLatest($request->query->getInt('page', 1));
-        $topPosts = $repository->findTopPosts();
-        $lastPosts = $repository->findLastPosts();
-        $popularPosts = $repository->findPopularPosts();
-        $filteredPosts = $this->filterPosts($topPosts);
-        // $search = new PostSearch();
-        // $form = $this->createForm(PostSearchType::class, $search);  
-        // $form->handleRequest($request);
-        if ($request->query->get('query')) {
-            $query = $request->query->get('query');
-            if (!empty($query) && strlen($query) > 3) {
-                $queryPosts = $repository->findLatest($request->query->getInt('page', 1), $query, null, 7);
-            } else {
-                $queryPosts = [];
-                // dump($query);die();
-            }
-            return $this->render('post/index.search.html.twig', [
-                'posts' => $queryPosts,
-                'lastPosts' => $lastPosts,
-                'q' => $query,
-            ]);
+        $users = $userRepository->findUsers();
+        $videos = $videoRepository->findVideos();
+        $photos = $photoRepository->findPhotos();
+
+        $contact = new Contact();
+        $form = $this->createForm(ContactType::class, $contact);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $notification->notify($contact);
+            $this->addFlash('success', 'Votre email a bien été envoyé');
+            return $this->redirect("/#contact");
+            // return $this->redirectToRoute('home' );
         }
-        if ($request->get('ajax')) {
-            return new JsonResponse([
-                'content' => $this->renderView('post/_homePosts.html.twig', 
-                    ['topPosts' => $topPosts, 'lastPosts' => $lastPosts, 'posts' => $posts]
-                ),
-                'pagination' => $this->renderView('post/_homePagination.html.twig', ['posts' => $posts]),
-                'pages' => ceil($posts->getTotalItemCount() / $posts->getItemNumberPerPage())
-            ]);
-        }
+
+        $key = "AIzaSyCPmYWVrORHMnJXXs24V7BkFHHcx9t3T3Q";
+        $client = new Google_Client();
+        
+        $client->setDeveloperKey($key);
+        $guzzleClient = new \GuzzleHttp\Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
+        $client->setHttpClient($guzzleClient);
+
+        $youtube = new Google_Service_YouTube($client);
+
+        $playlist = $youtube->playlistItems->listPlaylistItems('id,snippet,contentDetails', ['playlistId' => 'UUB0erOivnkO7jkdHFQ_pa7Q', 'maxResults' => 12]);
+
         return $this->render('views/home.html.twig', [
-            'posts' => $posts,
-            'popularPosts' => $popularPosts,
-            'topPosts' => $filteredPosts,
-            'lastPosts' => $lastPosts
+            'users' => $users,
+            'videos' => $videos,
+            'photos' => $photos,
+            'playlist' => $playlist,
+            'form' => $form->createView()
         ]);
     }
 
@@ -129,16 +125,4 @@ class HomeController extends AbstractController
         return $this->render('video/index.html.twig', compact('playlist'));
     }
 
-    private function filterPosts($topPosts)
-    {
-        $result = [];
-        foreach ($topPosts as $element) {
-            $result[$element['id']][] = $element;
-        }
-        $shifted = [];
-        foreach ($result as $element) {
-            $shifted[] = array_shift($element);
-        }
-        return $shifted;
-    }
 }

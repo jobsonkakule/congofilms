@@ -9,6 +9,7 @@
 {% block title 'A propos de l\'auteur : ' ~ pseudo %}
 
 {% block body %}
+    <div class="mt-5 pt-5"></div>
     <div class="container mt-4 mb-4">
         <h1 class="text-center" style="font-weight: 700;">
             {% if app.user and app.user.email == user.email %}
@@ -74,52 +75,6 @@
                 </div>
             {% endif %}
             <hr>
-            <div class="profil-75 m-auto">
-                {% if authorPosts %}
-                    <div class="cat-high-toggle">
-                        <h6>
-                            <a href="" class="toggle-item cat-high-selected">
-                                
-                            {% if app.user and app.user.email == user.email %}
-                                Mes derniers articles
-                            {% else %}
-                                Ses derniers articles
-                            {% endif %}
-                            </a>
-                        </h6>
-                    </div>
-                    <div class="row last-articles">
-                        {% for p in authorPosts %}
-                        {% set postItem = p[0] %}
-                            <div class="col-md-4 last-art-item">
-                                <div class="cat-post-img">
-                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}">
-                                    {% if postItem.picture %}
-                                        <img src="{{ vich_uploader_asset(postItem.picture, 'imageFile') | imagine_filter('thumb') }}" alt="">
-                                    {% else %}
-                                        <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="" title="{{ postItem.title }}"></a>
-                                    {% endif %}
-                                <a href="{{ path('category.show', {id: p.id, slug: postItem.category.slug}) }}" class="item-cat">{{ p.title }}</a>
-                                </div>
-                                <div class="cat-post-body">
-                                <a href="{{ path('post.show', {id: postItem.id, slug: postItem.slug}) }}"><h6>{{ postItem.title }}</h6></a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    <br>
-                    <div class="pagination justify-content-center">
-                        {{ knp_pagination_render(authorPosts) }}
-                    </div>
-                    {% if app.user and app.user == user  %}
-                        <div class="float-right m-0 p-0">
-                            Ma contribution : <span style="font-size: 1.3rem; font-weight:700;">{{ stats.totalAuthor }} articles soit {{ stats.contribution }} %</span>
-                        </div>
-                        <br>
-                        <br>
-                    {% endif %}
-                {% endif %}
-            </div>
         </div>
     </div>
     

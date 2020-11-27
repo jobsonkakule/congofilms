@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Dashboard | Grands Lacs News' %}
+
+{% block body %}
+    <div class="mt-5 pd-5"></div>
+    <div class="container mt-4">
+        <h1>Editer la vidéo</h1>
+        {{ include("admin/video/_form.html.twig", {button: 'Editer'}) }}
+    </div>
+    <br>
+{% endblock %}

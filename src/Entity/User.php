@@ -39,11 +39,6 @@ class User implements UserInterface, Serializable
     private $password;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Post", mappedBy="author")
-     */
-    private $posts;
-
-    /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -60,6 +55,11 @@ class User implements UserInterface, Serializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pseudo;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -101,7 +101,6 @@ class User implements UserInterface, Serializable
 
     public function __construct()
     {
-        $this->posts = new ArrayCollection();
         $this->updated_at = new \DateTime();
     }
 
@@ -209,37 +208,6 @@ class User implements UserInterface, Serializable
             $this->password,
             $this->roles
         ) = unserialize($serialized, ['allowed_classes' => false]);
-    }
-
-    /**
-     * @return Collection|Post[]
-     */
-    public function getPosts(): Collection
-    {
-        return $this->posts;
-    }
-
-    public function addPost(Post $post): self
-    {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-            $post->setAuthor($this);
-        }
-
-        return $this;
-    }
-
-    public function removePost(Post $post): self
-    {
-        if ($this->posts->contains($post)) {
-            $this->posts->removeElement($post);
-            // set the owning side to null (unless already changed)
-            if ($post->getAuthor() === $this) {
-                $post->setAuthor(null);
-            }
-        }
-
-        return $this;
     }
 
     public function getEmail(): ?string
@@ -361,6 +329,26 @@ class User implements UserInterface, Serializable
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of title
+     */ 
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set the value of title
+     *
+     * @return  self
+     */ 
+    public function setTitle(?string $title): self
+    {
+        $this->title = $title;
 
         return $this;
     }

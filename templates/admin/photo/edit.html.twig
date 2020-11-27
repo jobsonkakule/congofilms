@@ -1,0 +1,14 @@
+{% extends "base.html.twig" %}
+
+{% block title 'Editer la photo' %}
+
+{% block body %}
+    
+    <div class="mt-5 pt-5">
+    </div>
+    <div class="container mt-4">
+        <h1>Editer la photo</h1>
+        {{ include("admin/photo/_form.html.twig", {button: 'Editer'}) }}
+    </div>
+
+{% endblock %}

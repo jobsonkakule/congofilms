@@ -43,11 +43,6 @@ class Contact {
     private $message;
 
     /**
-     * @var Property|null
-     */
-    private $property;
-
-    /**
      * Get the value of firstname
      *
      * @return  string|null
@@ -139,30 +134,6 @@ class Contact {
     public function setMessage($message)
     {
         $this->message = $message;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of property
-     *
-     * @return  Property|null
-     */ 
-    public function getProperty()
-    {
-        return $this->property;
-    }
-
-    /**
-     * Set the value of property
-     *
-     * @param  Property|null  $property
-     *
-     * @return  self
-     */ 
-    public function setProperty($property)
-    {
-        $this->property = $property;
 
         return $this;
     }

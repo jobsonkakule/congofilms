@@ -14,6 +14,7 @@ class AdminUserType extends AbstractType
     {
         $builder
             ->add('username')
+            ->add('title')
             ->add('email')
             ->add('roles', ChoiceType::class, [
                     'choices' => $this->getRoles(),

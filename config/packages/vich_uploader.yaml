@@ -10,6 +10,10 @@ vich_uploader:
             uri_prefix: /media/users
             upload_destination: '%kernel.project_dir%/public/media/users'
             namer: Vich\UploaderBundle\Naming\UniqidNamer
+        photo_image:
+            uri_prefix: /media/photos
+            upload_destination: '%kernel.project_dir%/public/media/photos'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
         pub_image:
             uri_prefix: /media/pubs
             upload_destination: '%kernel.project_dir%/public/media/pubs'

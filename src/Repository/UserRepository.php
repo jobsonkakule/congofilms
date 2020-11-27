@@ -32,12 +32,18 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+    
+    public function findUsers(): array
+    {
+        $query = $this->createQueryBuilder('u')
+            ->getQuery()
+            ->getResult();
+        return $query;
+    }
+
     public function adminFindAll(int $page, int $limit = 12): PaginationInterface
     {
         $query = $this->createQueryBuilder('u')
-            ->addSelect('count(p.id) as totalAuthor')
-            ->leftJoin('u.posts', 'p')
-            ->groupBy('u.id')
             ->getQuery();
         return $this->paginator->paginate(
             $query,
@@ -45,32 +51,5 @@ class UserRepository extends ServiceEntityRepository
             $limit
         );
     }
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    
 }

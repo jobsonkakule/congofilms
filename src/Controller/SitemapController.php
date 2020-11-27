@@ -21,11 +21,6 @@ class SitemapController extends AbstractController
 
         // adding static URLs
         $urls[] = ['loc' =>  $this->generateUrl('home')];
-        $urls[] = ['loc' =>  $this->generateUrl('post.index')];
-        $urls[] = ['loc' =>  $this->generateUrl('video.index')];
-        $urls[] = ['loc' =>  $this->generateUrl('home.contact')];
-        $urls[] = ['loc' =>  $this->generateUrl('login')];
-        $urls[] = ['loc' =>  $this->generateUrl('signup')];
 
         // adding dynamic URLs
         /**
@@ -55,30 +50,6 @@ class SitemapController extends AbstractController
         }
 
         // adding dynamic URLs
-        /**
-         * @var Post[] $posts
-         */
-        $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
-        foreach(array_reverse($posts) as $post) {
-            $picture = $post->getPictures();
-            if (!is_null($picture[0])) {
-                $images = [
-                    'loc' => '/media/posts/' . $picture[0]->getFileName(),
-                    'title' => $post->getTitle()
-                ];
-            } else {
-                $images = [];
-            }
-            
-            $urls[] = [
-                'loc' => $this->generateUrl('post.show', [
-                    'id' => $post->getId(),
-                    'slug' => $post->getSlug()
-                ]),
-                'image' => $images,
-                'lastmod' => $post->getUpdatedAt()->format('Y-m-d')
-            ];
-        }
         
         // Create Response
         $response =  new Response(

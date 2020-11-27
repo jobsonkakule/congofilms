@@ -2,8 +2,6 @@
 namespace App\Twig;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use App\Repository\CategoryRepository;
-use App\Repository\PostRepository;
 use App\Repository\PubRepository;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
@@ -38,16 +36,12 @@ class SidebarExtension extends AbstractExtension {
     private $socialCache;
 
     public function __construct(
-        PostRepository $postRepository,
-        CategoryRepository $categoryRepository,
         PubRepository $pubRepository,
         Environment $twig,
         TagAwareAdapterInterface $cache,
         CacheInterface $socialCache
     )
     {
-        $this->postRepository = $postRepository;
-        $this->categoryRepository = $categoryRepository;
         $this->pubRepository = $pubRepository;
         $this->twig = $twig;
         $this->cache = $cache;
@@ -60,7 +54,6 @@ class SidebarExtension extends AbstractExtension {
             new TwigFunction('footer', [$this, 'getFooter'], ['is_safe' => ['html']]),
             new TwigFunction('topPub', [$this, 'getTopPub'], ['is_safe' => ['html']]),
             new TwigFunction('pub', [$this, 'getPub'], ['is_safe' => ['html']]),
-            new TwigFunction('social', [$this, 'getSocial'], ['is_safe' => ['html']]),
             new TwigFunction('menu', [$this, 'getMenu'], ['is_safe' => ['html']]),
             new TwigFunction('submenu', [$this, 'getSubmenu'], ['is_safe' => ['html']]),
             new TwigFunction('reports', [$this, 'getReports'], ['is_safe' => ['html']])
@@ -96,14 +89,6 @@ class SidebarExtension extends AbstractExtension {
         return $this->cache->get('pub', function (ItemInterface $item) {
             $item->tag(['pub']);
             return $this->renderPub();
-        });
-    }
-
-    public function getSocial()
-    {
-        return $this->cache->get('social', function (ItemInterface $item) {
-            $item->expiresAfter(86400);
-            return $this->renderSocial();
         });
     }
 
@@ -203,69 +188,5 @@ class SidebarExtension extends AbstractExtension {
         return $this->twig->render('partials/submenu.html.twig', [
             'categories' => $categories
         ]);
-    }
-    
-    private function renderSocial(): string {
-        $subscribers = number_format($this->getSubsribers(), 0, '', ' ');
-        $followers = number_format($this->getFollowers(), 0, '', ' ');
-        $likes = number_format($this->getLikes(), 0, '', ' ');
-        return $this->twig->render('partials/social.html.twig', [
-            'subscribers' => $subscribers,
-            'followers' => $followers,
-            'likes' => $likes
-        ]);
-    }
-
-    private function getSubsribers()
-    {
-        $key = "AIzaSyCPmYWVrORHMnJXXs24V7BkFHHcx9t3T3Q";
-        $client = new Google_Client();
-        
-        $client->setDeveloperKey($key);
-        //When working in dev-environment
-        $guzzleClient = new \GuzzleHttp\Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
-        $client->setHttpClient($guzzleClient);
-
-        $youtube = new Google_Service_YouTube($client);
-
-        // $channel = $youtube->channels->listChannels('contentDetails', ['id' => 'UC4_mlXKezTbWDxrLihjvxNw']);
-        $subscribers = $youtube->channels->listChannels('statistics', ['id' => 'UCB0erOivnkO7jkdHFQ_pa7Q']);
-
-        return $subscribers->getItems()[0]->getStatistics()->getSubscriberCount();
-    }
-
-    private function getFollowers()
-    {
-        $oauth = new TwitterOAuth("cWAgBW4u1vFvVII7xP29TOSyO", "b3fdKw1fFSwzxpFHpPzQgcP5aHH84ZeWV0fbdEm7gHoj0FyP9x");
-        $accessToken = $oauth->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
-
-        $twitter = new TwitterOAuth("cWAgBW4u1vFvVII7xP29TOSyO", "b3fdKw1fFSwzxpFHpPzQgcP5aHH84ZeWV0fbdEm7gHoj0FyP9x", null, $accessToken->access_token);
-        $user = $twitter->get('users/show', [
-            'screen_name' => 'GrandsLacsNews'
-        ]);
-        return (int)$user->followers_count;
-    }
-
-    private function getLikes()
-    {
-        $fb = new Facebook([
-            'app_id' => '454671828554424',
-            'app_secret' => '826e36db816f2daa40a9fe653f6a5e68',
-            'default_graph_version' => 'v2.10',
-        ]);
-        
-        try {
-            $response = $fb->get('/108304060702176?fields=fan_count&access_token=EAAGdhYjUkrgBAH07rbdfSJRCPUKq2tHYLnCwLsbVQN7WVkzhyIHrrPNcCx8hUjKkgalGC6qeZC5peR3Uovl6trry6ZBMCnt7D5GK11tRAzM6Yj8lkDhTpV8X97q8CyP7tW6lXMZBADVX8ca4uAO442kVwmSp9MQ5FxjBGSrPgZDZD', 'EAAGdhYjUkrgBAH07rbdfSJRCPUKq2tHYLnCwLsbVQN7WVkzhyIHrrPNcCx8hUjKkgalGC6qeZC5peR3Uovl6trry6ZBMCnt7D5GK11tRAzM6Yj8lkDhTpV8X97q8CyP7tW6lXMZBADVX8ca4uAO442kVwmSp9MQ5FxjBGSrPgZDZD');
-            $graphNode = $response->getGraphNode();
-            $likes = $graphNode['fan_count'];
-        } catch(FacebookResponseException $e) {
-            echo 'Graph returned an error: ' . $e->getMessage();
-            
-            return $likes = 1001;
-        } catch(FacebookSDKException $e) {
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            return $likes = 1002;
-        }
-        return $likes;
     }
 }
