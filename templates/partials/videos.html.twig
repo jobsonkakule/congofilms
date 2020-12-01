@@ -1,0 +1,10 @@
+{% for video in videos %}
+    <div class="item col-md-6 ">
+        {{ video.link | raw }}
+        <div class="item__title my-4">
+            <h2>
+                {{ video.title }}
+            </h2>
+        </div>
+    </div>
+{% endfor %}

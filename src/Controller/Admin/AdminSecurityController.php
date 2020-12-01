@@ -6,6 +6,7 @@ use App\Form\AdminUserType;
 use App\Repository\UserRepository;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -37,16 +38,17 @@ class AdminSecurityController extends AbstractController
     /**
      * @Route("/admin/user/{id}", name="admin.user.edit", methods="GET|POST")
      */
-    public function edit(User $user, Request $request)
+    public function edit(User $user, Request $request, TagAwareAdapterInterface $cache)
     {
         $form = $this->createForm(AdminUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // dump($this->form);die();
             $this->em->flush();
             
             $this->addFlash('success', 'L\'utilisateur a été mis à jour avec succès');
+            $cache->invalidateTags(['users']);
+
             return $this->redirectToRoute('admin.user.index');
         }
         return $this->render('admin/user/edit.html.twig', [
@@ -58,12 +60,13 @@ class AdminSecurityController extends AbstractController
     /**
      * @Route("/admin/user/{id}", name="admin.user.delete", methods="DELETE")
      */
-    public function delete(User $user, Request $request)
+    public function delete(User $user, Request $request, TagAwareAdapterInterface $cache)
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->get('_token'))) {
             $this->em->remove($user);
             $this->em->flush();
             $this->addFlash('success', 'Utilisateur suprimé avec succès');
+            $cache->invalidateTags(['users']);
         }
         return $this->redirectToRoute('admin.user.index');
     }

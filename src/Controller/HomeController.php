@@ -38,10 +38,6 @@ class HomeController extends AbstractController
      */
     public function index(UserRepository $userRepository, VideoRepository $videoRepository, PhotoRepository $photoRepository, TagAwareAdapterInterface $cache, Request $request, ContactNotification $notification): Response
     {
-        $users = $userRepository->findUsers();
-        $videos = $videoRepository->findVideos();
-        $photos = $photoRepository->findPhotos();
-
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
@@ -52,23 +48,7 @@ class HomeController extends AbstractController
             return $this->redirect("/#contact");
             // return $this->redirectToRoute('home' );
         }
-
-        $key = "AIzaSyCPmYWVrORHMnJXXs24V7BkFHHcx9t3T3Q";
-        $client = new Google_Client();
-        
-        $client->setDeveloperKey($key);
-        $guzzleClient = new \GuzzleHttp\Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
-        $client->setHttpClient($guzzleClient);
-
-        $youtube = new Google_Service_YouTube($client);
-
-        $playlist = $youtube->playlistItems->listPlaylistItems('id,snippet,contentDetails', ['playlistId' => 'UUB0erOivnkO7jkdHFQ_pa7Q', 'maxResults' => 12]);
-
         return $this->render('views/home.html.twig', [
-            'users' => $users,
-            'videos' => $videos,
-            'photos' => $photos,
-            'playlist' => $playlist,
             'form' => $form->createView()
         ]);
     }

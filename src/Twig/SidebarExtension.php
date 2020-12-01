@@ -1,15 +1,12 @@
 <?php
 namespace App\Twig;
 
-use Abraham\TwitterOAuth\TwitterOAuth;
-use App\Repository\PubRepository;
-use Facebook\Exceptions\FacebookResponseException;
-use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Facebook;
+use App\Repository\PhotoRepository;
+use App\Repository\UserRepository;
+use App\Repository\VideoRepository;
 use Google_Client;
 use Google_Service_YouTube;
 use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
-use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -17,176 +14,143 @@ use Twig\TwigFunction;
 
 class SidebarExtension extends AbstractExtension {
 
-    private $postRepository;
+    private $videoRepository;
 
-    private $categoryRepository;
+    private $userRepository;
 
-    private $pubRepository;
+    private $photoRepository;
 
     private $twig;
 
     private $cache;
 
-    private $posts;
+    private $videos;
 
-    private $categories;
+    private $photos;
 
-    private $pub;
+    private $users;
 
-    private $socialCache;
+
 
     public function __construct(
-        PubRepository $pubRepository,
+        VideoRepository $videoRepository,
+        PhotoRepository $photoRepository,
+        UserRepository $userRepository,
         Environment $twig,
-        TagAwareAdapterInterface $cache,
-        CacheInterface $socialCache
+        TagAwareAdapterInterface $cache
     )
     {
-        $this->pubRepository = $pubRepository;
+        $this->videoRepository = $videoRepository;
+        $this->photoRepository = $photoRepository;
+        $this->userRepository = $userRepository;
         $this->twig = $twig;
         $this->cache = $cache;
-        $this->socialCache = $socialCache;
     }
     public function getFunctions(): array
     { 
         return [
-            new TwigFunction('sidebar', [$this, 'getSidebar'], ['is_safe' => ['html']]),
-            new TwigFunction('footer', [$this, 'getFooter'], ['is_safe' => ['html']]),
-            new TwigFunction('topPub', [$this, 'getTopPub'], ['is_safe' => ['html']]),
-            new TwigFunction('pub', [$this, 'getPub'], ['is_safe' => ['html']]),
-            new TwigFunction('menu', [$this, 'getMenu'], ['is_safe' => ['html']]),
-            new TwigFunction('submenu', [$this, 'getSubmenu'], ['is_safe' => ['html']]),
-            new TwigFunction('reports', [$this, 'getReports'], ['is_safe' => ['html']])
+            new TwigFunction('videos', [$this, 'getVideos'], ['is_safe' => ['html']]),
+            new TwigFunction('users', [$this, 'getUsers'], ['is_safe' => ['html']]),
+            new TwigFunction('playlist', [$this, 'getPlaylist'], ['is_safe' => ['html']]),
+            new TwigFunction('photos', [$this, 'getPhotos'], ['is_safe' => ['html']])
         ];
     }
 
-    public function getSidebar(): string
+    public function getVideos(): string
     {
-        return $this->cache->get('sidebar', function (ItemInterface $item) {
-            $item->tag(['topPosts']);
-            return $this->renderSidebar();
+        return $this->cache->get('videos', function (ItemInterface $item) {
+            $item->tag(['videos']);
+            return $this->renderVideos();
         });
     }
 
-    public function getFooter(): string
+    public function getUsers(): string
     {
-        return $this->cache->get('footer', function (ItemInterface $item) {
-            $item->tag(['posts', 'categories']);
-            return $this->renderFooter();
+        return $this->cache->get('users', function (ItemInterface $item) {
+            $item->tag(['users']);
+            return $this->renderUsers();
         });
     }
 
-    public function getTopPub(): string
+    public function getPlaylist(): string
     {
-        return $this->cache->get('topPub', function (ItemInterface $item) {
-            $item->tag(['topPub']);
-            return $this->renderTopPub();
+        return $this->cache->get('playlist', function (ItemInterface $item) {
+            $item->expiresAfter(86400);
+            return $this->renderPlaylist();
         });
     }
 
-    public function getPub(): string
+    public function getPhotos(): string
     {
-        return $this->cache->get('pub', function (ItemInterface $item) {
-            $item->tag(['pub']);
-            return $this->renderPub();
+        return $this->cache->get('photos', function (ItemInterface $item) {
+            $item->tag(['photos']);
+            return $this->renderPhotos();
         });
     }
 
-    public function getMenu(): string
-    {
-        return $this->cache->get('menu', function (ItemInterface $item) {
-            $item->tag(['categories']);
-            return $this->renderMenu();
-        });
-    }
-
-    public function getSubmenu(): string
-    {
-        return $this->cache->get('submenu', function (ItemInterface $item) {
-            $item->tag(['categories']);
-            return $this->renderSubmenu();
-        });
-    }
-
-    public function getReports(): string
-    {
-        return $this->cache->get('reports', function (ItemInterface $item) {
-            $item->tag(['categories']);
-            return $this->renderReports();
-        });
-    }
-
-    private function getPosts() {
-        if ($this->posts === null) {
-            $this->posts = $this->postRepository->findForSidebar();
+    private function getVideo() {
+        if ($this->videos === null) {
+            $this->videos = $this->videoRepository->findVideos();
         }
-        return $this->posts;
+        return $this->videos;
     }
 
-    private function getAd() {
-        if ($this->pub === null) {
-            $this->pub = $this->pubRepository->findOneBy(['promo' => 1]);
+    private function getPhoto() {
+        if ($this->photos === null) {
+            $this->photos = $this->photoRepository->findPhotos();
         }
-        return $this->pub;
+        return $this->photos;
     }
 
-    private function getCategories() {
-        if ($this->categories === null) {
-            $this->categories = $this->categoryRepository->findAll();
+    private function getUser() {
+        if ($this->users === null) {
+            $this->users = $this->userRepository->findUsers();
         }
-        return $this->categories;
+        return $this->users;
     }
 
-    private function renderSidebar(): string {
-        $topPosts = $this->getPosts();
-        return $this->twig->render('partials/sidebar.html.twig', [
-            'topPosts' => $topPosts
+    private function renderVideos(): string {
+        $videos = $this->getVideo();
+        return $this->twig->render('partials/videos.html.twig', [
+            'videos' => $videos
         ]);
     }
 
-    private function renderFooter(): string {
-        $posts = $this->getPosts();
-        $popularPosts = $this->postRepository->findPopularPosts();
-        $categories = $this->categoryRepository->findForFooter();
-        return $this->twig->render('partials/footer.html.twig', [
-            'posts' => $posts,
-            'popularPosts' => $popularPosts,
-            'categories' => $categories
+    private function renderUsers(): string {
+        $users = $this->getUser();
+        $realUsers = [];
+        foreach ($users as $user)
+        {
+            if (in_array('ROLE_EDITOR', $user->getRoles())) {
+                $realUsers[] = $user;
+            }
+        }
+        return $this->twig->render('partials/users.html.twig', [
+            'users' => $realUsers
         ]);
     }
 
-    private function renderTopPub(): string {
-        $topPub = $this->getAd();
-        return $this->twig->render('partials/topPub.html.twig', [
-            'topPub' => $topPub
+    private function renderPhotos(): string {
+        $photos = $this->getPhoto();
+        return $this->twig->render('partials/photos.html.twig', [
+            'photos' => $photos
         ]);
     }
 
-    private function renderPub(): string {
-        $pub = $this->getAd();
-        return $this->twig->render('partials/pub.html.twig', [
-            'pub' => $pub
-        ]);
-    }
+    private function renderPlaylist(): string {
+        
+        $key = "AIzaSyCPmYWVrORHMnJXXs24V7BkFHHcx9t3T3Q";
+        $client = new Google_Client();
+        
+        $client->setDeveloperKey($key);
+        $guzzleClient = new \GuzzleHttp\Client(array( 'curl' => array( CURLOPT_SSL_VERIFYPEER => false, ), ));
+        $client->setHttpClient($guzzleClient);
 
-    private function renderMenu(): string {
-        $categories = $this->getCategories();
-        return $this->twig->render('partials/menu.html.twig', [
-            'categories' => $categories
-        ]);
-    }
+        $youtube = new Google_Service_YouTube($client);
 
-    private function renderReports(): string {
-        $categories = $this->getCategories();
-        return $this->twig->render('partials/reports.html.twig', [
-            'categories' => $categories
-        ]);
-    }
-
-    private function renderSubmenu(): string {
-        $categories = $this->getCategories();
-        return $this->twig->render('partials/submenu.html.twig', [
-            'categories' => $categories
+        $playlist = $youtube->playlistItems->listPlaylistItems('id,snippet,contentDetails', ['playlistId' => 'UUB0erOivnkO7jkdHFQ_pa7Q', 'maxResults' => 12]);
+        return $this->twig->render('partials/playlist.html.twig', [
+            'playlist' => $playlist
         ]);
     }
 }

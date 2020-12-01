@@ -53,8 +53,7 @@ class AdminVideoController extends AbstractController
             $this->em->flush();
 
             $this->addFlash('success', 'Elément créé avec succès');
-
-            // $cache->invalidateTags(['categories']);
+            $cache->invalidateTags(['videos']);
 
             return $this->redirectToRoute('admin.video.index');
         }
@@ -79,8 +78,7 @@ class AdminVideoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
             $this->addFlash('success', 'Elément modifié avec succès');
-
-            // $cache->invalidateTags(['categories']);
+            $cache->invalidateTags(['videos']);
 
             return $this->redirectToRoute('admin.video.index');
         }
@@ -103,8 +101,7 @@ class AdminVideoController extends AbstractController
             $this->em->remove($video);
             $this->em->flush();
             $this->addFlash('success', 'Elément suprimmé avec succès');
-
-            // $cache->invalidateTags(['categories']);
+            $cache->invalidateTags(['videos']);
         }
         return $this->redirectToRoute('admin.video.index');
 

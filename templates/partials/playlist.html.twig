@@ -1,0 +1,30 @@
+
+{% for video in playlist %}
+    <div class="col-md-4 cat-post-details video">
+        <div class="card-mt-4">
+            <div class="cat-post-img">
+                <img src="{{ video.snippet.thumbnails.high.url }}" alt="" class="card-img-top">
+                <a class="play-btn" data-toggle="modal" data-target="#videoModal" data-video="https://www.youtube.com/embed/{{ video.contentDetails.videoId }}">
+                    <i class="far fa-play-circle"></i>
+                </a>
+            </div>
+            <div class="card-body cat-post-body pt-0 pl-0 pr-0">
+                <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><p>{{ video.snippet.title }}</p></a>
+                <div class="cat-post-excerpt">
+                    {{ video.snippet.description | striptags | truncate(100, '...') | raw }}
+                </div>
+                <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body bg-dark p-0">
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" allowfullscreen></iframe>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

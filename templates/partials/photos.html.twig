@@ -1,0 +1,19 @@
+
+{% for photo in photos | slice(0, 9) %}
+    <figure class="pb-5" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
+        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
+            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
+        </a>
+        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
+        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
+    </figure>
+{% endfor %}
+{% for photo in photos | slice(9, 20) %}
+    <figure style="display: none;" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
+        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
+            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
+        </a>
+        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
+        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
+    </figure>
+{% endfor %}

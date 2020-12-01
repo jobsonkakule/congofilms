@@ -11,6 +11,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 
 class AdminPhotoController extends AbstractController
 {
@@ -40,7 +41,7 @@ class AdminPhotoController extends AbstractController
     /**
      * @Route("/admin/photo/create", name="admin.photo.new")
      */
-    public function create(Request $request, TagAwareCacheInterface $cache)
+    public function new(Request $request, TagAwareCacheInterface $cache)
     {
         $photo = new Photo();
         $form = $this->createForm(PhotoType::class, $photo);
@@ -57,6 +58,7 @@ class AdminPhotoController extends AbstractController
             }
 
             $this->addFlash('success', 'La Photo a été ahoutée avec succès');
+            $cache->invalidateTags(['photos']);
             return $this->redirectToRoute('admin.photo.index');
         }
         return $this->render('admin/photo/new.html.twig', [
@@ -68,7 +70,7 @@ class AdminPhotoController extends AbstractController
     /**
      * @Route("/admin/photo/{id}", name="admin.photo.edit", methods="GET|POST")
      */
-    public function edit(Photo $photo, Request $request)
+    public function edit(Photo $photo, Request $request, TagAwareAdapterInterface $cache)
     {
         dump($photo);
         $form = $this->createForm(EditPhotoType::class, $photo);
@@ -83,6 +85,8 @@ class AdminPhotoController extends AbstractController
             }
 
             $this->addFlash('success', 'La Photo a été mise à jour avec succès');
+            $cache->invalidateTags(['photos']);
+
             return $this->redirectToRoute('admin.photo.index');
         }
         return $this->render('admin/photo/edit.html.twig', [
@@ -94,12 +98,13 @@ class AdminPhotoController extends AbstractController
     /**
      * @Route("/admin/photo/{id}", name="admin.photo.delete", methods="DELETE")
      */
-    public function delete(Photo $photo, Request $request)
+    public function delete(Photo $photo, Request $request, TagAwareAdapterInterface $cache)
     {
         if ($this->isCsrfTokenValid('delete' . $photo->getId(), $request->get('_token'))) {
             $this->em->remove($photo);
             $this->em->flush();
             $this->addFlash('success', 'Photo suprimée avec succès');
+            $cache->invalidateTags(['photos']);
         }
         return $this->redirectToRoute('admin.photo.index');
     }

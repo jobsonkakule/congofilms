@@ -1,0 +1,25 @@
+
+{% for user in users %}
+    <div class="item col-md-3">
+        <div class="item__image mb-4  team-image">
+            {% if user.pseudo %}
+            {% set pseudo = user.pseudo %}
+            {% else %}
+            {% set pseudo = user.username %}
+            {% endif %}
+            {% if user.filename %}
+                <img src="{{ vich_uploader_asset(user, 'imageFile') | imagine_filter('thumb') }}" alt="{{ pseudo }}" style="width: 100%; display: inline-block;">
+            {% else %}
+                <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="{{ pseudo }}" title="{{ pseudo }}" style="width: 100%; display: inline-block;"></a>
+            {% endif %}
+        </div>
+        <div class="item__content mb-5">
+            <div class="item__heading">
+                <h2>{{ pseudo }}</h2>
+            </div>
+            <div class="item__text">
+                <p>{{ user.title }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}

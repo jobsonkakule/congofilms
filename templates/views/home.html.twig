@@ -125,16 +125,7 @@
         <h4></h4>
         <hr>
         <div class="portfolio-block row">
-            {% for video in videos %}
-                <div class="item col-md-6 ">
-                    {{ video.link | raw }}
-                    <div class="item__title my-4">
-                        <h2>
-                            {{ video.title }}
-                        </h2>
-                    </div>
-                </div>
-            {% endfor %}
+            {{ videos() }}
         </div>
     </div>
 </section>
@@ -162,30 +153,7 @@
             </div>
         </div>
         <div class="team-block row">
-            {% for user in users %}
-                <div class="item col-md-3">
-                    <div class="item__image mb-4  team-image">
-                        {% if user.pseudo %}
-                        {% set pseudo = user.pseudo %}
-                        {% else %}
-                        {% set pseudo = user.username %}
-                        {% endif %}
-                        {% if user.filename %}
-                          <img src="{{ vich_uploader_asset(user, 'imageFile') | imagine_filter('thumb') }}" alt="{{ pseudo }}" style="width: 100%; display: inline-block;">
-                        {% else %}
-                          <img src="{{ '/images/noimage.png'| imagine_filter('thumb') }}" alt="{{ pseudo }}" title="{{ pseudo }}" style="width: 100%; display: inline-block;"></a>
-                        {% endif %}
-                    </div>
-                    <div class="item__content mb-5">
-                        <div class="item__heading">
-                            <h2>{{ pseudo }}</h2>
-                        </div>
-                        <div class="item__text">
-                            <p>{{ user.title }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+            {{ users() }}
         </div>
     </div>
 </section>
@@ -280,35 +248,7 @@
       </div>
     </div>
     <div class="team-block row">
-      {% for video in playlist %}
-        <div class="col-md-4 cat-post-details video">
-            <div class="card-mt-4">
-                <div class="cat-post-img">
-                    <img src="{{ video.snippet.thumbnails.high.url }}" alt="" class="card-img-top">
-                    <a class="play-btn" data-toggle="modal" data-target="#videoModal" data-video="https://www.youtube.com/embed/{{ video.contentDetails.videoId }}">
-                        <i class="far fa-play-circle"></i>
-                    </a>
-                </div>
-                <div class="card-body cat-post-body pt-0 pl-0 pr-0">
-                    <a href="https://www.youtube.com/watch?v={{ video.contentDetails.videoId }}"><p>{{ video.snippet.title }}</p></a>
-                    <div class="cat-post-excerpt">
-                        {{ video.snippet.description | striptags | truncate(100, '...') | raw }}
-                    </div>
-                    <div class="modal fade bd-example-modal-lg" id="videoModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-body bg-dark p-0">
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <iframe class="embed-responsive-item" allowfullscreen></iframe>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-      {% endfor %}
+        {{ playlist() }}
     </div>
   </div>
 </section>
@@ -319,24 +259,7 @@
         </div>
         <div class="my-gallery">
             <div class="row">
-                {% for photo in photos | slice(0, 9) %}
-                    <figure class="pb-5" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
-                        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
-                            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
-                        </a>
-                        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
-                        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
-                    </figure>
-                {% endfor %}
-                {% for photo in photos | slice(9, 20) %}
-                    <figure style="display: none;" itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject" style="margin: auto;padding:2px;">
-                        <a href="{{ vich_uploader_asset(photo, 'imageFile') }}" itemprop="contentUrl" data-size="964x1024">
-                            <img src="{{ vich_uploader_asset(photo, 'imageFile') | imagine_filter('thumb') }}" itemprop="thumbnail" title="{{ photo.caption }}" style="border-radius: 2px;"/>
-                        </a>
-                        <p class="text-muted" style="display: none;">{{ photo.caption | truncate(50, '...') }}</p>
-                        <figcaption itemprop="caption description" style="display: none">{{ photo.caption }}</figcaption>
-                    </figure>
-                {% endfor %}
+                {{ photos() }}
             </div>
         </div>
     </div>
